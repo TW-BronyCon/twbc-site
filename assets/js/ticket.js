@@ -38,7 +38,7 @@ const homeBtn = document.getElementById('home');
 
 if (homeBtn) {
     homeBtn.addEventListener('click', () => {
-        window.location.href = "Home.html";
+        window.location.href = "index.html";
         // 如果首頁是根目錄，用這行：
         // window.location.href = "/";
     });
