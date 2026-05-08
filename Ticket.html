@@ -1,240 +1,252 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-	<head>
-		<!-- HTML Meta Tags -->
-        <title>TWBC台灣馬聚-購票</title>
-        <meta name="description" content="">
 
-		<!-- other -->
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
-        <meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+<head>
+    <!-- HTML Meta Tags -->
+    <title>TWBC台灣馬聚-購票</title>
+    <meta name="description" content="">
 
-        <!-- css -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link rel="stylesheet" href="assets/css/font.css" />
-        <link rel="stylesheet" href="assets/css/ticket.css" />
-	</head>
-	<body>
-		<div class="bg"></div>
-        <div id="blur"></div>
-        <div class="vine-menu noblur"></div>
-        <div class="vine-img noblur"></div>
+    <!-- other -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
 
-        <div class="container">
+    <!-- css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/font.css" />
+    <link rel="stylesheet" href="assets/css/ticket.css" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QN69QWDCDV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-QN69QWDCDV');
+    </script>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div id="blur"></div>
+    <div class="vine-menu noblur"></div>
+    <div class="vine-img noblur"></div>
+
+    <div class="container">
+        <div class="border">
             <div class="border">
-                <div class="border">
-                    <h1>票種</h1> 
-                    <h2>請選擇想要的活動票券</h2> 
-                    <div class="btn">
-                        <button class="sectionbtn" id="home">返回首頁</button>
-                        <button class="sectionbtn" id="btn"></button>
+                <h1>票種</h1>
+                <h2>請選擇想要的活動票券</h2>
+                <div class="btn">
+                    <button class="sectionbtn" id="home">返回首頁</button>
+                    <button class="sectionbtn" id="btn"></button>
+                </div>
+                <div id="section1" class="section show">
+                    <div class="block" style="color: #73bfe5;">
+                        <img src="assets/img/B.avif" alt="經濟票" class="ticket-img">
+                        <div class="ticket-text">
+                            <div class="ticket-title">經濟票</div>
+                            <div class="description">
+                                <div class="desc-top">
+                                    <span style="color: #6baaca;">精打細算好選擇！</span>
+                                </div>
+                                <div class="desc-bottom">內含：活動識別證</div>
+                            </div>
+                        </div>
+                        <div class="ticket-price">$500</div>
                     </div>
-                    <div id="section1" class="section show">
-                        <div class="block" style="color: #73bfe5;">
-                            <img src="assets/img/B.avif" alt="經濟票" class="ticket-img">
-                            <div class="ticket-text">
-                                <div class="ticket-title">經濟票</div>
-                                <div class="description">
-                                    <div class="desc-top">
-                                        <span style="color: #6baaca;">精打細算好選擇！</span>
-                                    </div>
-                                    <div class="desc-bottom">內含：活動識別證</div>
-                                </div>
-                            </div>
-                            <div class="ticket-price">$500</div>
-                        </div>
 
-                        <div class="block" style="color: #8673e5;">
-                            <img src="assets/img/PU.avif" alt="標準票" class="ticket-img">
-                            <div class="ticket-text">
-                                <div class="ticket-title">標準票</div>
-                                <div class="description">
-                                    <div class="desc-top">
-                                        <span style="color: #7c6ccc;">贈送小小紀念品！</span>
-                                    </div>
-                                    <div class="desc-bottom">內含：活動識別證、吧唧徽章、明信片</div>
+                    <div class="block" style="color: #8673e5;">
+                        <img src="assets/img/PU.avif" alt="標準票" class="ticket-img">
+                        <div class="ticket-text">
+                            <div class="ticket-title">標準票</div>
+                            <div class="description">
+                                <div class="desc-top">
+                                    <span style="color: #7c6ccc;">贈送小小紀念品！</span>
                                 </div>
+                                <div class="desc-bottom">內含：活動識別證、吧唧徽章、明信片</div>
                             </div>
-                            <div class="ticket-price">$600</div>
                         </div>
-
-                        <div class="block" style="color: #e57399;">
-                            <img src="assets/img/PI.avif" alt="贊助票" class="ticket-img">
-                            <div class="ticket-text">
-                                <div class="ticket-title">贊助票</div>
-                                <div class="description">
-                                    <div class="desc-top">
-                                        <span style="color: #ce6e8e;">謝謝你對TWBC的支持！</span>
-                                    </div>
-                                    <div class="desc-bottom">
-                                        內含：活動識別證、吧唧徽章、明信片、L夾、手提袋、鑰匙圈、立牌、特別致謝名單、開場感謝、Discord伺服器頭銜
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ticket-price">$1000</div>
-                        </div>
-
-                        <div class="block" style="color: #e5d273;">
-                            <img src="assets/img/Y.avif" alt="貴賓票" class="ticket-img">
-                            <div class="ticket-text">
-                                <div class="ticket-title">貴賓票</div>
-                                <div class="description">
-                                    <div class="desc-top">
-                                        <span style="color: #b4a34c;">尊貴之選，感謝支持！</span>
-                                    </div>
-                                    <div class="desc-bottom">
-                                        內含：活動識別證、吧唧徽章、明信片、L夾、手提袋、鑰匙圈、立牌、特別致謝名單、開場感謝介紹、Discord伺服器頭銜、馬克杯、杯墊、紀念T-Shirt、上台致詞
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ticket-price">$5000</div>
-                        </div>
+                        <div class="ticket-price">$600</div>
                     </div>
-                    <div id="section2" class="section hidden">
-                        <div class="compare-wrap">
-                            <table class="compare-table">
-                                <thead>
-                                    <tr>
-                                        <th class="feature-head"></th>
-                                        <th class="tier-head">
-                                            <span class="tier-label budget">經濟票</span>
-                                        </th>
-                                        <th class="tier-head">
-                                            <span class="tier-label standard">標準票</span>
-                                        </th>
-                                        <th class="tier-head">
-                                            <span class="tier-label sponsor">贊助票</span>
-                                        </th>
-                                        <th class="tier-head">
-                                            <span class="tier-label royale">貴賓票</span>
-                                        </th>
-                                    </tr>
-                                </thead>
 
-                                <tbody>
-                                    <tr>
-                                        <th class="feature-name">活動識別證</th>
-                                        <td class="yes col-1" data-col="1">✔</td>
-                                        <td class="yes col-2" data-col="2">✔</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th class="feature-name">吧唧徽章</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="yes col-2" data-col="2">✔</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th class="feature-name">明信片</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="yes col-2" data-col="2">✔</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">L夾</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">手提袋</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">鑰匙圈</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">立牌</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">特別致謝名單</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">開場感謝</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">開場介紹</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="no col-3" data-col="3">✖</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">Discord 伺服器頭銜</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="yes col-3" data-col="3">✔</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">馬克杯</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="no col-3" data-col="3">✖</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">杯墊</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="no col-3" data-col="3">✖</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">紀念T-Shirt</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="no col-3" data-col="3">✖</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="feature-name">上台致詞</th>
-                                        <td class="no col-1" data-col="1">✖</td>
-                                        <td class="no col-2" data-col="2">✖</td>
-                                        <td class="no col-3" data-col="3">✖</td>
-                                        <td class="yes col-4" data-col="4">✔</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="block" style="color: #e57399;">
+                        <img src="assets/img/PI.avif" alt="贊助票" class="ticket-img">
+                        <div class="ticket-text">
+                            <div class="ticket-title">贊助票</div>
+                            <div class="description">
+                                <div class="desc-top">
+                                    <span style="color: #ce6e8e;">謝謝你對TWBC的支持！</span>
+                                </div>
+                                <div class="desc-bottom">
+                                    內含：活動識別證、吧唧徽章、明信片、L夾、手提袋、鑰匙圈、立牌、特別致謝名單、開場感謝、Discord伺服器頭銜
+                                </div>
+                            </div>
                         </div>
+                        <div class="ticket-price">$1000</div>
+                    </div>
+
+                    <div class="block" style="color: #e5d273;">
+                        <img src="assets/img/Y.avif" alt="貴賓票" class="ticket-img">
+                        <div class="ticket-text">
+                            <div class="ticket-title">貴賓票</div>
+                            <div class="description">
+                                <div class="desc-top">
+                                    <span style="color: #b4a34c;">尊貴之選，感謝支持！</span>
+                                </div>
+                                <div class="desc-bottom">
+                                    內含：活動識別證、吧唧徽章、明信片、L夾、手提袋、鑰匙圈、立牌、特別致謝名單、開場感謝介紹、Discord伺服器頭銜、馬克杯、杯墊、紀念T-Shirt、上台致詞
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ticket-price">$5000</div>
+                    </div>
+                </div>
+                <div id="section2" class="section hidden">
+                    <div class="compare-wrap">
+                        <table class="compare-table">
+                            <thead>
+                                <tr>
+                                    <th class="feature-head"></th>
+                                    <th class="tier-head">
+                                        <span class="tier-label budget">經濟票</span>
+                                    </th>
+                                    <th class="tier-head">
+                                        <span class="tier-label standard">標準票</span>
+                                    </th>
+                                    <th class="tier-head">
+                                        <span class="tier-label sponsor">贊助票</span>
+                                    </th>
+                                    <th class="tier-head">
+                                        <span class="tier-label royale">貴賓票</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th class="feature-name">活動識別證</th>
+                                    <td class="yes col-1" data-col="1">✔</td>
+                                    <td class="yes col-2" data-col="2">✔</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+
+                                <tr>
+                                    <th class="feature-name">吧唧徽章</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="yes col-2" data-col="2">✔</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+
+                                <tr>
+                                    <th class="feature-name">明信片</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="yes col-2" data-col="2">✔</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">L夾</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">手提袋</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">鑰匙圈</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">立牌</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">特別致謝名單</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">開場感謝</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">開場介紹</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="no col-3" data-col="3">✖</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">Discord 伺服器頭銜</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="yes col-3" data-col="3">✔</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">馬克杯</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="no col-3" data-col="3">✖</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">杯墊</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="no col-3" data-col="3">✖</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">紀念T-Shirt</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="no col-3" data-col="3">✖</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                                <tr>
+                                    <th class="feature-name">上台致詞</th>
+                                    <td class="no col-1" data-col="1">✖</td>
+                                    <td class="no col-2" data-col="2">✖</td>
+                                    <td class="no col-3" data-col="3">✖</td>
+                                    <td class="yes col-4" data-col="4">✔</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="assets/js/ticket.js"></script>
-        <script src="assets/js/table.js"></script>
-        <!-- <script src="assets/js/lang.js"></script> -->
-	</body>
+    <script src="assets/js/ticket.js"></script>
+    <script src="assets/js/table.js"></script>
+    <!-- <script src="assets/js/lang.js"></script> -->
+</body>
+
 </html>
