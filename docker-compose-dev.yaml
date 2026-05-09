@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    container_name: twbc-site-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - twbc-site-dev
+    volumes:
+      - twbc-site-dev:/app
+
+networks:
+  twbc-site-dev:
+    driver: bridge
+
+volumes:
+  twbc-site-dev:
+    name: twbc-site-dev
