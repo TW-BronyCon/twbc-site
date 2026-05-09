@@ -7,7 +7,6 @@ const { t, tm } = useI18n()
 const quotes = computed(() => {
   // Method 1: Try tm (translated message)
   const raw = tm('home.quotes')
-  console.log('[Footer] raw quotes:', raw)
   let list: any[] = []
   
   if (raw && typeof raw !== 'string') {
@@ -25,10 +24,9 @@ const quotes = computed(() => {
       i++
       if (i > 100) break // Safety break
     }
-    console.log('[Footer] fallback list:', list)
   }
   
-  const mapped = list.map(q => {
+  return list.map(q => {
     // If it's already a string, return it
     if (typeof q === 'string') return q
     // If it's a function (some i18n setups return message functions), call it
@@ -40,19 +38,12 @@ const quotes = computed(() => {
       // Handle cases where static is at the top level
       if (typeof q.static === 'string') return q.static
       // Common properties in other i18n message formats
-      return q.value || q.b || q.v || JSON.stringify(q)
+      return (q as any).value || (q as any).b || (q as any).v || String(q)
     }
     return String(q || '')
   }).filter(q => !!q && q.trim() !== '')
-
-  console.log('[Footer] final mapped quotes:', mapped)
-  return mapped
 })
 const { currentQuote, isQuoteFadingOut } = useQuotes(quotes)
-
-watch(currentQuote, (val) => {
-  console.log('[Footer] current quote changed:', val)
-})
 </script>
 
 <template>
