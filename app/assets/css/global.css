@@ -4,11 +4,32 @@ html, body {
     padding: 0;
     height: 100%;
     box-sizing: border-box;
-    background-color: #ffffff;
+    /* Fix white background leak */
+    /* background-color: #000000; */
+    color: #ffffff;
+    font-family: "Noto Sans TC", sans-serif;
 }
 
-/* Fallback for missing Equestria font - Use Outfit which is modern and clean */
-@font-face {
-    font-family: 'EquestriaFallback';
-    src: local('Outfit'), local('Segoe UI'), sans-serif;
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* Common UI Elements */
+.noblur {
+    filter: none !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

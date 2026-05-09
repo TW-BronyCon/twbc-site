@@ -1,7 +1,8 @@
 {
   "home": {
-    "subtitle": "2026 年 8 月 15號",
+    "subtitle": "2026 年 8 月 15 號",
     "countdown": {
+      "title": "活動倒數",
       "days": "天",
       "hours": "時",
       "minutes": "分",
@@ -10,17 +11,37 @@
       "eventStarted": "盛會已奏響"
     },
     "nav": {
-      "title": "TWBC 2026",
-      "titleSub": "台北三重",
       "tickets": "立即購票",
-      "news": "最新消息",
-      "about": "關於我們",
-      "events": "活動資訊",
-      "apply": "參與"
+      "volunteer": "志工申請",
+      "vendor": "攤位申請",
+      "event": "自主活動申請",
+      "apply": "活動申請",
+      "comingSoon": "規劃中"
     },
     "footer": {
       "copyright": "版權所有",
       "copyrightNotice": "© 2026 TWBC"
+    },
+    "about": {
+      "title": "關於我們",
+      "content": "Taiwan BronyCon（簡稱TWBC）是為熱愛My Little Pony: Friendship is Magic (彩虹小馬) 的粉絲所舉辦的非官方聚會活動。我們結合國際馬展的活動經驗與台灣在地的馬聚文化，打造一場屬於台灣馬迷的專屬盛會。在這裡，無論是交流 、創作或遊戲，都能讓每位參與者親身感受到「友誼就是魔法」的核心精神，並與同好建立深刻的連結。\n",
+      "pinkiequote": "——派對、狂歡、友誼長存。"
+    },
+    "location": {
+      "title": "活動位置",
+      "name": "阿斯生活空間",
+      "address": "新北市三重區三和路四段111號10樓"
+    },
+    "faq": {
+      "title": "常見問題",
+      "q1": "這是什麼活動？",
+      "a1": "TWBC 是一個以彩虹小馬為主題的粉絲聚會活動！",
+      "q2": "所有票種總和有多少張？",
+      "a2": "約100張...",
+      "q3": "請問可以帶學齡前兒童參加嗎？",
+      "a3": "可以，但本活動參加客群大多為16歲以上，13歲以下可能會較難融入，家長須全程陪同。",
+      "q4": "請問活動識別證上面會印有購票人的名字嗎？",
+      "a4": "識別證上有空白區域讓參加者寫上自己的名字或暱稱。"
     },
     "quotes": [
       "「不管你做什麼，永遠都不會有萬事俱備的時候。」- Applejack",
@@ -39,5 +60,63 @@
       "「友情不總是簡單，但值得去守護。」- Twilight Sparkle",
       "「派對是交朋友最棒的方法！」- Pinkie Pie"
     ]
+  },
+  "ticket": {
+    "title": "票種",
+    "subtitle": "請選擇想要的活動票券",
+    "backHome": "返回首頁",
+    "viewTable": "票種比較",
+    "viewDetailed": "詳細清單",
+    "purchase": "立即購票",
+    "includes": "內含：",
+    "tiers": {
+      "budget": "經濟票",
+      "standard": "標準票",
+      "sponsor": "贊助票",
+      "royale": "貴賓票"
+    },
+    "descriptions": {
+      "budget": "精打細算好選擇！",
+      "standard": "贈送小小紀念品！",
+      "sponsor": "謝謝你對TWBC的支持！",
+      "royale": "尊貴之選，感謝支持！"
+    },
+    "prices": {
+      "budget": "$500",
+      "standard": "$600",
+      "sponsor": "$1000",
+      "royale": "$5000"
+    },
+    "features": {
+      "id": "活動識別證",
+      "badge": "活動識別證",
+      "pin": "吧唧徽章",
+      "postcard": "明信片",
+      "folder": "L夾",
+      "bag": "手提袋",
+      "keychain": "鑰匙圈",
+      "standee": "立牌",
+      "thanks": "特別致謝名單",
+      "intro_thx": "開場感謝",
+      "intro_detail": "開場介紹",
+      "discord": "Discord 伺服器頭銜",
+      "mug": "馬克杯",
+      "coaster": "杯墊",
+      "tshirt": "紀念T-Shirt",
+      "speech": "上台致詞"
+    }
+  },
+  "menu": {
+    "about": "關於我們",
+    "events": "活動資訊",
+    "apply": "活動申請",
+    "timetable": "時程表",
+    "location": "場地資訊"
+  },
+  "apply": {
+    "comingSoon": "規劃中",
+    "volunteer": "志工申請",
+    "vendor": "攤位申請",
+    "event": "自主活動申請"
   }
 }
