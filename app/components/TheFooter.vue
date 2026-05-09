@@ -5,10 +5,54 @@ const { t, tm } = useI18n()
 
 // Quote Logic
 const quotes = computed(() => {
+  // Method 1: Try tm (translated message)
   const raw = tm('home.quotes')
-  return Array.isArray(raw) ? raw.map(q => typeof q === 'string' ? q : String(q.value || '')) : []
+  console.log('[Footer] raw quotes:', raw)
+  let list: any[] = []
+  
+  if (raw && typeof raw !== 'string') {
+    list = Array.isArray(raw) ? raw : Object.values(raw)
+  }
+
+  // Method 2: Fallback to t-loop if Method 1 returned nothing
+  if (list.length === 0) {
+    let i = 0
+    while (true) {
+      const key = `home.quotes.${i}`
+      const val = t(key)
+      if (val === key) break
+      list.push(val)
+      i++
+      if (i > 100) break // Safety break
+    }
+    console.log('[Footer] fallback list:', list)
+  }
+  
+  const mapped = list.map(q => {
+    // If it's already a string, return it
+    if (typeof q === 'string') return q
+    // If it's a function (some i18n setups return message functions), call it
+    if (typeof q === 'function') return q()
+    // If it's an object, try to extract the message
+    if (q && typeof q === 'object') {
+      // Handle compiled message objects (body.static)
+      if (q.body && typeof q.body.static === 'string') return q.body.static
+      // Handle cases where static is at the top level
+      if (typeof q.static === 'string') return q.static
+      // Common properties in other i18n message formats
+      return q.value || q.b || q.v || JSON.stringify(q)
+    }
+    return String(q || '')
+  }).filter(q => !!q && q.trim() !== '')
+
+  console.log('[Footer] final mapped quotes:', mapped)
+  return mapped
 })
-const { currentQuote, isQuoteFadingOut } = useQuotes(quotes.value)
+const { currentQuote, isQuoteFadingOut } = useQuotes(quotes)
+
+watch(currentQuote, (val) => {
+  console.log('[Footer] current quote changed:', val)
+})
 </script>
 
 <template>

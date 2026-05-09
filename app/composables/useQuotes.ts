@@ -1,31 +1,54 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, toValue, type MaybeRefOrGetter } from 'vue'
 
-export const useQuotes = (quotesList: string[], intervalMs: number = 10000) => {
+export const useQuotes = (quotesList: MaybeRefOrGetter<string[]>, intervalMs: number = 10000) => {
   const currentQuote = ref('Loading...')
   const isQuoteFadingOut = ref(false)
   let quoteInterval: ReturnType<typeof setInterval> | null = null
-  let remainingQuotes = [...quotesList]
+  let remainingQuotes: string[] = []
 
   function getRandomQuote() {
+    const list = toValue(quotesList)
+    if (!list || list.length === 0) return ''
+    
     if (remainingQuotes.length === 0) {
-      remainingQuotes = [...quotesList]
+      remainingQuotes = [...list]
     }
     const index = Math.floor(Math.random() * remainingQuotes.length)
     const quote = remainingQuotes.splice(index, 1)[0]
     return quote || ''
   }
 
-  function updateQuote() {
+  function updateQuote(immediate = false) {
+    const nextQuote = getRandomQuote()
+    if (!nextQuote) return
+
+    if (immediate || currentQuote.value === 'Loading...') {
+      currentQuote.value = nextQuote
+      return
+    }
+
     isQuoteFadingOut.value = true
     setTimeout(() => {
-      currentQuote.value = getRandomQuote()
+      currentQuote.value = nextQuote
       isQuoteFadingOut.value = false
     }, 300)
   }
 
+  // Watch for changes in the quotes list
+  watch(() => toValue(quotesList), (newList) => {
+    if (newList && newList.length > 0) {
+      remainingQuotes = [...newList]
+      if (currentQuote.value === 'Loading...') {
+        updateQuote(true)
+      }
+    }
+  }, { immediate: true, deep: true })
+
   onMounted(() => {
-    updateQuote()
-    quoteInterval = setInterval(updateQuote, intervalMs)
+    if (currentQuote.value === 'Loading...') {
+      updateQuote(true)
+    }
+    quoteInterval = setInterval(() => updateQuote(false), intervalMs)
   })
 
   onUnmounted(() => {
