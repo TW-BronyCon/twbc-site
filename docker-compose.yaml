@@ -9,13 +9,7 @@ services:
       - NODE_ENV=production
     networks:
       - twbc-site
-    volumes:
-      - twbc-site:/app
 
 networks:
   twbc-site:
     driver: bridge
-
-volumes:
-  twbc-site:
-    name: twbc-site
