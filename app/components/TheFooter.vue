@@ -133,7 +133,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes.value)
 
 .footer-copyright {
   font-size: 0.85rem;
-  color: #c9eaeb;
+  color: #ffbdde;
   opacity: 0.7;
 }
 
@@ -150,7 +150,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes.value)
 .quote-text {
   margin: 0;
   font-size: 0.95rem;
-  color: #c9eaeb;
+    color: #ffbdde;
   font-style: italic;
   transition: all 0.3s ease-in-out;
 }
