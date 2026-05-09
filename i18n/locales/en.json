@@ -64,6 +64,7 @@
   "ticket": {
     "title": "Tickets",
     "subtitle": "Please choose your ticket",
+    "backHome": "Back to Home",
     "viewTable": "Compare Tiers",
     "viewDetailed": "Detailed List",
     "purchase": "Buy Now",
@@ -107,7 +108,9 @@
   "menu": {
     "about": "About Us",
     "events": "Events",
-    "apply": "Apply"
+    "apply": "Apply",
+    "timetable": "Timetable",
+    "location": "Location"
   },
   "apply": {
     "comingSoon": "Planning",

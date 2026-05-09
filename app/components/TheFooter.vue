@@ -54,7 +54,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes.value)
   );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
   padding: 3rem 0 1.5rem;
   color: #fff;
   z-index: 10;

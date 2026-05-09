@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 const { t } = useI18n()
+const router = useRouter()
+
+useHead({
+  title: '購票'
+})
 
 const currentMode = ref<'detailed' | 'table'>('detailed')
 const isHovering = ref(false)
@@ -11,15 +16,39 @@ const toggleMode = () => {
   currentMode.value = currentMode.value === 'detailed' ? 'table' : 'detailed'
 }
 
-const goToPurchase = () => {
-  window.open('https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform', '_blank')
+const goHome = () => {
+  router.push('/')
 }
 
 const tiers = [
-  { id: 'budget', color: '#73bfe5', subColor: '#bddeef', img: '/img/form-b.png' },
-  { id: 'standard', color: '#8673e5', subColor: '#c2b9ed', img: '/img/form-g.png' },
-  { id: 'sponsor', color: '#e57399', subColor: '#e8b2c4', img: '/img/form-p.png' },
-  { id: 'royale', color: '#e5d273', subColor: '#efe6b8', img: '/img/form-o.png' }
+  { 
+    id: 'budget', 
+    color: '#73bfe5', 
+    subColor: '#6baaca', 
+    img: '/img/B.avif',
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500"
+  },
+  { 
+    id: 'standard', 
+    color: '#8673e5', 
+    subColor: '#7c6ccc', 
+    img: '/img/PU.avif',
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600"
+  },
+  { 
+    id: 'sponsor', 
+    color: '#e57399', 
+    subColor: '#ce6e8e', 
+    img: '/img/PI.avif',
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000"
+  },
+  { 
+    id: 'royale', 
+    color: '#e5d273', 
+    subColor: '#b4a34c', 
+    img: '/img/Y.avif',
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)"
+  }
 ]
 
 const featuresList = [
@@ -31,7 +60,7 @@ const featuresList = [
   { key: 'keychain', availability: [false, false, true, true] },
   { key: 'standee', availability: [false, false, true, true] },
   { key: 'thanks', availability: [false, false, true, true] },
-  { key: 'intro_thx', availability: [false, false, true, false] },
+  { key: 'intro_thx', availability: [false, false, true, true] },
   { key: 'intro_detail', availability: [false, false, false, true] },
   { key: 'discord', availability: [false, false, true, true] },
   { key: 'mug', availability: [false, false, false, true] },
@@ -67,7 +96,7 @@ const onMouseLeave = () => {
 
 <template>
   <div class="ticket-root">
-    <SharedBackground variant="village" />
+    <div class="bg"></div>
 
     <div class="container">
       <div class="border">
@@ -75,34 +104,44 @@ const onMouseLeave = () => {
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
           <div class="btn">
+            <button class="sectionbtn" @click="goHome">{{ $t('ticket.backHome') }}</button>
             <button class="sectionbtn" @click="toggleMode">
               {{ currentMode === 'detailed' ? $t('ticket.viewTable') : $t('ticket.viewDetailed') }}
             </button>
-            <button class="sectionbtn" @click="goToPurchase">{{ $t('ticket.purchase') }}</button>
           </div>
 
           <!-- Detailed View -->
-          <div v-if="currentMode === 'detailed'" class="section show">
-            <div
-              v-for="tier in tiers"
+          <div v-if="currentMode === 'detailed'" id="section1" class="section show">
+            <a
+              v-for="(tier, index) in tiers"
               :key="tier.id"
-              class="block"
-              :style="{ color: tier.color }"
+              :href="tier.url"
+              target="_blank"
+              class="block-link"
             >
-              <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
-              <div class="ticket-text">
-                <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
-                <div class="description">
-                  <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
-                  <br>{{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[tiers.indexOf(tier)]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+              <div
+                class="block"
+                :style="{ color: tier.color }"
+              >
+                <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
+                <div class="ticket-text">
+                  <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
+                  <div class="description">
+                    <div class="desc-top">
+                      <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
+                    </div>
+                    <div class="desc-bottom">
+                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+                    </div>
+                  </div>
                 </div>
+                <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
               </div>
-              <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
-            </div>
+            </a>
           </div>
 
           <!-- Table View -->
-          <div v-if="currentMode === 'table'" class="section show">
+          <div v-if="currentMode === 'table'" id="section2" class="section show">
             <div class="compare-wrap">
               <table :class="['compare-table', { 'is-hovering': isHovering }]" @mouseleave="onMouseLeave">
                 <thead>
@@ -156,3 +195,14 @@ const onMouseLeave = () => {
 </template>
 
 <style scoped src="~/assets/css/ticket.css"></style>
+
+<style scoped>
+.block-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.block{
+  height: 100%;
+}
+</style>

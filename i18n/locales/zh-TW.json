@@ -64,6 +64,7 @@
   "ticket": {
     "title": "票種",
     "subtitle": "請選擇想要的活動票券",
+    "backHome": "返回首頁",
     "viewTable": "票種比較",
     "viewDetailed": "詳細清單",
     "purchase": "立即購票",
@@ -108,7 +109,9 @@
   "menu": {
     "about": "關於我們",
     "events": "活動資訊",
-    "apply": "活動申請"
+    "apply": "活動申請",
+    "timetable": "時程表",
+    "location": "場地資訊"
   },
   "apply": {
     "comingSoon": "規劃中",

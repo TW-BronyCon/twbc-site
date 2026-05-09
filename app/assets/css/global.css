@@ -7,7 +7,7 @@ html, body {
     /* Fix white background leak */
     /* background-color: #000000; */
     color: #ffffff;
-    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-family: "Noto Sans TC", sans-serif;
 }
 
 *, *::before, *::after {

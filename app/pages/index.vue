@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const { t, tm } = useI18n()
 const localePath = useLocalePath()
 
 // ---------- Head Config ----------
 useHead({
-  title: 'TWBC',
-  meta: [
-    { name: 'description', content: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。' },
-    { property: 'og:site_name', content: 'TWBC' },
-    { property: 'viewport', content: 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10' }
-  ],
-  link: [
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&family=Noto+Sans+TC:wght@100..900&display=swap' },
-    { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' }
-  ]
+  title: '首頁'
 })
 
 // ---------- Controllers ----------
@@ -46,17 +37,33 @@ const toggleNav = () => {
 const toggleSubmenu = (name: string) => {
   openSubmenu.value = openSubmenu.value === name ? null : name
 }
+
+const closeMenus = (e: MouseEvent) => {
+  const target = e.target as HTMLElement
+  if (!target.closest('.top-nav') && !target.closest('.nav-toggle')) {
+    isNavOpen.value = false
+    openSubmenu.value = null
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', closeMenus)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeMenus)
+})
 </script>
 
 <template>
   <div class="homepage-root" :class="{ 'layout-hidden': isLayoutHidden }">
     <SharedBackground variant="homepage" />
 
-    <!-- <button class="nav-toggle invisible" :class="{ active: isNavOpen }" @click="toggleNav">
+    <button class="nav-toggle invisible" :class="{ active: isNavOpen }" @click.stop="toggleNav">
       <span></span>
       <span></span>
       <span></span>
-    </button> -->
+    </button>
 
     <nav class="top-nav invisible" :class="{ open: isNavOpen }">
       <ul class="menu">
@@ -69,8 +76,12 @@ const toggleSubmenu = (name: string) => {
           </ul>
         </li>
       </ul>
-      <NuxtLink :to="localePath('/events')">{{ $t('menu.events') }} ({{ $t('apply.comingSoon') }})</NuxtLink>
-      <NuxtLink :to="localePath('/about')">{{ $t('menu.about') }}</NuxtLink>
+      <!-- unfinished pages use disable btn instead -->
+      <!-- <NuxtLink :to="localePath('/timetable')">{{ $t('menu.timetable') }} ({{ $t('apply.comingSoon') }})</NuxtLink>
+      <NuxtLink :to="localePath('/location')">{{ $t('menu.location') }} ({{ $t('apply.comingSoon') }})</NuxtLink> -->
+      <span class="disabled">{{ $t('menu.timetable') }} ({{ $t('apply.comingSoon') }})</span>
+      <span class="disabled">{{ $t('menu.location') }} ({{ $t('apply.comingSoon') }})</span>
+
     </nav>
 
     <main class="container">
