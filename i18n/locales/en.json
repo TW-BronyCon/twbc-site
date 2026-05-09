@@ -1,0 +1,118 @@
+{
+  "home": {
+    "subtitle": "August 15, 2026",
+    "countdown": {
+      "title": "Countdown",
+      "days": "d",
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s",
+      "eventEnded": "Event has ended",
+      "eventStarted": "Event has started"
+    },
+    "nav": {
+      "tickets": "Buy Tickets",
+      "volunteer": "Volunteer",
+      "vendor": "Vendor",
+      "event": "Event",
+      "apply": "Apply",
+      "comingSoon": "Coming Soon"
+    },
+    "footer": {
+      "copyright": "All Rights Reserved",
+      "copyrightNotice": "© 2026 TWBC"
+    },
+    "about": {
+      "title": "About Us",
+      "content": "Taiwan BronyCon (TWBC) is an unofficial gathering for fans who love My Little Pony: Friendship is Magic. We combine international convention experience with local brony culture to create a special event for Taiwanese bronies. Whether it's through exchange, creation, or games, every participant can experience the core spirit of \"Friendship is Magic\" and build deep connections with fellow fans.\n",
+      "pinkiequote": "——Party, Celebration, Friendship Forever."
+    },
+    "location": {
+      "title": "Location",
+      "name": "Asi Space",
+      "address": "10F, No. 111, Sec. 4, Sanhe Rd., Sanchong Dist., New Taipei City"
+    },
+    "faq": {
+      "title": "FAQ",
+      "q1": "What is this event?",
+      "a1": "TWBC is a fan gathering event themed around My Little Pony!",
+      "q2": "How many tickets are available in total?",
+      "a2": "About 100 tickets...",
+      "q3": "Can I bring preschool children?",
+      "a3": "Yes, but the event is mainly targeted at audiences over 16. Children under 13 might find it harder to blend in, and parents must accompany them throughout the event.",
+      "q4": "Will the participant's name be printed on the ID badge?",
+      "a4": "There is a blank space on the ID badge for participants to write their own name or nickname."
+    },
+    "quotes": [
+      "\"No matter what you do, you're never gonna be prepared for everything.\" – Applejack",
+      "\"Bad things happen, but that doesn't mean you should give up!\" – Applejack",
+      "\"Don't forget who you are.\" – Fluttershy",
+      "\"It's not just about pushing yourself, it's about pushing yourself in the right direction.\" – Rainbow Dash",
+      "\"Fear isn't scary, giving up is.\" – Princess Luna",
+      "\"Everyone deserves to be forgiven once.\" – Princess Celestia",
+      "\"You don't need to be perfect, you just need to be yourself.\" – Starlight Glimmer",
+      "\"Even if change is hard, it's worth a try.\" – Sunset Shimmer",
+      "\"Be true to yourself, don't let others define you.\" – Rainbow Dash",
+      "\"Laughter makes things a little bit better!\" – Pinkie Pie",
+      "\"True beauty comes from within.\" – Rarity",
+      "\"Honesty is the most important principle of all.\" – Applejack",
+      "\"Kindness is stronger than any power.\" – Fluttershy",
+      "\"Friendship isn't always easy, but it's worth protecting.\" – Twilight Sparkle",
+      "\"A party is the best way to make friends!\" – Pinkie Pie"
+    ]
+  },
+  "ticket": {
+    "title": "Tickets",
+    "subtitle": "Please choose your ticket",
+    "viewTable": "Compare Tiers",
+    "viewDetailed": "Detailed List",
+    "purchase": "Buy Now",
+    "includes": "Includes: ",
+    "tiers": {
+      "budget": "Budget",
+      "standard": "Standard",
+      "sponsor": "Sponsor",
+      "royale": "Royale"
+    },
+    "descriptions": {
+      "budget": "Great choice for budget-conscious fans!",
+      "standard": "Comes with small souvenirs!",
+      "sponsor": "Thank you for supporting TWBC!",
+      "royale": "Premium choice, thank you for your support!"
+    },
+    "prices": {
+      "budget": "$500",
+      "standard": "$600",
+      "sponsor": "$1000",
+      "royale": "$5000"
+    },
+    "features": {
+      "badge": "ID Badge",
+      "pin": "Button Pin",
+      "postcard": "Postcard",
+      "folder": "L-Folder",
+      "bag": "Tote Bag",
+      "keychain": "Keychain",
+      "standee": "Acrylic Standee",
+      "thanks": "Special Thanks List",
+      "intro_thx": "Opening Thanks",
+      "intro_detail": "Opening Intro",
+      "discord": "Discord Server Role",
+      "mug": "Mug",
+      "coaster": "Coaster",
+      "tshirt": "Commemorative T-Shirt",
+      "speech": "Stage Speech"
+    }
+  },
+  "menu": {
+    "about": "About Us",
+    "events": "Events",
+    "apply": "Apply"
+  },
+  "apply": {
+    "comingSoon": "Planning",
+    "volunteer": "Volunteer",
+    "vendor": "Vendor",
+    "event": "Event"
+  }
+}

@@ -1,0 +1,407 @@
+html, body {
+    height: auto;
+}
+html {
+    background-color: black;
+}
+
+/* Background */
+.bg {
+    position: fixed;
+    top: -5vh;
+    left: 0;
+    width: 100vw;
+    height: 110vh;
+    z-index: -1;
+    background-image: url('/img/village.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.container {
+    background-color: #000000a0;
+    margin: 0 10%;
+    border-radius: 1.5em;
+    height: 100%;
+    transition: all .2s ease-out;
+    padding: 1.5em;
+}
+.border {
+    border: 0.3em solid #ffff00c4;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0.5em;
+    border-radius: calc(1.5em - 0.5em);
+    min-height: 91vh;
+}
+.border .border {
+    border-radius: calc(1.5em - 1em);
+}
+.block {
+    border-radius: 1.5em;
+    padding: 1em 1.5em;
+    margin: 20px 1em;
+    border: 0.15em solid #000000a0;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    transition: all .2s ease-out;
+}
+.block:hover {
+    transform: translateY(-0.1em) scale(1.01);
+    background-color: #ffffff12;
+    box-shadow: 0 0.5em 1em #00000059;
+}
+.ticket-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    align-items: flex-start;
+    font-weight: 600;
+    transition: all .2s ease-out;
+}
+.ticket-title {
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-size: 1.75em;
+    line-height: 1.2;
+    text-align: left;
+}
+.ticket-img {
+    width: auto;
+    height: 5em;
+    object-fit: contain;
+    flex-shrink: 0;
+    color: #ddd;
+    animation-play-state: paused; 
+}
+.ticket-img:hover {
+    animation: wiggle 1.5s infinite ease-in-out;
+}
+@keyframes wiggle {
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(5deg); }
+    75%  { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+.description {
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-size: 1.25em;
+    margin-top: 0.35em;
+    line-height: 1.4;
+    text-align: left;
+    margin-top: 0.3em;
+}
+.ticket-price {
+    font-size: 1.75em;
+    white-space: nowrap;
+    font-weight: 1000;
+}
+h1 {
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-size: 3.5em;
+    text-align: center;
+    color: #fff;
+    margin-top: 0.25em;
+    transition: all .2s ease-out;
+}
+h2 {
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-size: 1.5em;
+    text-align: center;
+    color: #fff;
+    margin-top: -1em;
+    transition: all .2s ease-out;
+}
+
+/* button */
+.btn {
+    display: flex;
+    margin: 0 25%;
+    gap: 15%;
+    transition: all .2s ease-out;
+}
+
+.sectionbtn {
+    display: block;
+    margin: 0 auto;
+    padding: 0.5em 1.5em;
+    font-size: 1em;
+    background-color: #00000060;
+    color: #fff;
+    border: none;
+    border-radius: 0.75em;
+    cursor: pointer;
+    transition: all .2s ease-out;
+    font-family: inherit;
+}
+.sectionbtn:hover {
+    background-color: #ffffff12;
+    box-shadow: 0 0.5em 1em #00000059;
+}
+.sectionbtn:active {
+    transform: translateY(0.25em);
+    box-shadow: 0 0.2em 0.4em #00000059;
+    transition: all .1s ease-out;
+}
+.section {
+    transition: all 0.3s ease-out;
+}
+
+.hidden {
+    display: none;
+    pointer-events: none;
+}
+
+.show {
+    display: block;
+    position: relative;
+}
+
+/* table */
+.compare-wrap {
+    max-width: 900px;
+    margin: 1em auto 0.5em auto;
+    padding: 1.5em;
+    background: rgba(20, 20, 20, 0.92);
+    border-radius: 1.25em;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    overflow-x: auto;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    table-layout: fixed;
+}
+
+.compare-table thead th {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 2px solid rgba(255,255,255,0.55);
+}
+
+.feature-head {
+    width: 30%;
+    transition: all 0.2s ease-out;
+}
+
+.tier-head {
+    height: 4em;
+    padding-bottom: 10px;
+    position: relative;
+    vertical-align: bottom;
+    text-align: center;
+}
+
+.tier-label {
+    position: absolute;
+    left: 50%;
+    bottom: 2em;
+    transform: translateX(-50%) rotate(-55deg);
+    transform-origin: center bottom;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-shadow: 0 0 8px currentColor;
+}
+
+/* 每個票種顏色 */
+.tier-label.budget      { color: #61b7ff; }
+.tier-label.standard    { color: #f6e27a; }
+.tier-label.sponsor     { color: #ff7bd1; }
+.tier-label.royale      { color: #c68cff; }
+
+.compare-table td.col-1.yes { color: #61b7ff; }
+.compare-table td.col-2.yes { color: #f6e27a; }
+.compare-table td.col-3.yes { color: #ff7bd1; }
+.compare-table td.col-4.yes { color: #c68cff; }
+
+.compare-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.28);
+    transition: opacity .2s ease, transform .2s ease, background-color .2s ease;
+}
+
+.feature-name {
+    text-align: left;
+    padding: 0.6em 0.8em;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.compare-table td {
+    text-align: center;
+    padding: 0.55em 0.25em;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    transition: opacity .2s ease, background-color .2s ease, color .2s ease;
+}
+
+.compare-table td,
+.compare-table th {
+    position: relative;
+}
+
+.compare-table td:not(:first-child),
+.compare-table thead th:not(:first-child) {
+    width: 2.5em;
+}
+.compare-table td {
+    color: #4a4a4a;
+}
+
+.compare-table td.yes {
+    color: #fff;
+    text-shadow: 0 0 10px currentColor;
+}
+
+.compare-table td.no {
+    color: rgba(255, 255, 255, 0.5);
+}
+.compare-table.is-hovering tbody tr,
+.compare-table.is-hovering tbody td,
+.compare-table.is-hovering tbody th,
+.compare-table.is-hovering thead th {
+    opacity: 0.2;
+}
+
+.compare-table.is-hovering .active-row,
+.compare-table.is-hovering .active-row td,
+.compare-table.is-hovering .active-row th,
+.compare-table.is-hovering .active-col {
+    opacity: 1;
+}
+
+.compare-table.is-hovering .active-row {
+    background: rgba(255,255,255,0.04);
+}
+
+.compare-table.is-hovering td.active-col,
+.compare-table.is-hovering th.active-col {
+    background: rgba(255,255,255,0.05);
+}
+.compare-table.is-hovering .active-row .feature-name {
+    color: #fff;
+}
+
+.compare-table.is-hovering .active-col .tier-label {
+    opacity: 1;
+    text-shadow:
+        0 0 6px currentColor,
+        0 0 14px currentColor;
+}
+.compare-table td.yes {
+    color: #fff;
+    text-shadow: 0 0 10px currentColor;
+    font-size: 1.25rem;
+}
+
+.compare-table td.no {
+    color: rgba(255,255,255,0.14);
+    font-size: 1.1rem;
+}
+
+/* 手機 */
+@media screen and (max-width: 800px) {
+    .container {
+        margin: 0 0.5%;
+        padding: 0.5em;
+    }
+    .border {
+        border: 0.2em solid #ffff00c4;
+        min-height: auto;
+    }
+    .block {
+        padding: 1em 1em 0.5em 1em;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 0.1em solid #000000a0;
+    }
+    .ticket-text {
+        align-items: center;
+        flex: 1;  
+    }
+    .ticket-title {
+        font-size: 1.5em;
+    }
+    .ticket-price {
+        margin-top: auto;
+        font-size: 1.5em;
+    }
+    .description {
+        font-size: 1em;
+    }
+    h1 {
+        font-size: 3em;
+    }
+    h2 {
+        font-size: 1.25em;
+    }
+    .border .border {
+        padding: 0em;
+        border: 0em solid #ffff00c4;
+    }
+
+    /* table */
+    .ticket-table thead {
+        display: none;
+    }
+    .ticket-table tr {
+        display: block;
+        padding: 1em;
+        text-align: center;
+    }
+    .ticket-table td {
+        display: block;
+        padding: 0.5em 0;
+    }
+    .col-price {
+        margin-top: 0.5em;
+    }
+    .feature-name {
+        font-size: 0.75em;
+    }
+    .compare-wrap {
+        padding: 0.5em;
+    }
+    .compare-table td {         
+        padding: 0.4em 0.2em;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .sectionbtn {
+        padding: 0.6em 1.2em;
+    }
+    .btn {
+        margin: 0 5%;
+        gap: 5%;
+    }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 2000px) { 
+    .container {
+        margin: 0 20%;
+    }
+}
+
+@media screen and (min-width: 2001px) { 
+    .feature-head {
+    width: 45%;
+    }
+    .border {
+        border: 0.5em solid #ffff00c4;
+    }
+    .container {
+        margin: 0 30%;
+    }
+}
