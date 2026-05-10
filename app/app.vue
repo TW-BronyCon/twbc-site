@@ -1,19 +1,21 @@
 <script setup lang="ts">
+const siteUrl = 'https://twbronycon.org'
+
 useSeoMeta({
   title: '首頁',
   description: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
   ogSiteName: 'TWBC台灣馬聚',
   ogType: 'website',
-  ogUrl: 'https://twbronycon.org/',
+  ogUrl: siteUrl,
   ogDescription: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
-  ogImage: '/img/Mascot_101.avif',
+  ogImage: `${siteUrl}/img/Mascot_101.avif`,
   ogImageWidth: 1200,
   ogImageHeight: 1200,
   ogTitle: 'TWBC台灣馬聚',
   twitterTitle: 'TWBC台灣馬聚',
   twitterDescription: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
   twitterCard: 'summary_large_image',
-  twitterImage: '/img/Mascot_101.avif'
+  twitterImage: `${siteUrl}/img/Mascot_101.avif`
 })
 
 useHead({
