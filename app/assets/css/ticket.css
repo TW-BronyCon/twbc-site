@@ -16,8 +16,7 @@ html {
     inset: 0;
     z-index: -2;
     background-image:
-        linear-gradient(rgba(26, 14, 34, 0.1), rgba(18, 10, 24, 0.2)),
-        url('/img/village.avif');
+        linear-gradient(#2c1b3a8e,#5f3680bd);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
