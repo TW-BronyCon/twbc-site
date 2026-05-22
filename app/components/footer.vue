@@ -2,7 +2,24 @@
 import { computed } from 'vue'
 
 const { t, tm, locale, locales } = useI18n()
+const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
+
+const partners = [
+  {
+    name: 'TWBC',
+    logo: '/img/twbc_text_logo_no_yearling.avif',
+    url: '/',
+    internal: true,
+    altKey: 'home.footer.logoAlt'
+  },
+  // {
+  //   name: 'Future Con',
+  //   logo: '/img/twbc_text_logo_no_yearling.avif',
+  //   url: 'https://example.com',
+  //   internal: false
+  // }
+]
 
 // Quote Logic
 const quotes = computed(() => {
@@ -52,7 +69,17 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <img src="/img/text-logo.avif" alt="TWBC Logo" class="footer-logo">
+          <div class="footer-logos">
+            <template v-for="partner in partners" :key="partner.name">
+              <NuxtLink v-if="partner.internal" :to="localePath(partner.url)">
+                <img :src="partner.logo" :alt="partner.altKey ? $t(partner.altKey) : partner.name" class="footer-logo">
+              </NuxtLink>
+              <a v-else :href="partner.url" target="_blank">
+                <img :src="partner.logo" :alt="partner.name" class="footer-logo">
+              </a>
+            </template>
+          </div>
+
           <div class="footer-lang-switcher">
             <NuxtLink 
               v-for="item in (locales as any)" 
@@ -124,6 +151,13 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .footer-logo {

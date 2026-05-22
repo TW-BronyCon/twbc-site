@@ -25,7 +25,8 @@
     },
     "footer": {
       "copyright": "All Rights Reserved",
-      "copyrightNotice": "© 2026 TWBC"
+      "copyrightNotice": "© 2026 TWBC",
+      "logoAlt": "TWBC Logo"
     },
     "about": {
       "title": "About Us",

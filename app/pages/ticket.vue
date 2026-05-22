@@ -100,18 +100,6 @@ const onMouseLeave = () => {
   <div class="ticket-root">
     <SharedBackground variant="homepage" />
 
-    <div class="top-bar">
-      <div class="lang-switcher">
-        <NuxtLink 
-          v-for="item in (locales as any)" 
-          :key="item.code" 
-          :to="switchLocalePath(item.code)"
-          :class="{ active: locale === item.code }"
-        >
-          {{ item.name }}
-        </NuxtLink>
-      </div>
-    </div>
 
     <div class="container">
       <div class="border">
