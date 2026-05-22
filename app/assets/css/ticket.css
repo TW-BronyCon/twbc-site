@@ -22,6 +22,44 @@ body::before {
         radial-gradient(circle at 50% 50%, rgba(112, 62, 151, 0.16), transparent 55%);
 }
 
+.top-bar {
+    width: min(1200px, calc(100vw - 48px));
+    margin: 1rem auto 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.lang-switcher {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(110, 53, 99, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 226, 170, 0.15);
+}
+
+.lang-switcher a {
+    color: #ffe9b5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    font-family: 'LXGW WenKai Mono TC', monospace;
+}
+
+.lang-switcher a:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px rgba(255, 233, 181, 0.4);
+}
+
+.lang-switcher a.active {
+    opacity: 1;
+    font-weight: bold;
+    pointer-events: none;
+}
+
 /* ===== 外框 ===== */
 .container {
     width: min(1200px, calc(100vw - 48px));

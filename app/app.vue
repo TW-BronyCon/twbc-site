@@ -9,14 +9,14 @@ useSeoMeta({
   ogType: 'website',
   ogUrl: siteUrl,
   ogDescription: () => t('seo.description'),
-  // ogImage: `${siteUrl}/img/Mascot_101.avif`,
+  ogImage: `${siteUrl}/img/text-logo.avif`,
   ogImageWidth: 1200,
   ogImageHeight: 1200,
   ogTitle: () => t('seo.ogSiteName'),
   twitterTitle: () => t('seo.ogSiteName'),
   twitterDescription: () => t('seo.description'),
   twitterCard: 'summary_large_image',
-  // twitterImage: `${siteUrl}/img/Mascot_101.avif`
+  twitterImage: `${siteUrl}/img/text-logo.avif`
 })
 
 useHead({

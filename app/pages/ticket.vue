@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const { t } = useI18n()
+const { t, locale, locales } = useI18n()
 const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
 const router = useRouter()
 
 useHead({
@@ -99,6 +100,19 @@ const onMouseLeave = () => {
   <div class="ticket-root">
     <SharedBackground variant="homepage" />
 
+    <div class="top-bar">
+      <div class="lang-switcher">
+        <NuxtLink 
+          v-for="item in (locales as any)" 
+          :key="item.code" 
+          :to="switchLocalePath(item.code)"
+          :class="{ active: locale === item.code }"
+        >
+          {{ item.name }}
+        </NuxtLink>
+      </div>
+    </div>
+
     <div class="container">
       <div class="border">
         <div class="border">
@@ -192,6 +206,7 @@ const onMouseLeave = () => {
         </div>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 

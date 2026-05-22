@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const { t, tm } = useI18n()
+const { t, tm, locale, locales } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
 
 // Quote Logic
 const quotes = computed(() => {
@@ -52,6 +53,17 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
       <div class="footer-top">
         <div class="footer-brand">
           <img src="/img/text-logo.avif" alt="TWBC Logo" class="footer-logo">
+          <div class="footer-lang-switcher">
+            <NuxtLink 
+              v-for="item in (locales as any)" 
+              :key="item.code" 
+              :to="switchLocalePath(item.code)"
+              :class="{ active: locale === item.code }"
+              class="lang-link"
+            >
+              {{ item.name }}
+            </NuxtLink>
+          </div>
         </div>
         
         <div class="footer-social">
@@ -118,6 +130,31 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   height: 3rem;
   width: auto;
   object-fit: contain;
+}
+
+.footer-lang-switcher {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.lang-link {
+  font-size: 0.85rem;
+  color: #ffbdde;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.lang-link:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(255, 189, 222, 0.5);
+}
+
+.lang-link.active {
+  opacity: 1;
+  font-weight: bold;
+  pointer-events: none;
 }
 
 .footer-tagline {

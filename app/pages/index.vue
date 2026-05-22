@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-const { t, tm } = useI18n()
+const { t, tm, locale, locales } = useI18n()
 const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
 
 // ---------- Head Config ----------
 useHead({
@@ -82,6 +83,16 @@ onUnmounted(() => {
       <span class="disabled">{{ $t('menu.timetable') }} ({{ $t('apply.comingSoon') }})</span>
       <span class="disabled">{{ $t('menu.location') }} ({{ $t('apply.comingSoon') }})</span>
 
+      <div class="lang-switcher">
+        <NuxtLink 
+          v-for="item in (locales as any)" 
+          :key="item.code" 
+          :to="switchLocalePath(item.code)"
+          :class="{ active: locale === item.code }"
+        >
+          {{ item.name }}
+        </NuxtLink>
+      </div>
     </nav>
 
     <main class="container">
