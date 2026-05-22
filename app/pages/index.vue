@@ -134,7 +134,7 @@ onUnmounted(() => {
       </section>
     </main>
 
-    <TheFooter />
+    <Footer />
   </div>
 </template>
 
