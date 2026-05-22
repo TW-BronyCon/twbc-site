@@ -48,7 +48,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 </script>
 
 <template>
-  <footer class="footer-root translucent">
+  <footer class="footer-root">
     <div class="footer-container">
       <div class="footer-top">
         <div class="footer-brand">
@@ -268,9 +268,5 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   .footer-copyright {
     text-align: center;
   }
-}
-
-.translucent {
-  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 </style>

@@ -21,12 +21,6 @@ const translatedCountdownMsg = computed(() => {
   return t(`home.countdown.${countdownMsg.value}`)
 })
 
-const isLayoutHidden = ref(false)
-const toggleLayout = () => {
-  isLayoutHidden.value = !isLayoutHidden.value
-}
-
-// Mobile Nav
 const isNavOpen = ref(false)
 const openSubmenu = ref<string | null>(null)
 
@@ -57,16 +51,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="homepage-root" :class="{ 'layout-hidden': isLayoutHidden }">
+  <div class="homepage-root">
     <SharedBackground variant="homepage" />
 
-    <button class="nav-toggle invisible" :class="{ active: isNavOpen }" @click.stop="toggleNav">
+    <button class="nav-toggle" :class="{ active: isNavOpen }" @click.stop="toggleNav">
       <span></span>
       <span></span>
       <span></span>
     </button>
 
-    <nav class="top-nav invisible" :class="{ open: isNavOpen }">
+    <nav class="top-nav" :class="{ open: isNavOpen }">
       <ul class="menu">
         <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
           <span @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</span>
@@ -97,12 +91,12 @@ onUnmounted(() => {
 
     <main class="container">
       <section class="hero">
-        <img class="logo translucent" src="/img/text-logo.avif" alt="TWBC" @click="toggleLayout">
+        <img class="logo" src="/img/text-logo.avif" alt="TWBC">
 
-        <div class="date translucent">{{ $t('home.subtitle') }}</div>
+        <div class="date">{{ $t('home.subtitle') }}</div>
 
-        <div class="count-title translucent">{{ $t('home.countdown.title') }}</div>
-        <div class="countdown translucent">
+        <div class="count-title">{{ $t('home.countdown.title') }}</div>
+        <div class="countdown">
           <span v-if="translatedCountdownMsg" class="countdown-message">{{ translatedCountdownMsg }}</span>
           <template v-else>
             <span>{{ days }}</span> {{ $t('home.countdown.days') }}
@@ -112,18 +106,18 @@ onUnmounted(() => {
           </template>
         </div>
 
-        <NuxtLink class="buy-btn translucent" :to="localePath('/ticket')">{{ $t('home.nav.tickets') }}</NuxtLink>
+        <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{ $t('home.nav.tickets') }}</NuxtLink>
       </section>
 
       <div class="spacer"></div>
 
-      <section class="info-card invisible">
+      <section class="info-card">
         <h2>{{ $t('home.about.title') }}</h2>
         <h4>{{ $t('home.about.content') }}</h4>
         <h4 class="pinkie-quote align-right">{{ $t('home.about.pinkiequote') }}</h4>
       </section>
 
-      <section class="info-card invisible">
+      <section class="info-card">
         <h2>{{ $t('home.location.title') }}</h2>
         <h4 style="text-align: center;">
           {{ $t('home.location.name') }}<br>
@@ -136,7 +130,7 @@ onUnmounted(() => {
         </iframe>
       </section>
 
-      <section class="info-card large invisible">
+      <section class="info-card large">
         <h2>{{ $t('home.faq.title') }}</h2>
         <div v-for="i in 4" :key="i">
           <h4>Q：{{ $t(`home.faq.q${i}`) }}</h4>
