@@ -1,28 +1,29 @@
 <script setup lang="ts">
 const siteUrl = 'https://twbronycon.org'
+const { t, locale } = useI18n()
 
 useSeoMeta({
-  title: '首頁',
-  description: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
-  ogSiteName: 'TWBC台灣馬聚',
+  title: () => t('seo.title'),
+  description: () => t('seo.description'),
+  ogSiteName: () => t('seo.ogSiteName'),
   ogType: 'website',
   ogUrl: siteUrl,
-  ogDescription: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
-  ogImage: `${siteUrl}/img/Mascot_101.avif`,
+  ogDescription: () => t('seo.description'),
+  // ogImage: `${siteUrl}/img/Mascot_101.avif`,
   ogImageWidth: 1200,
   ogImageHeight: 1200,
-  ogTitle: 'TWBC台灣馬聚',
-  twitterTitle: 'TWBC台灣馬聚',
-  twitterDescription: 'Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。',
+  ogTitle: () => t('seo.ogSiteName'),
+  twitterTitle: () => t('seo.ogSiteName'),
+  twitterDescription: () => t('seo.description'),
   twitterCard: 'summary_large_image',
-  twitterImage: `${siteUrl}/img/Mascot_101.avif`
+  // twitterImage: `${siteUrl}/img/Mascot_101.avif`
 })
 
 useHead({
   htmlAttrs: {
-    lang: 'zh-Hant'
+    lang: computed(() => locale.value === 'en' ? 'en' : 'zh-Hant')
   },
-  titleTemplate: 'TWBC台灣馬聚-%s',
+  titleTemplate: (title) => title ? `${t('seo.ogSiteName')} - ${title}` : t('seo.ogSiteName'),
   meta: [
     { name: 'format-detection', content: 'telephone=no' },
     { 'http-equiv': 'Cache-Control', content: 'no-cache, no-store, must-revalidate' },

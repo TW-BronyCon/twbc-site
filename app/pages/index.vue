@@ -6,7 +6,7 @@ const localePath = useLocalePath()
 
 // ---------- Head Config ----------
 useHead({
-  title: '首頁'
+  title: t('seo.title')
 })
 
 // ---------- Controllers ----------
@@ -90,7 +90,7 @@ onUnmounted(() => {
 
         <div class="date translucent">{{ $t('home.subtitle') }}</div>
 
-        <div class="count-title translucent">↪ {{ $t('home.countdown.title') }} ↩</div>
+        <div class="count-title translucent">{{ $t('home.countdown.title') }}</div>
         <div class="countdown translucent">
           <span v-if="translatedCountdownMsg" class="countdown-message">{{ translatedCountdownMsg }}</span>
           <template v-else>

@@ -1,4 +1,9 @@
 {
+  "seo": {
+    "title": "Home",
+    "description": "Taiwan BronyCon is a fan event combining creation, market, and exchange, featuring vendors, venue maps, schedules, and complete event information. We invite everyone who loves ponies and creative culture to participate.",
+    "ogSiteName": "TWBC Taiwan BronyCon"
+  },
   "home": {
     "subtitle": "August 15, 2026",
     "countdown": {
@@ -59,7 +64,8 @@
       "\"Kindness is stronger than any power.\" – Fluttershy",
       "\"Friendship isn't always easy, but it's worth protecting.\" – Twilight Sparkle",
       "\"A party is the best way to make friends!\" – Pinkie Pie"
-    ]
+    ],
+    "quotesLoading": "Loading..."
   },
   "ticket": {
     "title": "Tickets",
@@ -113,7 +119,7 @@
     "location": "Location"
   },
   "apply": {
-    "comingSoon": "Planning",
+    "comingSoon": "TBD",
     "volunteer": "Volunteer",
     "vendor": "Vendor",
     "event": "Event"

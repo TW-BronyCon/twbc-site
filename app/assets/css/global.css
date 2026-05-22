@@ -5,7 +5,7 @@ html, body {
     height: 100%;
     box-sizing: border-box;
     /* Fix white background leak */
-    background-color: #412557;
+    /* background-color: #120b18; */
     color: #ffffff;
     font-family: "Noto Sans TC", sans-serif;
 }

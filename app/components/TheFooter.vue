@@ -43,7 +43,7 @@ const quotes = computed(() => {
     return String(q || '')
   }).filter(q => !!q && q.trim() !== '')
 })
-const { currentQuote, isQuoteFadingOut } = useQuotes(quotes)
+const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quotesLoading'))
 </script>
 
 <template>

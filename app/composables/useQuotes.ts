@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted, watch, toValue, type MaybeRefOrGetter } from 'vue'
 
-export const useQuotes = (quotesList: MaybeRefOrGetter<string[]>, intervalMs: number = 10000) => {
-  const currentQuote = ref('Loading...')
+export const useQuotes = (quotesList: MaybeRefOrGetter<string[]>, intervalMs: number = 10000, initialValue: string = '') => {
+  const currentQuote = ref(initialValue)
   const isQuoteFadingOut = ref(false)
   let quoteInterval: ReturnType<typeof setInterval> | null = null
   let remainingQuotes: string[] = []
@@ -22,7 +22,7 @@ export const useQuotes = (quotesList: MaybeRefOrGetter<string[]>, intervalMs: nu
     const nextQuote = getRandomQuote()
     if (!nextQuote) return
 
-    if (immediate || currentQuote.value === 'Loading...') {
+    if (immediate || currentQuote.value === initialValue) {
       currentQuote.value = nextQuote
       return
     }
@@ -38,14 +38,14 @@ export const useQuotes = (quotesList: MaybeRefOrGetter<string[]>, intervalMs: nu
   watch(() => toValue(quotesList), (newList) => {
     if (newList && newList.length > 0) {
       remainingQuotes = [...newList]
-      if (currentQuote.value === 'Loading...') {
+      if (currentQuote.value === initialValue) {
         updateQuote(true)
       }
     }
   }, { immediate: true, deep: true })
 
   onMounted(() => {
-    if (currentQuote.value === 'Loading...') {
+    if (currentQuote.value === initialValue) {
       updateQuote(true)
     }
     quoteInterval = setInterval(() => updateQuote(false), intervalMs)

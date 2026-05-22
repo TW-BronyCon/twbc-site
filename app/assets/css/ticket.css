@@ -10,20 +10,6 @@ html {
     color: #f8ecd5;
 }
 
-/* Background */
-.bg {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background-image:
-        linear-gradient(#2c1b3a8e,#5f3680bd);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    will-change: transform;
-}
-
 body::before {
     content: "";
     position: fixed;

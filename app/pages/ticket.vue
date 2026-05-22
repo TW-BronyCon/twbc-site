@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const { t } = useI18n()
+const localePath = useLocalePath()
 const router = useRouter()
 
 useHead({
-  title: '購票'
+  title: t('ticket.title')
 })
 
 const currentMode = ref<'detailed' | 'table'>('detailed')
@@ -17,7 +18,7 @@ const toggleMode = () => {
 }
 
 const goHome = () => {
-  router.push('/')
+  router.push(localePath('/'))
 }
 
 const tiers = [
@@ -96,7 +97,7 @@ const onMouseLeave = () => {
 
 <template>
   <div class="ticket-root">
-    <div class="bg"></div>
+    <SharedBackground variant="homepage" />
 
     <div class="container">
       <div class="border">

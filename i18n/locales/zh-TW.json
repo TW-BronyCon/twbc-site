@@ -1,4 +1,9 @@
 {
+  "seo": {
+    "title": "首頁",
+    "description": "Taiwan BronyCon 台灣馬聚是一場結合創作、市集與交流的粉絲活動，帶來商販、場地地圖、時間安排與完整活動資訊，邀請所有喜愛小馬與創作文化的你一同參與。",
+    "ogSiteName": "TWBC台灣馬聚"
+  },
   "home": {
     "subtitle": "2026 年 8 月 15 號",
     "countdown": {
@@ -59,7 +64,8 @@
       "「善良比任何力量都強大。」- Fluttershy",
       "「友情不總是簡單，但值得去守護。」- Twilight Sparkle",
       "「派對是交朋友最棒的方法！」- Pinkie Pie"
-    ]
+    ],
+    "quotesLoading": "讀取中..."
   },
   "ticket": {
     "title": "票種",
