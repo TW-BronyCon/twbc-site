@@ -109,7 +109,7 @@ onUnmounted(() => {
         <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{ $t('home.nav.tickets') }}</NuxtLink>
       </section>
 
-      <div class="spacer"></div>
+      <!-- <div class="spacer"></div> -->
 
       <section class="info-card">
         <h2>{{ $t('home.about.title') }}</h2>

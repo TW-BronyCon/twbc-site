@@ -49,9 +49,10 @@
 /* Logo */
 .logo {
     display: block;
-    width: clamp(15em, 30vw, 25em);
+    /* width: clamp(15em, 30vw, 25em); */
+    width: clamp(20em, 30vw, 40em);
     height: auto;
-    margin: 5rem auto 7.5rem;
+    margin: 5rem auto 5.5rem;
     transition: all 0.2s ease-out;
 }
 
@@ -171,6 +172,7 @@
 .hero {
     text-align: center;
     padding: 2.2em 0 2.5em;
+    margin-bottom: 10em;
     color: #ffbdde;
     text-shadow: 0 2px 8px rgba(0,0,0,.5);
 }
@@ -351,7 +353,11 @@
     }
 
     .logo {
-        margin: 0em auto 1em;
+        margin: 3em auto 1em;
+    }
+
+    .hero{
+        margin-bottom: 2.5em;
     }
 
     .countdown {
