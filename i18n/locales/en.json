@@ -16,21 +16,20 @@
       "eventStarted": "Event has started"
     },
     "nav": {
-      "tickets": "Buy Tickets",
+      "tickets": "Register",
       "volunteer": "Volunteer",
       "vendor": "Vendor",
       "event": "Event",
-      "apply": "Apply",
+      "apply": "Applications",
       "comingSoon": "Coming Soon"
     },
     "footer": {
       "copyright": "All Rights Reserved",
-      "copyrightNotice": "© 2026 TWBC",
-      "logoAlt": "TWBC Logo"
+      "copyrightNotice": "© 2026 TWBC"
     },
     "about": {
       "title": "About Us",
-      "content": "Taiwan BronyCon (TWBC) is an unofficial gathering for fans who love My Little Pony: Friendship is Magic. We combine international convention experience with local brony culture to create a special event for Taiwanese bronies. Whether it's through exchange, creation, or games, every participant can experience the core spirit of \"Friendship is Magic\" and build deep connections with fellow fans.\n",
+      "content": "Taiwan BronyCon (TWBC) is an unofficial gathering for fans who love My Little Pony: Friendship is Magic. We combine international convention experience with local brony culture to create a special event for Taiwanese bronies. Whether it's through socialize, creation, or games, every participant can experience the spirit of \"Friendship is Magic\" and build deep connections with fellow Bronies.\n",
       "pinkiequote": "——Party, Celebration, Friendship Forever."
     },
     "location": {
@@ -41,13 +40,13 @@
     "faq": {
       "title": "FAQ",
       "q1": "What is this event?",
-      "a1": "TWBC is a fan gathering event themed around My Little Pony!",
+      "a1": "TWBC is a convention for My Little Pony fans!",
       "q2": "How many tickets are available in total?",
       "a2": "About 100 tickets...",
-      "q3": "Can I bring preschool children?",
-      "a3": "Yes, but the event is mainly targeted at audiences over 16. Children under 13 might find it harder to blend in, and parents must accompany them throughout the event.",
-      "q4": "Will the participant's name be printed on the ID badge?",
-      "a4": "There is a blank space on the ID badge for participants to write their own name or nickname."
+      "q3": "Can children attend the event?",
+      "a3": "Yes. However, the event is primarily intended for attendees aged 16 and above. Children under 16 may find it harder to fit in. Children under 13 must be accompanied by a parent or guardian throughout the event.",
+      "q4": "Will the participant's name be printed on the badge?",
+      "a4": "There is a blank space on the badge for you to write your own name or nickname."
     },
     "quotes": [
       "\"No matter what you do, you're never gonna be prepared for everything.\" – Applejack",
