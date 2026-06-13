@@ -8,14 +8,14 @@ const switchLocalePath = useSwitchLocalePath()
 const partners = [
   {
     name: 'TWBC',
-    logo: '/img/twbc_text_logo_no_yearling.avif',
+    logo: '/img/text-logo-clear.avif',
     url: '/',
     internal: true,
     altKey: 'home.footer.logoAlt'
   },
   // {
   //   name: 'Future Con',
-  //   logo: '/img/twbc_text_logo_no_yearling.avif',
+  //   logo: '/img/text-logo-clear.avif',
   //   url: 'https://example.com',
   //   internal: false
   // }
