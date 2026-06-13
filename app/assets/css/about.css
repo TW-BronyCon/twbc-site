@@ -1,0 +1,655 @@
+*,
+*::before,
+*::after {
+    transition: all .2s ease-out;
+}
+
+html, body {
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    transition: all .2s ease-out;
+}
+
+html {
+    background-color: black;
+}
+
+/* 主內容 */
+.page-wrap {
+    width: min(92%, 1200px);
+    margin: 1rem auto 0;
+    /* min-height: 100vh; */
+    padding: clamp(1rem, 0.8rem + 1vw, 1.4rem) 0 clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    position: relative;
+    z-index: 1;
+}
+
+/* 標題 */
+.wood-board > h1 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(2rem, 1.2rem + 3.2vw, 4rem);
+    color: #fff;
+    gap: clamp(0.25em, 3vw, 1em);
+    text-align: center;
+}
+
+.wood-board > h1::before,
+.wood-board > h1::after {
+    content: "";
+    flex: 1;
+    height: 2.5px;
+    min-width: 0;
+}
+
+.wood-board > h1::before {
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.9) 20%,
+        rgba(255,255,255,1) 70%,
+        rgba(255,255,255,0) 100%
+    );
+}
+
+.wood-board > h1::after {
+    background: linear-gradient(
+        to left,
+        rgba(255,255,255,0) 00%,
+        rgba(255,255,255,0.9) 20%,
+        rgba(255,255,255,1) 70%,
+        rgba(255,255,255,0) 100%
+    );
+}
+
+/* logo */
+.logo-container {
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.logo {
+    padding: 0.5em 1.5em 1em 0;
+    width: clamp(9rem, 8vw + 4rem, 15rem);
+    min-width: 0;
+    height: auto;
+    object-fit: contain;
+    transition: all .2s ease-out;
+}
+
+/* 淡入淡出 */
+.board-view,
+.paper-view {
+    transition: opacity .4s ease, transform .4s ease;
+}
+
+.board-view.active,
+.paper-view.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.board-view.hidden,
+.paper-view.hidden {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+}
+
+.board-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.paper-view {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    display: none;
+}
+
+/* 木板 */
+.wood-board {
+    width: min(100%, 72em);
+    max-width: 70em;
+
+    margin: clamp(1.2em, 1em + 1.5vw, 2em) auto 0 auto;
+
+    padding:
+        clamp(2em, 1.3em + 2vw, 3em)
+        clamp(1.4em, 0.8em + 3vw, 3em)
+        clamp(1.5em, 1em + 2vw, 2.5em);
+
+    border-radius: clamp(1.1em, 0.8em + 1vw, 1.5em);
+
+    position: relative;
+
+    background:
+
+        /* 木頭色調 */
+        linear-gradient(
+            180deg,
+            rgba(231, 127, 41, 0.65) 0%,
+            rgba(192, 99, 28, 0.75) 45%,
+            rgba(161, 76, 19, 0.85) 100%
+        ),
+
+        /* 木紋圖 */
+        url("/img/wood.jpg");
+
+    background-size:
+        cover,
+        cover;
+
+    background-position:
+        center,
+        center;
+
+    background-repeat:
+        no-repeat,
+        no-repeat;
+
+    /* 重點 */
+    background-blend-mode:
+        multiply;
+
+    box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,0.05),
+        inset 0 0 3em rgba(0,0,0,.22),
+        0 10px 25px rgba(0,0,0,0.3);
+
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.wood-board::before,
+.wood-board::after {
+    content: "";
+    position: absolute;
+    top: 1.1em;
+    width: 1.1em;
+    height: 1.1em;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #dcdcdc, #787878);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+}
+
+.wood-board::before {
+    left: 1.25em;
+}
+
+.wood-board::after {
+    right: 1.25em;
+}
+
+.wood-board > h2 {
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.8rem);
+    color: #fff3d5;
+    text-align: center;
+    margin: 0 0 0.35em 0;
+}
+
+.wood-board > p {
+    font-size: clamp(1rem, 0.9rem + 0.45vw, 1.2rem);
+    color: #f7ead0;
+    text-align: center;
+    margin: 0 0 clamp(1.4em, 1em + 1.5vw, 2em) 0;
+    line-height: clamp(1.7em, 1.5em + 0.3vw, 2em);
+}
+
+/* 小祈福紙 */
+.wish-paper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(20em, 100%), 1fr));
+    gap: clamp(1.4em, 1em + 1.5vw, 2em);
+    align-items: stretch;
+}
+
+.wish-paper {
+    position: relative;
+    width: 100%;
+    min-height: clamp(10em, 8em + 5vw, 12em);
+    border: none;
+    border-radius: 0.9em;
+    cursor: pointer;
+    text-align: left;
+    padding:
+        clamp(1.3em, 1em + 1vw, 1.5em)
+        clamp(1.2em, 1em + 1vw, 1.5em)
+        clamp(0.9em, 0.8em + 0.6vw, 1em);
+    background: linear-gradient(180deg, #fffdf4 0%, #f4e8cb 100%);
+    color: #5d4326;
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.18),
+        inset 0 0 0 1px rgba(120, 95, 50, .15);
+    transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    box-sizing: border-box;
+}
+
+.wish-paper:hover {
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow:
+        0 14px 24px rgba(0,0,0,.22),
+        inset 0 0 0 1px rgba(120,95,50,.18);
+}
+
+.wish-paper::before {
+    content: "";
+    position: absolute;
+    top: -0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3.2em;
+    height: 1em;
+    border-radius: 0.3em;
+    background: rgba(233, 220, 176, 0.95);
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+
+.wish-paper-title {
+    display: block;
+    font-size: clamp(1.15rem, 0.9rem + 1vw, 1.9rem);
+    font-weight: bold;
+    color: #6a4424;
+    margin-bottom: 0.65em;
+    text-align: center;
+    line-height: 1.35em;
+}
+
+.wish-paper-desc {
+    display: block;
+    font-size: clamp(0.95rem, 0.85rem + 0.45vw, 1.15rem);
+    color: #5c5144;
+    line-height: clamp(1.7em, 1.6em + 0.15vw, 1.9em);
+    white-space: pre-line;
+}
+
+/* 大祈福紙 */
+.full-paper {
+    width: min(100%, 60em);
+    margin: clamp(0em, 1vw, 1em) auto;
+
+    padding:
+        clamp(.5rem, 3.5rem, 2.8rem)
+        clamp(1rem, -2rem + 10vw, 8rem)
+        clamp(.5rem, 3.5rem, 2.4rem);
+
+    border-radius: clamp(1em, 0.8em + 0.8vw, 1.25em);
+
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    background:
+
+        /* 泛黃 */
+        radial-gradient(
+            circle at 10% 6%,
+            rgba(255, 196, 0, 0.15) 0%,
+            transparent 50%
+        ),
+
+        radial-gradient(
+            circle at 92% 22%,
+            rgba(255, 170, 66, 0.15) 0%,
+            transparent 50%
+        ),
+
+        /* 主色 */
+        linear-gradient(
+            180deg,
+            #fffffeb0 0%,
+            #fff6e0e0 42%,
+            #f0d8ae 100%
+        ),
+
+        /* texture */
+        url("/img/paper.jpg");
+
+    background-size:
+        auto,
+        auto,
+        auto,
+        cover;
+
+    background-position:
+        center,
+        center,
+        center,
+        center;
+
+    background-repeat:
+        no-repeat,
+        no-repeat,
+        no-repeat,
+        repeat;
+
+    background-blend-mode:
+        multiply,
+        multiply,
+        normal,
+        multiply;
+
+    box-shadow:
+        0 18px 35px rgba(0,0,0,.28),
+        inset 0 0 0 1px rgba(127,100,50,.15),
+        inset 0 0 4em rgba(120,80,35,.12);
+}
+
+.paper-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 -.5em;
+    gap: clamp(.5em, 1vw, 1.5em);
+}
+
+/* 共用按鈕 */
+.back-btn,
+.copy-btn,
+.home-btn {
+    border: none;
+    border-radius: 999px;
+    padding:
+        clamp(0.7rem, 0.55rem + 0.5vw, 1rem)
+        clamp(1rem, 0.5rem + 1.2vw, 1.7rem);
+    min-height: 2em;
+    min-width: 4em;
+    font-size: clamp(0.9rem, 0.82rem + 0.35vw, 1.08rem);
+    font-family: inherit;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,.2);
+    transition: all .18s ease;
+}
+
+/* 顏色 */
+.back-btn {
+    background: linear-gradient(180deg, #8e6a45, #6d4e31);
+}
+
+.copy-btn {
+    background: linear-gradient(180deg, #5a7aa3, #3d5f85);
+}
+
+.home-btn {
+    background: linear-gradient(180deg, #6c8f4a, #4f6b36);
+}
+
+/* hover */
+.back-btn:hover,
+.copy-btn:hover,
+.home-btn:hover {
+    transform: translateY(-2px);
+    opacity: .95;
+}
+
+/* active */
+.back-btn:active,
+.copy-btn:active,
+.home-btn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+}
+
+/* 成功 */
+.copy-btn.success {
+    background: linear-gradient(180deg, #4caf50, #2e7d32);
+    box-shadow: 0 0 12px rgba(76,175,80,0.6);
+    animation: glow 0.6s ease;
+}
+
+@keyframes glow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* 失敗 */
+.copy-btn.error {
+    background: linear-gradient(180deg, #e53935, #b71c1c);
+    box-shadow: 0 0 12px rgba(229,57,53,0.6);
+}
+
+/* 隱藏原始來源 */
+.section-source {
+    display: none;
+}
+
+/* 原始內容 */
+.block {
+    display: block;
+    width: 100%;
+}
+
+.center-img {
+    display: block;
+    margin: 1.25em auto 0.25em auto;
+    width: 100%;
+    max-width: clamp(22em, 40vw, 30em);
+    height: auto;
+    object-fit: contain;
+    transition: all .2s ease-out;
+}
+
+/* 大祈福紙內文 */
+#paperContent .section,
+#paperContent .block,
+#paperContent .signboard {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    background-image: none !important;
+    color: #4d3b27 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+#paperContent h2 {
+    font-size: clamp(1.5rem, 1rem + 1.8vw, 2.5rem);
+    color: #5a3920 !important;
+    margin: 1em 0 0.8em 0;
+    text-align: center;
+}
+
+#paperContent h3 {
+    font-size: clamp(1.2rem, 0.9rem + 0.5vw, 1.5rem);
+    color: #5d4326 !important;
+    margin: 1.1em 0 0.6em 0;
+    text-align: justify;
+    font-weight: lighter;
+}
+
+#paperContent h4 {
+    font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.4rem);
+    color: #5d4326 !important;
+    margin: 1.1em 0 0.6em 0;
+    text-align: justify;
+}
+
+#paperContent h5 {
+    font-size: clamp(1rem, 0.9rem + 0.5vw, 1.2rem);
+    color: #5d4326 !important;
+    margin: 0.9em 0;
+    line-height: 1.6em;
+    text-align: justify;
+}
+
+#paperContent p {
+    font-size: clamp(1rem, 0.92rem + 0.4vw, 1.18rem);
+    color: #4d3b27 !important;
+    margin: 0;
+    line-height: clamp(1.25em, 1.6em + 0.15vw, 1.3em);
+    text-align: justify;
+}
+
+#paperContent .block > a {
+    display: block;
+    width: fit-content;
+    margin: 1.5em auto 0.5em;
+    text-align: center;
+    color: #5a3920 !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: clamp(1rem, 0.9rem + 0.55vw, 1.25rem);
+    background: rgba(120, 83, 47, 0.08);
+    padding:
+        clamp(0.65em, 0.5em + 0.5vw, 0.75em)
+        clamp(2em, 1em + 7vw, 5em);
+    border-radius: 10em;
+    transition: all .2s ease-out;
+}
+
+#paperContent a:hover {
+    background: rgba(120, 83, 47, 0.16);
+}
+
+#paperContent .block p a {
+    color: #c74cc5 !important;
+    text-decoration: none;
+    border-radius: .5em;
+    transition: all .2s ease-out;
+}
+
+#paperContent .block p a:hover {
+    color: #ff00c8 !important;
+}
+
+#paperContent img {
+    display: block;
+    margin: 1.5em auto;
+    width: 100%;
+    max-width: clamp(20em, 38vw, 28em);
+    height: auto;
+    object-fit: contain;
+}
+
+#paperContent br {
+    display: block;
+    margin: 0.5em 0;
+    content: "";
+}
+
+/* 手機 */
+@media screen and (max-width: 800px) {
+    .page-wrap {
+        width: 95%;
+        padding: .5em 0em;
+    }
+
+    .wood-board > h1 {
+        font-size: clamp(1.8rem, 1.25rem + 5vw, 3rem);
+        margin-top: 0.5em;
+    }
+
+    .wood-board > h1::before {
+        background: linear-gradient(
+            to right,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.9) 30%,
+            rgba(255,255,255,1) 70%,
+            rgba(255,255,255,0) 100%
+        );
+    }
+
+    .wood-board > h1::after {
+        background: linear-gradient(
+            to left,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.9) 30%,
+            rgba(255,255,255,1) 70%,
+            rgba(255,255,255,0) 100%
+        );
+    }
+
+    .logo {
+        width: clamp(9rem, 35vw, 12rem);
+        max-width: 12em;
+        min-width: 0;
+        padding: 0.5em 0.75em 0.8em 0;
+    }
+
+    .wood-board {
+        padding:
+            clamp(1.6em, 1em + 3vw, 2em)
+            clamp(1.2em, 0.6em + 5vw, 3em)
+            clamp(1.3em, 0.9em + 2vw, 1.5em);
+        margin: 4.5rem auto 1rem;
+    }
+
+    .wood-board > h2 {
+        font-size: clamp(1.45rem, 1rem + 4vw, 2.25rem);
+    }
+
+    .wood-board > p {
+        font-size: clamp(0.98rem, 0.85rem + 1vw, 1.1rem);
+        margin-bottom: 1.4em;
+    }
+
+    .wish-paper-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+        width: 100%;
+        max-width: 20em;
+        margin: 0 auto;
+    }
+
+    .wish-paper {
+        min-height: auto;
+        padding: 1.5em 1.5em 1em 1.5em;
+    }
+
+    .wish-paper-title {
+        font-size: clamp(1.2rem, 0.95rem + 3vw, 1.75rem);
+    }
+
+    .wish-paper-desc {
+        font-size: clamp(0.95rem, 0.86rem + 1vw, 1.15rem);
+        line-height: 1.7em;
+    }
+
+    .full-paper {
+        padding:
+            clamp(.5rem, 5vw, 1.5rem)
+            clamp(1rem, 0.5rem + 4vw, 2rem);
+        margin: 0.25em 0;
+        
+    }
+
+    #paperContent h2 {
+        font-size: clamp(1.45rem, 1rem + 4vw, 2.1rem);
+    }
+
+    #paperContent h4 {
+        font-size: clamp(1rem, 0.9rem + 1vw, 1.2rem);
+    }
+
+    #paperContent h5 {
+        font-size: clamp(0.95rem, 0.88rem + 0.7vw, 1.05rem);
+    }
+
+    #paperContent p {
+        font-size: clamp(1rem, 0.9rem + 1vw, 1.15rem);
+    }
+
+    .back-btn,
+    .copy-btn,
+    .home-btn {
+        border-radius: 999px;
+        padding:
+            clamp(0.7rem, 0.55rem + 1vw, 0.8rem)
+            clamp(0.9rem, 0.55rem + 2vw, 1.25rem);
+        min-height: 2.8em;
+        min-width: 4em;
+        font-size: clamp(0.88rem, 0.78rem + 1vw, 1rem);
+        box-shadow: 0 6px 14px rgba(0,0,0,.2);
+    }
+}

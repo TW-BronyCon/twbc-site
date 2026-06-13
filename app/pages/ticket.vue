@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const { t, locale, locales } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const switchLocalePath = useSwitchLocalePath()
 const router = useRouter()
 
 useHead({
@@ -98,10 +97,7 @@ const onMouseLeave = () => {
 
 <template>
   <div class="ticket-root">
-    <SharedBackground variant="homepage" />
-
-
-    <div class="container">
+    <div class="container ticket-page-container">
       <div class="border">
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
@@ -134,7 +130,7 @@ const onMouseLeave = () => {
                       <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
                     </div>
                     <div class="desc-bottom">
-                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join(locale === 'en' ? ', ' : '、') }}
                     </div>
                   </div>
                 </div>
@@ -194,12 +190,10 @@ const onMouseLeave = () => {
         </div>
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
 <style scoped src="~/assets/css/ticket.css"></style>
-
 <style scoped>
 .block-link {
   text-decoration: none;

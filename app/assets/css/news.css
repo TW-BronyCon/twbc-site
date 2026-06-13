@@ -1,0 +1,427 @@
+html, body {
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: #000;
+}
+
+body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* 暗遮罩 */
+.bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.2);
+}
+
+/* 主容器 */
+.news-wrap {
+    width: min(1100px, 92%);
+    margin: 0 auto -1rem;
+    padding: 0;
+}
+
+/* 標題 */
+.news-head {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.news-head h1 {
+    margin: 0;
+    font-size: clamp(2rem,5vw,4rem);
+    letter-spacing: .05em;
+    text-shadow: 0 0 15px rgba(255,255,255,.25);
+}
+
+.news-head p {
+    margin-top: .7rem;
+    color: rgba(255,255,255,.75);
+    font-size: 1rem;
+}
+
+/* 信件列表 */
+.mail-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+/* 信封 */
+.mail {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    grid-template-rows: 5em auto auto;
+    grid-template-areas:
+        "blank blank"
+        "title preview"
+        "meta meta";
+    gap: .75rem;
+
+    min-height: 225px;
+    background: linear-gradient(145deg,#f7ecd6,#ead7b4);
+    border-radius: 1rem;
+    padding: 1.2rem 1.35rem 1rem;
+    color: #4a3522;
+    cursor: pointer;
+    box-shadow: 0 18px 35px rgba(0,0,0,.35);
+    transition: .25s ease;
+    overflow: hidden;
+}
+
+.mail:hover {
+    transform: translateY(-8px) rotate(-.5deg);
+    box-shadow: 0 28px 45px rgba(0,0,0,.45);
+}
+
+/* 上方倒三角封口區 */
+.mail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 96px;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.18) 0%,
+        rgba(255,255,255,.18) 49.5%,
+        rgba(255,255,255,.34) 50%,
+        rgba(255,255,255,.18) 50.5%,
+        rgba(255,255,255,.18) 100%
+    );
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 郵票 */
+.stamp {
+    position: absolute;
+    top: .85rem;
+    right: 1rem;
+    width: 52px;
+    height: 52px;
+    border: 2px dashed rgba(255,255,255,.8);
+    border-radius: .5rem;
+    background: #c9a6ff;
+    opacity: .95;
+    z-index: 2;
+}
+
+/* 發文者舊欄位隱藏 */
+.sender {
+    display: none;
+}
+
+/* 標題：中左 */
+.mail h3 {
+    grid-area: title;
+    margin: 0;
+    align-self: center;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    /* padding-right: .4rem; */
+    position: relative;
+    z-index: 1;
+
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 內文：中右，最多三行 */
+.preview {
+    grid-area: preview;
+    margin: 0;
+    align-self: center;
+    font-size: .95rem;
+    line-height: 1.7;
+    color: #6a5642;
+    position: relative;
+    z-index: 1;
+
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+/* 底部資訊列 */
+.mail-meta {
+    grid-area: meta;
+    margin-top: .15rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    font-size: .82rem;
+    opacity: .72;
+    position: relative;
+    z-index: 1;
+}
+
+/* 左邊時間 */
+.mail-meta .time {
+    margin: 0;
+    font-size: .8rem;
+    opacity: .9;
+}
+
+/* 右邊寄件人 */
+.mail-meta .author {
+    text-align: right;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s;
+    z-index: 99;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* =========================
+   圓形封蠟
+   ========================= */
+.wax-seal{
+    position: absolute;
+    top: 2.05rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 58px;
+    height: 58px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* 左右兩半共用 */
+.wax-left,
+.wax-right{
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+
+    background:
+        radial-gradient(circle at 35% 30%,
+        #ffb0ba 0%,
+        #d85c70 34%,
+        #b2384c 68%,
+        #7d1f2e 100%);
+
+    box-shadow:
+        inset 0 3px 7px rgba(255,255,255,.18),
+        inset 0 -5px 8px rgba(0,0,0,.22),
+        0 5px 12px rgba(0,0,0,.28);
+
+    transition:
+        transform .6s cubic-bezier(.22,.8,.2,1),
+        opacity .35s ease;
+
+}
+
+/* 左半圓 */
+.wax-left{
+    left: 0;
+    border-radius: 100% 0 0 100%;
+    transform-origin: right center;
+}
+
+/* 右半圓 */
+.wax-right{
+    right: 0;
+    border-radius: 0 100% 100% 0;
+    transform-origin: left center;
+}
+
+/* 壓印字 */
+.wax-seal::after{
+    content: "TWBC";
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+
+    color: rgba(255,245,230,.78);
+    text-shadow: 0 1px 1px rgba(0,0,0,.18);
+
+    z-index: 6;
+    transition: opacity .25s ease;
+}
+
+/* =========================
+   開封後：裂成兩半
+   ========================= */
+.mail.opened .wax-left{
+    transform:
+        translateX(-14px)
+        rotate(-28deg)
+        scale(.96);
+}
+
+.mail.opened .wax-right{
+    transform:
+        translateX(14px)
+        rotate(28deg)
+        scale(.96);
+}
+
+.mail.opened .wax-seal::after{
+    opacity: 0;
+}
+
+/* 信紙 */
+.paper {
+    width: min(760px,100%);
+    max-height: 88vh;
+    overflow-y: auto;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            #fffdf8 0px,
+            #fffdf8 34px,
+            #f2efe6 35px
+        );
+    color: #2d2d2d;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 25px 50px rgba(0,0,0,.45);
+    position: relative;
+}
+
+.paper h2 {
+    margin: 0 0 .5rem;
+    padding-right: 1.25rem;
+    font-size: 2rem;
+}
+
+.paper-meta {
+    font-size: .9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+.paper-content {
+    line-height: 1.5;
+    white-space: pre-wrap;
+    text-align: justify;
+}
+
+.paper-tools {
+    display: flex;
+    gap: .8rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.paper-tools button,
+.paper-tools a {
+    border: 0;
+    background: #222;
+    color: white;
+    padding: .8rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: .92rem;
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #ddd;
+    color: #111;
+}
+
+/* 手機 */
+@media (max-width:700px) {
+
+    .news-wrap {
+        padding-top: 0;
+    }
+
+    .mail-list {
+        grid-template-columns: 1fr;
+    }
+
+    .mail {
+        grid-template-columns: 1fr;
+        grid-template-rows: 78px auto auto auto;
+        grid-template-areas:
+            "blank"
+            "title"
+            "preview"
+            "meta";
+        gap: .7rem;
+        min-height: auto;
+        padding: 1.1rem 1.1rem .95rem;
+    }
+
+    .mail::before {
+        height: 82px;
+    }
+
+    .mail h3,
+    .preview {
+        align-self: start;
+    }
+
+    .mail h3 {
+        font-size: 1.12rem;
+        padding-right: 0;
+    }
+
+    .preview {
+        font-size: .93rem;
+        line-height: 1.65;
+    }
+
+    .mail-meta {
+        font-size: .78rem;
+    }
+
+    .paper {
+        padding: 1.2rem;
+    }
+
+    .paper h2 {
+        font-size: 1.4rem;
+    }
+}
