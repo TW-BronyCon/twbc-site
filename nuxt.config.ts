@@ -3,16 +3,16 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  sourcemap: {
-    server: false,
-    client: false
-  },
+  // sourcemap: {
+  //   server: false,
+  //   client: false
+  // },
 
-  vite: {
-    build: {
-      sourcemap: false
-    }
-  },
+  // vite: {
+  //   build: {
+  //     sourcemap: false
+  //   }
+  // },
 
   routeRules: {
     '/index.html': { redirect: '/' },
