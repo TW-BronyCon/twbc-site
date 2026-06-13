@@ -38,10 +38,10 @@ const props = defineProps({
       },
       {
         src: '/img/bg2-2560.avif',
-        start: -15,
+        start: -20,
         end: 105,
         mobileStart: -5,
-        mobileEnd: 90,
+        mobileEnd: 145,
         scale: 1,
         mobileScale: 1.1,
         x: "-50%",
@@ -50,20 +50,19 @@ const props = defineProps({
       {
         src: '/img/bg3-2560.avif',
         start: 40,
-        end: 90,
-        mobileStart: 25,
-        mobileEnd: 80,
+        end: 95,
+        mobileStart: 8,
+        mobileEnd: 92,
         scale: 1,
         mobileScale: 1,
         x: "-50%",
-        mobileX: "0"
+        mobileX: "-50%"
       }
     ]
   }
 })
 
 const layerRefs = ref([])
-
 const layers = computed(() => props.config)
 
 const isMobile = () => typeof window !== 'undefined' && window.innerWidth <= 800
@@ -95,6 +94,7 @@ const setupSizes = () => {
     img._movable = Math.max(0, h - vh)
     img.style.width = `${w}px`
     img.style.height = `${h}px`
+    img.style.willChange = "transform"
   })
 }
 
@@ -133,6 +133,15 @@ const requestUpdate = () => {
   })
 }
 
+let resizeTimer = null
+const requestResizeUpdate = () => {
+  clearTimeout(resizeTimer)
+  resizeTimer = setTimeout(() => {
+    setupSizes()
+    updateParallax()
+  }, 120)
+}
+
 const onImgLoad = () => {
   setupSizes()
   updateParallax()
@@ -141,15 +150,20 @@ const onImgLoad = () => {
 onMounted(() => {
   if (props.variant === 'homepage') {
     window.addEventListener('scroll', requestUpdate, { passive: true })
-    window.addEventListener('resize', setupSizes)
-    setupSizes()
-    updateParallax()
+    window.addEventListener('resize', requestResizeUpdate)
+    
+    // Initial setup after all images are likely loaded or on next tick
+    setTimeout(() => {
+      setupSizes()
+      updateParallax()
+    }, 100)
   }
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', requestUpdate)
-  window.removeEventListener('resize', setupSizes)
+  window.removeEventListener('resize', requestResizeUpdate)
+  clearTimeout(resizeTimer)
 })
 </script>
 
@@ -163,6 +177,7 @@ onUnmounted(() => {
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  background-color: #120b18; /* Dark purple matching site scheme */
 }
 
 .bg-layer {
@@ -171,7 +186,6 @@ onUnmounted(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  will-change: transform;
 }
 
 .bg-layer img {
@@ -181,19 +195,15 @@ onUnmounted(() => {
   width: 100vw;
   height: auto;
   min-height: 100vh;
-  will-change: transform;
   object-fit: cover;
   object-position: top center;
 }
 
 .village {
-  background-image: url('/img/village.avif');
-  background-size: cover;
-  background-position: center;
+  background-color: #120b18;
 }
 
 .bg1 { z-index: 1; }
 .bg2 { z-index: 2; }
 .bg3 { z-index: 3; }
 </style>
-

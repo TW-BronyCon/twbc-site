@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
 const router = useRouter()
 
 useHead({
-  title: '購票'
+  title: t('ticket.title')
 })
 
 const currentMode = ref<'detailed' | 'table'>('detailed')
@@ -17,7 +18,7 @@ const toggleMode = () => {
 }
 
 const goHome = () => {
-  router.push('/')
+  router.push(localePath('/'))
 }
 
 const tiers = [
@@ -96,9 +97,7 @@ const onMouseLeave = () => {
 
 <template>
   <div class="ticket-root">
-    <div class="bg"></div>
-
-    <div class="container">
+    <div class="container ticket-page-container">
       <div class="border">
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
@@ -131,7 +130,7 @@ const onMouseLeave = () => {
                       <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
                     </div>
                     <div class="desc-bottom">
-                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join(locale === 'en' ? ', ' : '、') }}
                     </div>
                   </div>
                 </div>
@@ -195,7 +194,6 @@ const onMouseLeave = () => {
 </template>
 
 <style scoped src="~/assets/css/ticket.css"></style>
-
 <style scoped>
 .block-link {
   text-decoration: none;

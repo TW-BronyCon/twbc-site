@@ -10,21 +10,6 @@ html {
     color: #f8ecd5;
 }
 
-/* Background */
-.bg {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background-image:
-        linear-gradient(rgba(26, 14, 34, 0.1), rgba(18, 10, 24, 0.2)),
-        url('/img/village.avif');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    will-change: transform;
-}
-
 body::before {
     content: "";
     position: fixed;
@@ -37,14 +22,21 @@ body::before {
         radial-gradient(circle at 50% 50%, rgba(112, 62, 151, 0.16), transparent 55%);
 }
 
+.top-bar {
+    width: min(1200px, calc(100vw - 48px));
+    margin: 1rem auto 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* ===== 外框 ===== */
 .container {
-    width: min(1200px, calc(100vw - 48px));
+    width: min(1200px, calc(100vw - 50px));
     margin: 1.25rem auto;
     padding: 1rem;
     border-radius: 1.75rem;
     background:
-        linear-gradient(180deg, rgba(110, 53, 99, 0.86), rgba(59, 34, 53, 0.9));
+        linear-gradient(180deg, rgba(255, 110, 243, 0.5), rgba(209, 111, 218, 0.75));
     box-shadow:
         0 0 0 1px rgba(255, 226, 170, 0.14),
         0 18px 48px rgba(0, 0, 0, 0.38);
@@ -53,7 +45,7 @@ body::before {
 
 .border {
     width: 100%;
-    min-height: 91vh;
+    /* min-height: 70vh; */
     box-sizing: border-box;
     padding: 0.65rem;
     border-radius: 1.4rem;
@@ -71,7 +63,6 @@ body::before {
 
 /* ===== 標題 ===== */
 h1 {
-    font-family: 'LXGW WenKai Mono TC', monospace;
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.15;
     text-align: center;
@@ -95,7 +86,6 @@ h1::after {
 }
 
 h2 {
-    font-family: 'LXGW WenKai Mono TC', monospace;
     font-size: clamp(1.1rem, 2vw, 1.4rem);
     text-align: center;
     color: #f3dca8;
@@ -124,7 +114,6 @@ h2 {
     min-width: 9.5rem;
     padding: 0.75em 1.5em;
     font-size: 1rem;
-    font-family: 'LXGW WenKai Mono TC', monospace;
     color: #ffe9b5;
     background:
         linear-gradient(180deg, rgba(110, 64, 145, 0.85), rgba(66, 34, 86, 0.92));
@@ -171,6 +160,7 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
     align-items: stretch;
+    margin: 0 .5rem 1.5rem;
 }
 
 #section2.show {
@@ -284,7 +274,6 @@ h2 {
 .ticket-title {
     width: 100%;
     margin-bottom: 0.25rem;
-    font-family: 'LXGW WenKai Mono TC', monospace;
     font-size: clamp(1.6rem, 2vw, 2rem);
     line-height: 1.2;
     text-align: center;
@@ -306,7 +295,6 @@ h2 {
 .description {
     width: 100%;
     margin-top: 0.3rem;
-    font-family: 'LXGW WenKai Mono TC', monospace;
     font-size: 1.04rem;
     line-height: 1.7;
     color: #5a4326;
@@ -402,7 +390,6 @@ h2 {
     border-collapse: collapse;
     table-layout: fixed;
     color: #5d4427;
-    font-family: 'LXGW WenKai Mono TC', monospace;
 }
 
 .compare-table thead th {
@@ -556,7 +543,7 @@ h2 {
 @media screen and (max-width: 800px) {
     .container {
         width: calc(100vw - 12px);
-        margin: 0.35rem auto;
+        margin: 0 auto 2rem;
         padding: 0.35rem;
         border-radius: 1rem;
     }
@@ -734,4 +721,8 @@ h2 {
     .feature-head {
         width: 36%;
     }
+}
+
+.ticket-page-container {
+  margin-top: clamp(5rem, 8vw, 7rem) !important;
 }

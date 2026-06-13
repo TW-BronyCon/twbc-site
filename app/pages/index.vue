@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 
-const { t, tm } = useI18n()
+const { t, tm, locale, locales } = useI18n()
 const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
 
 // ---------- Head Config ----------
 useHead({
-  title: '首頁'
+  title: t('seo.title')
 })
 
 // ---------- Controllers ----------
@@ -20,78 +21,18 @@ const translatedCountdownMsg = computed(() => {
   return t(`home.countdown.${countdownMsg.value}`)
 })
 
-const isLayoutHidden = ref(false)
-const toggleLayout = () => {
-  isLayoutHidden.value = !isLayoutHidden.value
-}
-
-// Mobile Nav
-const isNavOpen = ref(false)
-const openSubmenu = ref<string | null>(null)
-
-const toggleNav = () => {
-  isNavOpen.value = !isNavOpen.value
-  if (!isNavOpen.value) openSubmenu.value = null
-}
-
-const toggleSubmenu = (name: string) => {
-  openSubmenu.value = openSubmenu.value === name ? null : name
-}
-
-const closeMenus = (e: MouseEvent) => {
-  const target = e.target as HTMLElement
-  if (!target.closest('.top-nav') && !target.closest('.nav-toggle')) {
-    isNavOpen.value = false
-    openSubmenu.value = null
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', closeMenus)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', closeMenus)
-})
 </script>
 
 <template>
-  <div class="homepage-root" :class="{ 'layout-hidden': isLayoutHidden }">
-    <SharedBackground variant="homepage" />
-
-    <button class="nav-toggle invisible" :class="{ active: isNavOpen }" @click.stop="toggleNav">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <nav class="top-nav invisible" :class="{ open: isNavOpen }">
-      <ul class="menu">
-        <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
-          <span @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</span>
-          <ul class="submenu">
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform" target="_blank">{{ $t('apply.volunteer') }}</a></li>
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform" target="_blank">{{ $t('apply.vendor') }}</a></li>
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf1h5OaWHYf2cdqkEwWk_SWcNioLj89ilOAtr1g1sbupTPk1w/viewform" target="_blank">{{ $t('apply.event') }}</a></li>
-          </ul>
-        </li>
-      </ul>
-      <!-- unfinished pages use disable btn instead -->
-      <!-- <NuxtLink :to="localePath('/timetable')">{{ $t('menu.timetable') }} ({{ $t('apply.comingSoon') }})</NuxtLink>
-      <NuxtLink :to="localePath('/location')">{{ $t('menu.location') }} ({{ $t('apply.comingSoon') }})</NuxtLink> -->
-      <span class="disabled">{{ $t('menu.timetable') }} ({{ $t('apply.comingSoon') }})</span>
-      <span class="disabled">{{ $t('menu.location') }} ({{ $t('apply.comingSoon') }})</span>
-
-    </nav>
-
+  <div class="homepage-root">
     <main class="container">
       <section class="hero">
-        <img class="logo translucent" src="/img/text-logo.avif" alt="TWBC" @click="toggleLayout">
+        <img class="logo" src="/img/text-logo.avif" alt="TWBC">
 
-        <div class="date translucent">{{ $t('home.subtitle') }}</div>
+        <div class="date">{{ $t('home.subtitle') }}</div>
 
-        <div class="count-title translucent">↪ {{ $t('home.countdown.title') }} ↩</div>
-        <div class="countdown translucent">
+        <div class="count-title">{{ $t('home.countdown.title') }}</div>
+        <div class="countdown">
           <span v-if="translatedCountdownMsg" class="countdown-message">{{ translatedCountdownMsg }}</span>
           <template v-else>
             <span>{{ days }}</span> {{ $t('home.countdown.days') }}
@@ -101,18 +42,18 @@ onUnmounted(() => {
           </template>
         </div>
 
-        <NuxtLink class="buy-btn translucent" :to="localePath('/ticket')">{{ $t('home.nav.tickets') }}</NuxtLink>
+        <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{ $t('home.nav.tickets') }}</NuxtLink>
       </section>
 
-      <div class="spacer"></div>
+      <!-- <div class="spacer"></div> -->
 
-      <section class="info-card invisible">
+      <section class="info-card">
         <h2>{{ $t('home.about.title') }}</h2>
         <h4>{{ $t('home.about.content') }}</h4>
         <h4 class="pinkie-quote align-right">{{ $t('home.about.pinkiequote') }}</h4>
       </section>
 
-      <section class="info-card invisible">
+      <section class="info-card">
         <h2>{{ $t('home.location.title') }}</h2>
         <h4 style="text-align: center;">
           {{ $t('home.location.name') }}<br>
@@ -125,7 +66,7 @@ onUnmounted(() => {
         </iframe>
       </section>
 
-      <section class="info-card large invisible">
+      <section class="info-card large">
         <h2>{{ $t('home.faq.title') }}</h2>
         <div v-for="i in 4" :key="i">
           <h4>Q：{{ $t(`home.faq.q${i}`) }}</h4>
@@ -133,8 +74,6 @@ onUnmounted(() => {
         </div>
       </section>
     </main>
-
-    <TheFooter />
   </div>
 </template>
 

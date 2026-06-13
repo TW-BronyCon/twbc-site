@@ -15,7 +15,7 @@
 /* Main Container */
 .container {
     position: relative;
-    width: clamp(50%, 50vw, 1400px);
+    width: clamp(75%, 50vw, 1400px);
     border-radius: 1em;
     background: linear-gradient(
         to bottom,
@@ -49,129 +49,17 @@
 /* Logo */
 .logo {
     display: block;
-    width: clamp(15em, 30vw, 25em);
+    width: clamp(20em, 30vw, 40em);
     height: auto;
-    margin: 5rem auto 7.5rem;
-    cursor: pointer;
+    margin: 5rem auto 5.5rem;
     transition: all 0.2s ease-out;
-}
-
-/* TOP NAV desktop */
-.top-nav {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(0);
-    z-index: 5;
-    height: clamp(2em, 3vw, 3.5em);
-    padding: clamp(-2.5em, 1.5vw, 0em) clamp(1em, 2.5vw, 2em);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(.5em, 2vw, 2em);
-    background: rgba(95, 45, 100, 0.65);
-    backdrop-filter: blur(.6em);
-    -webkit-backdrop-filter: blur(.6em);
-    border-radius: 0 0 .8em .8em;
-    transition: 
-        transform 1s cubic-bezier(.22,1,.36,1),
-        opacity 1s ease;
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.top-nav.hide {
-    transform: translateX(-50%) translateY(-120%);
-    opacity: 0;
-}
-
-.top-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-size: clamp(.9em, 1.6cqw, 1.05em);
-    text-shadow: 0 2px 5px rgba(0,0,0,.65);
-    white-space: nowrap;
-}
-
-/* ===== menu 結構 ===== */
-.top-nav .menu {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: clamp(.5em, 2vw, 2em);
-    margin: 0;
-    padding: 0;
-}
-
-.top-nav .menu-group {
-    position: relative;
-}
-
-.top-nav .menu-group > span {
-    color: #fff;
-    /* font-size: clamp(.9em, 1.6cqw, 1.05em); */
-    text-shadow: 0 2px 5px rgba(0,0,0,.65);
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-/* ===== 下拉選單 ===== */
-.top-nav .submenu {
-    list-style: none;
-    position: absolute;
-    top: 100%;
-    left: -1em;
-    min-width: 8em;
-    padding: .5em 0;
-    margin: .5em 0 0;
-    background: rgba(95, 45, 100, 0.85);
-    backdrop-filter: blur(.6em);
-    -webkit-backdrop-filter: blur(.6em);
-    border-radius: .6em;
-    box-shadow: 0 8px 20px rgba(0,0,0,.35);
-    opacity: 0;
-    transform: translateY(8px);
-    pointer-events: none;
-    transition: all .25s ease;
-}
-
-/* Hover Bridge */
-.top-nav .submenu::before {
-    content: "";
-    position: absolute;
-    top: -1em;
-    left: 0;
-    width: 100%;
-    height: 1em;
-}
-
-.top-nav .submenu li a {
-    display: block;
-    padding: .6em 1em;
-    font-size: .95em;
-}
-
-.top-nav .menu-group:hover .submenu,
-.top-nav .menu-group.open .submenu {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.top-nav a:hover,
-.top-nav .menu-group > span:hover,
-.top-nav .menu-group.open > span {
-    color: #ffe6a7;
-    text-shadow:
-        0 0 6px rgba(255, 230, 167, 0.75),
-        0 0 14px rgba(255, 180, 220, 0.45);
-    transform: translateY(-1px);
 }
 
 /* Hero */
 .hero {
     text-align: center;
     padding: 2.2em 0 2.5em;
+    margin-bottom: 10em;
     color: #ffbdde;
     text-shadow: 0 2px 8px rgba(0,0,0,.5);
 }
@@ -289,26 +177,6 @@
     margin-top: 1em;
 }
 
-/* layout hidden */
-.invisible,
-.translucent {
-    transition: opacity .25s ease, visibility .25s ease;
-}
-
-.layout-hidden .invisible {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.layout-hidden .translucent {
-    opacity: .1;
-}
-
-.layout-hidden .container::before {
-    opacity: 0;
-}
-
 /* Utility Classes */
 .align-right {
     text-align: right !important;
@@ -334,7 +202,7 @@
     .container {
         width: 100%;
         padding: 0 .5em 1em;
-        margin-bottom: -3.5em;
+        margin-bottom: 0;
     }
 
     .container::before {
@@ -348,7 +216,11 @@
     }
 
     .logo {
-        margin: 0em auto 1em;
+        margin: 3em auto 1em;
+    }
+
+    .hero{
+        margin-bottom: 2.5em;
     }
 
     .countdown {
@@ -498,5 +370,18 @@
         padding: .5em 0 .5em 0;
         border-bottom: .05em solid rgba(255,255,255,.1);
         margin: 0;
+    }
+
+    .lang-switcher {
+        margin-top: auto;
+        padding-top: 1.5em;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 1.5em;
+    }
+
+    .lang-switcher a {
+        padding: 0.5em 0;
+        border-bottom: none;
     }
 }
