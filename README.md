@@ -1,75 +1,77 @@
-# Nuxt Minimal Starter
+<p align="center">
+  <img src="public/img/text-logo.avif" alt="TWBC Logo" align="center" width="256">
+</p>
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+<h1 align="center">TWBC - Taiwan BronyCon</h1>
 
-## Setup
+<p align="center">
+  A modern, high-performance website for Taiwan BronyCon 2026.
+</p>
 
-Make sure to install dependencies:
+<p align="center">
+  <a href="https://nuxt.com"><img
+    alt="Made with Nuxt"
+    src="https://img.shields.io/badge/made_with-nuxt-00DC82?logo=nuxt.js"
+  ></a>
+  <img
+    alt="Works on my machine"
+    src="https://img.shields.io/badge/works_on-my_machine-dark_green"
+  >
+</p>
+
+## What is this?
+
+This is the official website for **Taiwan BronyCon (TWBC)**, a fan-organized convention for *My Little Pony: Friendship is Magic* fans in Taiwan.
+
+The site features:
+- Event information and countdown
+- Ticket information and purchase links
+- Multi-language support (Traditional Chinese and English)
+- Interactive map (using Leaflet)
+
+## Tech Stack
+
+- **Framework:** [Nuxt 4](https://nuxt.com/)
+- **UI:** [Vue 3](https://vuejs.org/) (Composition API)
+- **Styling:** Vanilla CSS
+- **i18n:** [@nuxtjs/i18n](https://i18n.nuxtjs.org/)
+- **Maps:** [Leaflet](https://leafletjs.com/)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (Latest LTS recommended)
+- `npm` or `pnpm`
+
+### Installation
 
 ```bash
-# npm
+# Install dependencies
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+### Development
 
 ```bash
-# npm
+# Start development server
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
+### Production
 
 ```bash
-# npm
+# Build for production
 npm run build
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
+# Preview production build
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Contributors
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for commit and branch guidelines.
+
+## License
+
+© 2026 TWBC. All rights reserved.
