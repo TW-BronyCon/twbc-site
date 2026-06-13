@@ -76,6 +76,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for commit and branch guidelines.
 
 Copyright (C) 2026 TWBC
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+**Code:** This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+**Assets:** All visual assets (including logos, images, and mascots in `public/img/`) are **not** covered by the GPL license. These assets remain the exclusive property and copyright of the TWBC team. Unauthorized use, redistribution, or modification of these assets is prohibited.
 
 See [LICENSE](LICENSE) for details.

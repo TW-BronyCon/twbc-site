@@ -1,6 +1,11 @@
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
+---
+NOTE: The following license applies ONLY to the source code of this project.
+All visual assets (including but not limited to logos, images, and mascots located in the `public/img/` directory) are EXCLUDED from this license and remain the exclusive property and copyright of the TWBC team.
+---
+
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
