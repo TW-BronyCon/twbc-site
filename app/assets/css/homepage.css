@@ -15,7 +15,7 @@
 /* Main Container */
 .container {
     position: relative;
-    width: clamp(50%, 50vw, 1400px);
+    width: clamp(75%, 50vw, 1400px);
     border-radius: 1em;
     background: linear-gradient(
         to bottom,
@@ -49,7 +49,6 @@
 /* Logo */
 .logo {
     display: block;
-    /* width: clamp(15em, 30vw, 25em); */
     width: clamp(20em, 30vw, 40em);
     height: auto;
     margin: 5rem auto 5.5rem;
@@ -93,7 +92,7 @@
     white-space: nowrap;
 }
 
-/* ===== menu 結構 ===== */
+/* menu 結構 */
 .top-nav .menu {
     list-style: none;
     display: flex;
@@ -112,6 +111,7 @@
     /* font-size: clamp(.9em, 1.6cqw, 1.05em); */
     text-shadow: 0 2px 5px rgba(0,0,0,.65);
     cursor: pointer;
+    transform: translateY(-10px);
     white-space: nowrap;
 }
 
@@ -310,36 +310,12 @@
     cursor: default;
 }
 
-.lang-switcher {
-    display: flex;
-    gap: 1em;
-    margin-left: 0.5em;
-}
-
-.lang-switcher a {
-    opacity: 0.6;
-    transition: all 0.2s ease;
-    font-size: clamp(.85em, 1.4cqw, 1em);
-}
-
-.lang-switcher a:hover {
-    opacity: 1;
-    color: #ffe6a7 !important;
-}
-
-.lang-switcher a.active {
-    opacity: 1;
-    font-weight: bold;
-    pointer-events: none;
-    color: #ffe6a7 !important;
-}
-
 /* Mobile */
 @media screen and (max-width: 800px) {
     .container {
         width: 100%;
         padding: 0 .5em 1em;
-        margin-bottom: -3.5em;
+        margin-bottom: 0;
     }
 
     .container::before {

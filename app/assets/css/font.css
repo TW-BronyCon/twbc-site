@@ -1,0 +1,19 @@
+.lxgw-wenkai-mono-tc-regular {
+    font-family: "LXGW WenKai Mono TC", monospace;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* @font-face {
+    font-family: 'Equestria';
+    src: url('@/assets/font/Equestria.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+} */
+
+.noto-sans-tc-regular {
+  font-family: "Noto Sans TC", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
