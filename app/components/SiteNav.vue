@@ -83,13 +83,13 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   align-items: center;
   gap: clamp(.5em, 1.6vw, 1.5em);
 
-  min-height: clamp(2.4em, 3.2vw, 3.6em);
-  padding: .15em clamp(1em, 2.5vw, 2em);
+  min-height: clamp(2em, 3.2vw, 3em);
+  padding: .15em clamp(.7em, 2.5vw, 1.7em) clamp(0em, 2vw, .2em) clamp(1em, 2.5vw, 2em);
 
   background: rgba(95, 45, 100, .72);
   border: 1px solid rgba(255, 230, 167, .18);
   border-top: 0;
-  border-radius: 0 0 .8em .8em;
+  border-radius: 0 0 1em 1em;
 
   backdrop-filter: blur(.6em);
   -webkit-backdrop-filter: blur(.6em);
@@ -132,7 +132,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 
   position: absolute;
   left: 50%;
-  bottom: -4px;
+  bottom: -2px;
 
   width: 0;
   height: 2px;
