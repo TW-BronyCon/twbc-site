@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="public/img/text-logo.avif" alt="TWBC Logo" align="center" width="256">
+  <img src="public/img/text-logo-clear.avif" alt="TWBC Logo" align="center" width="256">
 </p>
 
 <h1 align="center">TWBC - Taiwan BronyCon</h1>
 
 <p align="center">
-  A modern, high-performance website for Taiwan BronyCon 2026.
+  A modern, high-performance website for Taiwan BronyCon.
 </p>
 
 <p align="center">
