@@ -2,6 +2,7 @@
   "name": "twbc-site",
   "type": "module",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

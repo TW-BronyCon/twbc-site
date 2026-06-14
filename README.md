@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="public/img/text-logo.avif" alt="TWBC Logo" align="center" width="256">
+  <img src="public/img/text-logo-clear.avif" alt="TWBC Logo" align="center" width="256">
 </p>
 
 <h1 align="center">TWBC - Taiwan BronyCon</h1>
 
 <p align="center">
-  A modern, high-performance website for Taiwan BronyCon 2026.
+  A modern, high-performance website for Taiwan BronyCon.
 </p>
 
 <p align="center">
@@ -74,4 +74,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for commit and branch guidelines.
 
 ## License
 
-© 2026 TWBC. All rights reserved.
+Copyright (C) 2026 TWBC
+
+**Code:** This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+**Assets:** All visual assets (including logos, images, and mascots in `public/img/`) are **not** covered by the GPL license. These assets remain the exclusive property and copyright of the TWBC team. Unauthorized use, redistribution, or modification of these assets is prohibited.
+
+See [LICENSE](LICENSE) for details.
