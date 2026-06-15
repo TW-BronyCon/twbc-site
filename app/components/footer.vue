@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const { t, tm, locale, locales } = useI18n()
 const localePath = useLocalePath()
@@ -12,56 +12,192 @@ const partners = [
     url: '/',
     internal: true,
     altKey: 'home.footer.logoAlt'
-  },
-  // {
-  //   name: 'Future Con',
-  //   logo: '/img/text-logo-clear.avif',
-  //   url: 'https://example.com',
-  //   internal: false
-  // }
+  }
 ]
 
-// Quote Logic
-const quotes = computed(() => {
-  // Method 1: Try tm (translated message)
-  const raw = tm('home.quotes')
-  let list: any[] = []
-  
-  if (raw && typeof raw !== 'string') {
-    list = Array.isArray(raw) ? raw : Object.values(raw)
+const quotes = computed<string[]>(() => {
+  const raw = tm('home.quotes') as unknown
+  let list: unknown[] = []
+
+  if (Array.isArray(raw)) {
+    list = raw
+  } else if (raw && typeof raw === 'object') {
+    list = Object.values(raw)
   }
 
-  // Method 2: Fallback to t-loop if Method 1 returned nothing
   if (list.length === 0) {
     let i = 0
-    while (true) {
+
+    while (i < 100) {
       const key = `home.quotes.${i}`
       const val = t(key)
-      if (val === key) break
+
+      if (!val || val === key) break
+
       list.push(val)
       i++
-      if (i > 100) break // Safety break
     }
   }
-  
-  return list.map(q => {
-    // If it's already a string, return it
-    if (typeof q === 'string') return q
-    // If it's a function (some i18n setups return message functions), call it
-    if (typeof q === 'function') return q()
-    // If it's an object, try to extract the message
-    if (q && typeof q === 'object') {
-      // Handle compiled message objects (body.static)
-      if (q.body && typeof q.body.static === 'string') return q.body.static
-      // Handle cases where static is at the top level
-      if (typeof q.static === 'string') return q.static
-      // Common properties in other i18n message formats
-      return (q as any).value || (q as any).b || (q as any).v || String(q)
-    }
-    return String(q || '')
-  }).filter(q => !!q && q.trim() !== '')
+
+  return list
+    .map(q => {
+      if (typeof q === 'string') return q
+
+      if (typeof q === 'function') {
+        const result = q()
+        return typeof result === 'string' ? result : String(result ?? '')
+      }
+
+      if (q && typeof q === 'object') {
+        const item = q as any
+
+        if (item.body && typeof item.body.static === 'string') return item.body.static
+        if (typeof item.static === 'string') return item.static
+
+        return item.value || item.b || item.v || String(item)
+      }
+
+      return String(q || '')
+    })
+    .filter(q => q.trim() !== '')
 })
-const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quotesLoading'))
+
+const { currentQuote, isQuoteFadingOut } = useQuotes(
+  quotes,
+  10000,
+  ''
+)
+
+const showUpdateLog = ref(false)
+
+let versionClickCount = 0
+let versionClickTimer: ReturnType<typeof setTimeout> | null = null
+
+const currentVersion = 'v0.3.5'
+
+const updateLogs = [
+  {
+    version: 'v0.1.0',
+    date: '2026-04-25',
+    changes: [
+      '設計首頁、購票頁面',
+      '新增導航列(電腦頂邊攔，手機側邊攔)',
+      '新增倒數計時器功能，並於時間結束顯示其他字串',
+      '新增視差效果，在滑動時讓3層背景圖片有不同的移動速度，增加深度感',
+      '新增票務表格資訊及詳細資訊',
+      '新增隨機名言功能',
+    ]
+  },
+  {
+    version: 'v0.2.0',
+    date: '2026-05-05',
+    changes: [
+      '改進首頁、購票頁面樣式',
+      '在導航列更新兩個路由連結➡(首頁、購票報名)',
+      '附上3個申請表單(志工、攤位、自主活動)',
+      '改進導航列樣式',
+      '修正視差效果效能',
+    ]
+  },
+  {
+    version: 'v0.2.1',
+    date: '2026-05-05',
+    changes: [
+      '新增雙語切換功能'
+    ]
+  },
+  {
+    version: 'v0.2.2',
+    date: '2026-05-05',
+    changes: [
+      '網站上線'
+    ]
+  },
+  {
+    version: 'v0.3.0',
+    date: '2026-06-1',
+    changes: [
+      '設計最新消息頁面',
+      '在導航列更新一個路由連結➡(首頁、最新消息、購票報名)',
+    ]
+  },
+  {
+    version: 'v0.3.1',
+    date: '2026-06-10',
+    changes: [
+      '改進最新消息頁面樣式',
+      '新增更新日誌',
+      '維護雙語表',
+    ]
+  },
+  {
+    version: 'v0.3.2',
+    date: '2026-06-11',
+    changes: [
+      '改進最新消息頁面樣式',
+      '新增信件封蠟開啟記錄',
+      '改進更新日誌樣式',
+    ]
+  },
+  {
+    version: 'v0.3.3',
+    date: '2026-06-12',
+    changes: [
+      '新增信件內容(6封)',
+    ]
+  },
+  {
+    version: 'v0.3.4',
+    date: '2026-06-15',
+    changes: [
+      '更換封蠟樣式',
+      '改進信封樣式',
+      '在消息頁面新增懸浮吉祥物',
+    ]
+  },
+  {
+    version: 'v0.3.5 (BETA)',
+    date: '2026-06-16',
+    changes: [
+      '網站更新',
+    ]
+  },
+]
+
+function handleVersionClick() {
+  versionClickCount++
+
+  if (versionClickTimer) {
+    clearTimeout(versionClickTimer)
+  }
+
+  versionClickTimer = setTimeout(() => {
+    versionClickCount = 0
+  }, 3000)
+
+  if (versionClickCount >= 3) {
+    showUpdateLog.value = true
+    versionClickCount = 0
+  }
+}
+
+function closeUpdateLog() {
+  showUpdateLog.value = false
+}
+
+watch(showUpdateLog, (open) => {
+  document.documentElement.style.overflow = open ? 'hidden' : ''
+  document.body.style.overflow = open ? 'hidden' : ''
+})
+
+onBeforeUnmount(() => {
+  document.documentElement.style.overflow = ''
+  document.body.style.overflow = ''
+
+  if (versionClickTimer) {
+    clearTimeout(versionClickTimer)
+  }
+})
 </script>
 
 <template>
@@ -70,20 +206,40 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
       <div class="footer-top">
         <div class="footer-brand">
           <div class="footer-logos">
-            <template v-for="partner in partners" :key="partner.name">
-              <NuxtLink v-if="partner.internal" :to="localePath(partner.url)">
-                <img :src="partner.logo" :alt="partner.altKey ? $t(partner.altKey) : partner.name" class="footer-logo">
+            <template
+              v-for="partner in partners"
+              :key="partner.name"
+            >
+              <NuxtLink
+                v-if="partner.internal"
+                :to="localePath(partner.url)"
+              >
+                <img
+                  :src="partner.logo"
+                  :alt="partner.altKey ? $t(partner.altKey) : partner.name"
+                  class="footer-logo"
+                >
               </NuxtLink>
-              <a v-else :href="partner.url" target="_blank">
-                <img :src="partner.logo" :alt="partner.name" class="footer-logo">
+
+              <a
+                v-else
+                :href="partner.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  :src="partner.logo"
+                  :alt="partner.name"
+                  class="footer-logo"
+                >
               </a>
             </template>
           </div>
 
           <div class="footer-lang-switcher">
-            <NuxtLink 
-              v-for="item in (locales as any)" 
-              :key="item.code" 
+            <NuxtLink
+              v-for="item in (locales as any)"
+              :key="item.code"
               :to="switchLocalePath(item.code)"
               :class="{ active: locale === item.code }"
               class="lang-link"
@@ -92,13 +248,57 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
             </NuxtLink>
           </div>
         </div>
-        
+
         <div class="footer-social">
-          <a href="https://www.youtube.com/@TWBronyCon2" target="_blank" aria-label="YouTube" class="social-icon youtube"><i class="fa-brands fa-youtube"></i></a>
-          <a href="https://discord.gg/k83NMPUKxG" target="_blank" aria-label="Discord" class="social-icon discord"><i class="fa-brands fa-discord"></i></a>
-          <a href="https://www.facebook.com/profile.php?id=61583292256078" target="_blank" aria-label="Facebook" class="social-icon facebook"><i class="fa-brands fa-facebook"></i></a>
-          <a href="https://x.com/TWBronycon2" target="_blank" aria-label="X (Twitter)" class="social-icon twitter"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.instagram.com/taiwanbronycon2" target="_blank" aria-label="Instagram" class="social-icon instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a
+            href="https://www.youtube.com/@TWBronyCon2"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            class="social-icon youtube"
+          >
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+
+          <a
+            href="https://discord.gg/k83NMPUKxG"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Discord"
+            class="social-icon discord"
+          >
+            <i class="fa-brands fa-discord"></i>
+          </a>
+
+          <a
+            href="https://www.facebook.com/profile.php?id=61583292256078"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            class="social-icon facebook"
+          >
+            <i class="fa-brands fa-facebook"></i>
+          </a>
+
+          <a
+            href="https://x.com/TWBronycon2"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+            class="social-icon twitter"
+          >
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+
+          <a
+            href="https://www.instagram.com/taiwanbronycon2"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            class="social-icon instagram"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
         </div>
       </div>
 
@@ -106,16 +306,82 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
       <div class="footer-bottom">
         <div class="footer-copyright">
-          <p>{{ $t('home.footer.copyrightNotice') }} {{ $t('home.footer.copyright') }}</p>
-        </div>
-        
-        <div class="footer-quotes">
-          <p :class="['quote-text', isQuoteFadingOut ? 'fade-out' : 'fade-in']">
-            {{ currentQuote }}
+          <p>
+            {{ $t('home.footer.copyrightNotice') }}
+            {{ $t('home.footer.copyright') }}
           </p>
+
+          <button
+            class="footer-version"
+            type="button"
+            aria-label="Website version"
+            @click="handleVersionClick"
+          >
+            {{ currentVersion }}
+          </button>
+        </div>
+
+        <div class="footer-quotes">
+          <ClientOnly>
+            <p :class="['quote-text', isQuoteFadingOut ? 'fade-out' : 'fade-in']">
+              {{ currentQuote }}
+            </p>
+
+            <template #fallback>
+              <p class="quote-text">
+                {{ $t('home.quotesLoading') }}
+              </p>
+            </template>
+          </ClientOnly>
         </div>
       </div>
     </div>
+    <Teleport to="body">
+  <div
+    v-if="showUpdateLog"
+    class="update-log-modal"
+    @click.self="closeUpdateLog"
+  >
+    <div class="update-log-box">
+
+      <div class="update-log-header">
+        <h2>✦ 更新日誌 ✦</h2>
+
+        <button
+          class="update-log-close"
+          type="button"
+          aria-label="Close update log"
+          @click="closeUpdateLog"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="update-log-content">
+        <div
+          v-for="log in updateLogs"
+          :key="log.version"
+          class="update-log-item"
+        >
+          <h3>
+            {{ log.version }}
+            <span>{{ log.date }}</span>
+          </h3>
+
+          <ul>
+            <li
+              v-for="change in log.changes"
+              :key="change"
+            >
+              {{ change }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Teleport>
   </footer>
 </template>
 
@@ -128,7 +394,6 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
   padding: 3rem 0 1.5rem;
   color: #fff;
   z-index: 10;
@@ -191,13 +456,6 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   pointer-events: none;
 }
 
-.footer-tagline {
-  font-size: 0.9rem;
-  color: #ffbdde;
-  margin: 0;
-  opacity: 0.8;
-}
-
 .footer-social {
   display: flex;
   gap: 1.25rem;
@@ -214,11 +472,25 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   color: #fff;
 }
 
-.social-icon.youtube:hover { color: #ff0000; }
-.social-icon.discord:hover { color: #5865F2; }
-.social-icon.facebook:hover { color: #1877F2; }
-.social-icon.twitter:hover { color: #1DA1F2; }
-.social-icon.instagram:hover { color: #E4405F; }
+.social-icon.youtube:hover {
+  color: #ff0000;
+}
+
+.social-icon.discord:hover {
+  color: #5865F2;
+}
+
+.social-icon.facebook:hover {
+  color: #1877F2;
+}
+
+.social-icon.twitter:hover {
+  color: #1DA1F2;
+}
+
+.social-icon.instagram:hover {
+  color: #E4405F;
+}
 
 .footer-divider {
   height: 1px;
@@ -247,6 +519,25 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   margin: 0.2rem 0;
 }
 
+.footer-version {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #ffbdde;
+  font: inherit;
+  font-size: 0.78rem;
+  opacity: 0.5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.footer-version:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(255, 189, 222, 0.6);
+}
+
 .footer-quotes {
   flex: 1;
   max-width: 60%;
@@ -256,7 +547,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 .quote-text {
   margin: 0;
   font-size: 0.95rem;
-    color: #ffbdde;
+  color: #ffbdde;
   font-style: italic;
   transition: all 0.3s ease-in-out;
 }
@@ -271,7 +562,150 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   transform: translateX(0);
 }
 
-/* Mobile */
+.update-log-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.update-log-box {
+  position: relative;
+
+  box-sizing: border-box;
+  width: min(92vw, 34rem);
+  max-height: 75vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  padding: 1.5rem 2rem;
+
+  border-radius: 1.25rem;
+  color: #fff;
+
+  background: linear-gradient(
+    180deg,
+    rgba(60, 30, 90, 0.95),
+    rgba(25, 10, 40, 0.96)
+  );
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.update-log-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 3.5rem 1rem;
+}
+
+.update-log-header h2 {
+  margin: 0 !important;
+}
+
+.update-log-content {
+  overflow-y: auto;
+  padding: 0 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: #d39cff rgba(255, 255, 255, 0);
+}
+
+.update-log-content::-webkit-scrollbar {
+  width: .5rem;
+}
+
+.update-log-content::-webkit-scrollbar-track {
+  background:
+    rgba(255,255,255,0);
+
+  border-radius: 999px;
+}
+
+.update-log-content::-webkit-scrollbar-thumb {
+  
+  background:
+    linear-gradient(
+      180deg,
+      #ffd5ea,
+      #d6a7ff
+    );
+  border-radius: 999px;
+
+  border:
+    2px solid
+    rgba(60,30,90,.4);
+}
+
+.update-log-content::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #ffbdde,
+      #c78cff
+    );
+}
+
+.update-log-close {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-67.5%);
+  border: 0;
+  background: transparent;
+  color: #ffbdde;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.update-log-box h2 {
+  margin: 0 0 1.25rem;
+  color: #ffbdde;
+  text-align: center;
+}
+
+.update-log-item {
+  margin-top: 1.2rem;
+}
+
+.update-log-item h3 {
+  margin: 0 0 0.5rem;
+  color: #fff;
+}
+
+.update-log-item h3 span {
+  margin-left: 0.6rem;
+  font-size: 0.8em;
+  color: #ffbdde;
+  opacity: 0.7;
+}
+
+.update-log-item ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.update-log-item li {
+  margin: 0.35rem 0;
+  color: #ffd6ea;
+}
+
 @media screen and (max-width: 800px) {
   .footer-root {
     padding: 2rem 0 1rem;
@@ -301,6 +735,15 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
   .footer-copyright {
     text-align: center;
+  }
+
+  .footer-logos {
+    transform: translateX(37.5px);
+  }
+
+  .update-log-box {
+    width: min(94vw, 32rem);
+    padding: 1.5rem;
   }
 }
 </style>

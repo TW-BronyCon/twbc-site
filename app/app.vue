@@ -58,6 +58,16 @@ useHead({
 
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <SharedBackground variant="homepage" />
+
+    <div class="app-layout">
+      <SiteNav />
+
+      <main class="page-content">
+        <NuxtPage />
+      </main>
+
+      <Footer />
+    </div>
   </NuxtLayout>
 </template>

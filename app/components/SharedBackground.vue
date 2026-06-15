@@ -56,7 +56,7 @@ const props = defineProps({
         scale: 1,
         mobileScale: 1,
         x: "-50%",
-        mobileX: "0"
+        mobileX: "-50%"
       }
     ]
   }

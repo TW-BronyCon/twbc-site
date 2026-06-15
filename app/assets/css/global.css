@@ -4,11 +4,21 @@ html, body {
     padding: 0;
     height: 100%;
     box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
     /* Fix white background leak */
     /* background-color: #120b18; */
     color: #ffffff;
     font-family: "Noto Sans TC", sans-serif;
 }
+
+/* html[lang="en"] body,
+html[lang="en"] button,
+html[lang="en"] input,
+html[lang="en"] textarea,
+html[lang="en"] select {
+  font-family: 'Equestria', sans-serif;
+} */
 
 *, *::before, *::after {
     box-sizing: inherit;
@@ -32,4 +42,83 @@ html, body {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Page transition: SiteNav is outside NuxtPage, so only page content animates */
+/* .page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.42s cubic-bezier(.22, 1, .36, 1),
+    transform 0.42s cubic-bezier(.22, 1, .36, 1);
+} */
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.page-enter-to,
+.page-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Legacy HTML pages integrated into Nuxt */
+.legacy-page-root .bg,
+.legacy-page-root #blur,
+.legacy-page-root .vine-menu,
+.legacy-page-root .vine-img {
+  display: none !important;
+}
+
+.legacy-page-body {
+  width: 100%;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+html,
+body,
+#__nuxt {
+  min-height: 100%;
+  overflow: visible;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.page-content {
+  flex: 1 0 auto;
+  overflow: visible;
 }

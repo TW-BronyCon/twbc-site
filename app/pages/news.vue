@@ -1,0 +1,594 @@
+<script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
+
+const rememberOpenedMail = true //記憶封蠟狀態
+const openedStorageKey = 'twbc-opened-news'
+
+const { t, locale, getLocaleMessage } = useI18n()
+
+useHead({
+  title: () => t('newsPage.title')
+})
+
+type MaybeI18nValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | {
+      source?: string
+      body?: {
+        static?: string
+      }
+    }
+
+type RawNewsPost = {
+  id?: MaybeI18nValue
+  title?: MaybeI18nValue
+  author?: MaybeI18nValue
+  time?: MaybeI18nValue
+  content?: MaybeI18nValue
+  url?: MaybeI18nValue
+}
+
+type NewsPost = {
+  id: string
+  title: string
+  author: string
+  time: string
+  content: string
+  url: string
+}
+
+type LocaleMessage = {
+  news?: {
+    posts?: RawNewsPost[]
+  }
+}
+
+type ContentPart =
+  | { type: 'text'; value: string }
+  | { type: 'link'; value: string }
+
+type SealData = {
+  angle: number
+  topClip: string
+  bottomClip: string
+}
+
+function toText(value: MaybeI18nValue): string {
+  if (value === null || value === undefined) return ''
+
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
+    return String(value)
+  }
+
+  return value.source || value.body?.static || ''
+}
+
+function randomBetween(min: number, max: number) {
+  return Math.random() * (max - min) + min
+}
+
+function createRandomCrack() {
+  const crack: string[] = []
+  const steps = Math.floor(randomBetween(10, 20))
+  const baseY = randomBetween(45, 55)
+  const minOffset = randomBetween(-10, -5)
+  const maxOffset = randomBetween(5, 10)
+
+  for (let i = 0; i <= steps; i++) {
+    const x = (i / steps) * 100
+    const y = baseY + randomBetween(minOffset, maxOffset)
+
+    crack.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`)
+  }
+
+  const reversed = crack.slice().reverse()
+
+  return {
+    topClip: `polygon(
+      0 0,
+      100% 0,
+      ${reversed.join(', ')}
+    )`,
+
+    bottomClip: `polygon(
+      0 100%,
+      100% 100%,
+      ${reversed.join(', ')}
+    )`
+  }
+}
+
+const posts = computed<NewsPost[]>(() => {
+  const message = getLocaleMessage(locale.value) as LocaleMessage
+  const rawPosts = message.news?.posts
+
+  if (!Array.isArray(rawPosts)) return []
+
+  return rawPosts
+    .map((post, index) => {
+      const id = toText(post.id) || `post_${index + 1}`
+
+      return {
+        id,
+        title: toText(post.title),
+        author: toText(post.author),
+        time: toText(post.time),
+        content: toText(post.content),
+        url: toText(post.url) || '#'
+      }
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.time.replace(/\//g, '-')).getTime()
+      const dateB = new Date(b.time.replace(/\//g, '-')).getTime()
+
+      return dateB - dateA
+    })
+})
+
+const selectedPost = ref<NewsPost | null>(null)
+const openedMap = ref<Record<string, boolean>>({})
+const sealMap = ref<Record<string, SealData>>({})
+
+const whyX = ref(0)
+const whyY = ref(0)
+const whyReady = ref(false)
+
+const mailRefs = new Map<string, HTMLElement>()
+
+let currentWhyPostId: string | null = null
+let whyIntroTimer: ReturnType<typeof setTimeout> | null = null
+let whyIdleTimer: ReturnType<typeof setTimeout> | null = null
+
+function setMailRef(
+  postId: string,
+  el: Element | ComponentPublicInstance | null
+) {
+  if (el instanceof HTMLElement) {
+    mailRefs.set(postId, el)
+    return
+  }
+
+  mailRefs.delete(postId)
+}
+
+function moveWhyOffscreen() {
+  currentWhyPostId = null
+  whyX.value = document.documentElement.scrollWidth + 250
+  whyY.value = 300
+}
+
+function getDefaultWhyPostId() {
+  const unopened = posts.value.find(post => !isMailOpened(post.id))
+  return unopened?.id || posts.value[0]?.id || ''
+}
+
+function moveWhyToMail(postId: string) {
+  const el = mailRefs.get(postId)
+
+  if (!el) return
+
+  currentWhyPostId = postId
+
+  if (whyIdleTimer) {
+    clearTimeout(whyIdleTimer)
+    whyIdleTimer = null
+  }
+
+  whyReady.value = true
+
+  const rect = el.getBoundingClientRect()
+
+  whyX.value =
+    rect.right +
+    window.scrollX +
+    20
+
+  whyY.value =
+    rect.top +
+    window.scrollY +
+    rect.height / 2 -
+    280
+}
+
+function moveWhyToDefaultMail() {
+  const postId = getDefaultWhyPostId()
+
+  if (!postId) return
+
+  moveWhyToMail(postId)
+  startWhyIdleTimer()
+}
+
+function startWhyIdleTimer() {
+  if (whyIdleTimer) clearTimeout(whyIdleTimer)
+
+  whyIdleTimer = setTimeout(() => {
+    moveWhyOffscreen()
+  }, 60 * 1000) // 1分鐘消失
+}
+
+function handleResize() {
+  if (!whyReady.value) return
+
+  if (currentWhyPostId) {
+    moveWhyToMail(currentWhyPostId)
+    return
+  }
+
+  moveWhyOffscreen()
+}
+
+function getPostNumber(postId: string) {
+  const match = postId.match(/(\d+)$/)
+  return match ? Number(match[1]) : null
+}
+
+function angleDiff(a: number, b: number) {
+  return Math.abs(a - b)
+}
+
+function createSealAngle(postId: string) {
+  const currentNo = getPostNumber(postId)
+
+  for (let i = 0; i < 80; i++) {
+    const angle = Math.round(randomBetween(-50, 50))
+
+    if (currentNo === null) return angle
+
+    const prevId = `post_${String(currentNo - 1).padStart(3, '0')}`
+    const nextId = `post_${String(currentNo + 1).padStart(3, '0')}`
+
+    const prevAngle = sealMap.value[prevId]?.angle
+    const nextAngle = sealMap.value[nextId]?.angle
+
+    if (
+      (prevAngle === undefined || angleDiff(angle, prevAngle) >= 15) &&
+      (nextAngle === undefined || angleDiff(angle, nextAngle) >= 15)
+    ) {
+      return angle
+    }
+  }
+
+  return Math.round(randomBetween(-50, 50))
+}
+
+function getSealData(postId: string) {
+  if (!sealMap.value[postId]) {
+    const crack = createRandomCrack()
+
+    sealMap.value[postId] = {
+      angle: createSealAngle(postId),
+      topClip: crack.topClip,
+      bottomClip: crack.bottomClip
+    }
+  }
+
+  return sealMap.value[postId]
+}
+
+function isMailOpened(postId: string) {
+  return openedMap.value[postId] === true
+}
+
+const contentParts = computed<ContentPart[]>(() => {
+  const text = selectedPost.value?.content ?? ''
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+
+  const parts: ContentPart[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = urlRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({
+        type: 'text',
+        value: text.slice(lastIndex, match.index)
+      })
+    }
+
+    parts.push({
+      type: 'link',
+      value: match[0]
+    })
+
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < text.length) {
+    parts.push({
+      type: 'text',
+      value: text.slice(lastIndex)
+    })
+  }
+
+  return parts
+})
+
+function trimText(text = '', max = 90) {
+  const clean = text
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return clean.length > max
+    ? `${clean.slice(0, max)}...`
+    : clean
+}
+
+function saveOpenedMap() {
+  if (!rememberOpenedMail) return
+
+  localStorage.setItem(
+    openedStorageKey,
+    JSON.stringify(openedMap.value)
+  )
+}
+
+function loadOpenedMap() {
+  if (!rememberOpenedMail) {
+    localStorage.removeItem(openedStorageKey)
+    openedMap.value = {}
+    return
+  }
+
+  const saved = localStorage.getItem(openedStorageKey)
+
+  if (!saved) {
+    openedMap.value = {}
+    return
+  }
+
+  try {
+    const parsed = JSON.parse(saved)
+
+    openedMap.value =
+      parsed &&
+      typeof parsed === 'object' &&
+      !Array.isArray(parsed)
+        ? parsed
+        : {}
+  } catch {
+    openedMap.value = {}
+  }
+}
+
+function openMail(post: NewsPost) {
+  openedMap.value[post.id] = true
+  saveOpenedMap()
+
+  selectedPost.value = post
+  document.body.style.overflow = 'hidden'
+}
+
+function closeMail() {
+  selectedPost.value = null
+  document.body.style.overflow = ''
+}
+
+async function copyLink(url?: string) {
+  try {
+    await navigator.clipboard.writeText(url || '#')
+    alert(t('news.messages.copied'))
+  } catch {
+    alert(t('news.messages.copyFailed'))
+  }
+}
+
+function handleEsc(e: KeyboardEvent) {
+  if (e.key === 'Escape') {
+    closeMail()
+  }
+}
+
+onMounted(async () => {
+  loadOpenedMap()
+
+  window.addEventListener('keydown', handleEsc)
+  window.addEventListener('resize', handleResize)
+
+  await nextTick()
+
+  moveWhyOffscreen()
+
+  whyIntroTimer = setTimeout(() => {
+    moveWhyToDefaultMail()
+  }, 1000) //1秒載入
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleEsc)
+  window.removeEventListener('resize', handleResize)
+
+  document.body.style.overflow = ''
+
+  if (whyIntroTimer) clearTimeout(whyIntroTimer)
+  if (whyIdleTimer) clearTimeout(whyIdleTimer)
+})
+</script>
+
+<template>
+  <div class="legacy-page-root">
+    <img
+    src="/img/Why.avif"
+    class="why"
+    :class="{ 'why-ready': whyReady }"
+    :style="{
+      '--why-x': `${whyX}px`,
+      '--why-y': `${whyY}px`
+    }"
+    >
+
+    <div class="legacy-page-body">
+      <section class="news-wrap">
+        <div class="news-head">
+          <h1>{{ t('newsPage.heading') }}</h1>
+          <p>{{ t('newsPage.description') }}</p>
+        </div>
+        
+        <div class="mail-list">
+          <article
+            v-for="post in posts"
+            :key="post.id"
+            :ref="el => setMailRef(post.id, el)"
+            class="mail"
+            :class="{ opened: openedMap[post.id] }"
+            @mouseenter="moveWhyToMail(post.id)"
+            @mouseleave="startWhyIdleTimer"
+            @click="openMail(post)"
+          >
+            <div class="stamp"></div>
+
+            <div
+              class="wax-seal"
+              :style="{
+                '--seal-angle': `${getSealData(post.id).angle}deg`,
+                '--crack-top': getSealData(post.id).topClip,
+                '--crack-bottom': getSealData(post.id).bottomClip
+              }"
+            >
+              <img
+                v-if="!isMailOpened(post.id)"
+                src="/img/WaxSeal.avif"
+                class="wax-closed"
+              >
+
+              <template v-else>
+                <div class="wax-top">
+                  <div class="wax-piece-img"></div>
+                </div>
+
+                <div class="wax-bottom">
+                  <div class="wax-piece-img"></div>
+                </div>
+              </template>
+            </div>
+
+            <h3>{{ post.title }}</h3>
+
+            <div class="preview">
+              {{ trimText(post.content, 90) }}
+            </div>
+
+            <div class="mail-meta">
+              <div class="time">{{ post.time }}</div>
+              <div class="author">{{ post.author }}</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <Teleport to="body">
+        <div
+          v-if="selectedPost"
+          class="modal show"
+          @click.self="closeMail"
+        >
+        <div class="paper">
+          <button
+            class="close-btn"
+            type="button"
+            @click="closeMail"
+          >
+            ✕
+          </button>
+
+          <div id="paperBody">
+            <h2>{{ selectedPost.title }}</h2>
+
+            <div class="paper-meta">
+              {{ t('news.labels.time') }}：{{ selectedPost.time }}
+
+              <span style="float: right;">
+                {{ t('news.labels.author') }}：{{ selectedPost.author }}
+              </span>
+            </div>
+
+            <div class="paper-content">
+              <template
+                v-for="(part, index) in contentParts"
+                :key="index"
+              >
+                <a
+                  v-if="part.type === 'link'"
+                  :href="part.value"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  @click.stop
+                >
+                  {{ part.value }}
+                </a>
+
+                <span v-else>
+                  {{ part.value }}
+                </span>
+              </template>
+            </div>
+
+            <!-- <div class="paper-tools">
+              <button
+                type="button"
+                @click="copyLink(selectedPost.url)"
+              >
+                {{ t('news.actions.copyLink') }}
+              </button>
+
+              <a
+                :href="selectedPost.url || '#'"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ t('news.actions.openPost') }}
+              </a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      </Teleport>
+    </div>
+  </div>
+</template>
+
+<style src="~/assets/css/font.css"></style>
+<style scoped src="~/assets/css/news.css"></style>
+
+<style scoped>
+.legacy-page-root {
+  position: relative;
+  padding-top: clamp(4.5rem, 7vw, 6.5rem);
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+    .legacy-page-root {
+        overflow-x: hidden;
+    }
+}
+
+.legacy-page-body {
+  position: relative;
+  z-index: 1;
+}
+
+.paper-content {
+  white-space: pre-line;
+}
+
+.paper-content a {
+  color: #803bff;
+  font-weight: 700;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.paper-content a:hover {
+  opacity: .75;
+}
+</style>
