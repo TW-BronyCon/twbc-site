@@ -128,9 +128,13 @@ const posts = computed<NewsPost[]>(() => {
     .sort((a, b) => {
       const toTime = (raw: string) => {
         const parts = raw.split(/[\/-]/).map(part => part.trim())
+
         if (parts.length !== 3) return 0
 
-        const [p1, p2, p3] = parts
+        const p1 = parts[0]!
+        const p2 = parts[1]!
+        const p3 = parts[2]!
+
         const iso = /^\d{4}$/.test(p1)
           ? `${p1}-${p2.padStart(2, '0')}-${p3.padStart(2, '0')}`
           : /^\d{4}$/.test(p3)
@@ -138,6 +142,7 @@ const posts = computed<NewsPost[]>(() => {
             : raw
 
         const time = Date.parse(iso)
+
         return Number.isNaN(time) ? 0 : time
       }
 
