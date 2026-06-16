@@ -126,10 +126,22 @@ const posts = computed<NewsPost[]>(() => {
       }
     })
     .sort((a, b) => {
-      const dateA = new Date(a.time.replace(/\//g, '-')).getTime()
-      const dateB = new Date(b.time.replace(/\//g, '-')).getTime()
+      const toTime = (raw: string) => {
+        const parts = raw.split(/[\/-]/).map(part => part.trim())
+        if (parts.length !== 3) return 0
 
-      return dateB - dateA
+        const [p1, p2, p3] = parts
+        const iso = /^\d{4}$/.test(p1)
+          ? `${p1}-${p2.padStart(2, '0')}-${p3.padStart(2, '0')}`
+          : /^\d{4}$/.test(p3)
+            ? `${p3}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`
+            : raw
+
+        const time = Date.parse(iso)
+        return Number.isNaN(time) ? 0 : time
+      }
+
+      return toTime(b.time) - toTime(a.time)
     })
 })
 
