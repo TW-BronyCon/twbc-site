@@ -30,7 +30,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 </script>
 
 <template>
-  <button class="nav-toggle" :class="{ active: isNavOpen }" @click.stop="toggleNav">
+  <button type="button" class="nav-toggle" :class="{ active: isNavOpen }" :aria-expanded="isNavOpen" aria-label="Toggle navigation menu" @click.stop="toggleNav">
     <span></span>
     <span></span>
     <span></span>
