@@ -154,6 +154,9 @@ const selectedPost = ref<NewsPost | null>(null)
 const openedMap = ref<Record<string, boolean>>({})
 const sealMap = ref<Record<string, SealData>>({})
 
+const defaultSealTopClip = 'polygon(0 0, 100% 0, 100% 50%, 0 50%)'
+const defaultSealBottomClip = 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)'
+
 const whyX = ref(0)
 const whyY = ref(0)
 const whyReady = ref(false)
@@ -277,19 +280,33 @@ function createSealAngle(postId: string) {
   return Math.round(randomBetween(-50, 50))
 }
 
-function getSealData(postId: string) {
-  if (!sealMap.value[postId]) {
-    const crack = createRandomCrack()
+function getSealData(postId: string): SealData {
+  const existing = sealMap.value[postId]
 
-    sealMap.value[postId] = {
-      angle: createSealAngle(postId),
-      topClip: crack.topClip,
-      bottomClip: crack.bottomClip
-    }
+  if (existing) return existing
+
+  const crack = createRandomCrack()
+
+  const data: SealData = {
+    angle: createSealAngle(postId),
+    topClip: crack.topClip,
+    bottomClip: crack.bottomClip
   }
 
-  return sealMap.value[postId]
+  sealMap.value[postId] = data
+
+  return data
 }
+
+watch(
+  posts,
+  (list) => {
+    for (const post of list) {
+      getSealData(post.id)
+    }
+  },
+  { immediate: true }
+)
 
 function isMailOpened(postId: string) {
   return openedMap.value[postId] === true
@@ -434,16 +451,16 @@ onBeforeUnmount(() => {
 <template>
   <div class="legacy-page-root">
     <img
-      src="/img/Why.avif"
-      alt=""
-      aria-hidden="true"
-      class="why"
-      :class="{ 'why-ready': whyReady }"
-      :style="{
-        '--why-x': `${whyX}px`,
-        '--why-y': `${whyY}px`
-      }"
-    />
+    src="/img/Why.avif"
+    alt=""
+    aria-hidden="true"
+    class="why"
+    :class="{ 'why-ready': whyReady }"
+    :style="{
+      '--why-x': `${whyX}px`,
+      '--why-y': `${whyY}px`
+    }"
+    >
 
     <div class="legacy-page-body">
       <section class="news-wrap">
@@ -468,9 +485,9 @@ onBeforeUnmount(() => {
             <div
               class="wax-seal"
               :style="{
-                '--seal-angle': `${getSealData(post.id).angle}deg`,
-                '--crack-top': getSealData(post.id).topClip,
-                '--crack-bottom': getSealData(post.id).bottomClip
+                '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
+                '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
+                '--crack-bottom': sealMap[post.id]?.bottomClip ?? defaultSealBottomClip
               }"
             >
               <img
