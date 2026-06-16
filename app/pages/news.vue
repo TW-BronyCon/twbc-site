@@ -434,14 +434,16 @@ onBeforeUnmount(() => {
 <template>
   <div class="legacy-page-root">
     <img
-    src="/img/Why.avif"
-    class="why"
-    :class="{ 'why-ready': whyReady }"
-    :style="{
-      '--why-x': `${whyX}px`,
-      '--why-y': `${whyY}px`
-    }"
-    >
+      src="/img/Why.avif"
+      alt=""
+      aria-hidden="true"
+      class="why"
+      :class="{ 'why-ready': whyReady }"
+      :style="{
+        '--why-x': `${whyX}px`,
+        '--why-y': `${whyY}px`
+      }"
+    />
 
     <div class="legacy-page-body">
       <section class="news-wrap">
