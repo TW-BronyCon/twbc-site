@@ -201,6 +201,11 @@ const onMouseLeave = () => {
 <style scoped src="~/assets/css/ticket.css"></style>
 
 <style scoped>
+.ticket-root {
+  position: relative;
+  padding-top: clamp(3.5rem, 1vw, 4.5rem);
+}
+
 .block-link {
   text-decoration: none;
   color: inherit;
