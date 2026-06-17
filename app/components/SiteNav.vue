@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 
-const { locale, locales } = useI18n()
 const localePath = useLocalePath()
-const switchLocalePath = useSwitchLocalePath()
 
 const isNavOpen = ref(false)
 const openSubmenu = ref<string | null>(null)
@@ -57,17 +55,6 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
         </ul>
       </li>
     </ul>
-
-    <div class="lang-switcher">
-      <NuxtLink
-        v-for="item in (locales as any)"
-        :key="item.code"
-        :to="switchLocalePath(item.code)"
-        :class="{ active: locale === item.code }"
-      >
-        {{ item.name }}
-      </NuxtLink>
-    </div>
   </nav>
 </template>
 
@@ -229,28 +216,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   pointer-events: auto;
 }
 
-.lang-switcher {
-  display: flex;
-  gap: .45em;
 
-  padding-left: .25em;
-}
-
-.lang-switcher a {
-  padding: .2em .55em;
-
-  border-radius: 999px;
-
-  opacity: .65;
-}
-
-.lang-switcher a.active {
-  color: #ffe6a7;
-  background: rgba(255, 255, 255, .1);
-
-  opacity: 1;
-  pointer-events: none;
-}
 
 .nav-toggle {
   display: none;
@@ -368,8 +334,5 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     display: block;
   }
 
-  .lang-switcher {
-    padding: .4rem .7rem 0;
-  }
 }
 </style>
