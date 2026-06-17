@@ -1,27 +1,34 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const { t, locale, locales } = useI18n()
-const localePath = useLocalePath()
-const switchLocalePath = useSwitchLocalePath()
-const router = useRouter()
 
+/**
+ * Ticket Page Component
+ * Handles displaying detailed ticket tiers and interactive feature comparison table.
+ */
+
+const { t } = useI18n()
+
+// Page SEO metadata
 useHead({
   title: t('ticket.title')
 })
 
+// Display mode state: 'detailed' view (cards) or 'table' view (comparison grid)
 const currentMode = ref<'detailed' | 'table'>('detailed')
+
+// Interaction states for comparison table hover effects
 const isHovering = ref(false)
 const activeRowIndex = ref<number | null>(null)
 const activeColIndex = ref<number | null>(null)
 
+/**
+ * Toggle display mode between card list and comparison table
+ */
 const toggleMode = () => {
   currentMode.value = currentMode.value === 'detailed' ? 'table' : 'detailed'
 }
 
-const goHome = () => {
-  router.push(localePath('/'))
-}
-
+// Ticket tier configurations containing layout colors, graphic assets, and purchase forms
 const tiers = [
   { 
     id: 'budget', 
@@ -53,6 +60,7 @@ const tiers = [
   }
 ]
 
+// Matrix mapping features to their availability across [budget, standard, sponsor, royale] tiers
 const featuresList = [
   { key: 'badge', availability: [true, true, true, true] },
   { key: 'pin', availability: [false, true, true, true] },
@@ -71,24 +79,36 @@ const featuresList = [
   { key: 'speech', availability: [false, false, false, true] }
 ]
 
+/**
+ * Track hovered cell inside comparison table
+ */
 const onCellMouseEnter = (rowIndex: number, colIndex: number) => {
   isHovering.value = true
   activeRowIndex.value = rowIndex
   activeColIndex.value = colIndex
 }
 
+/**
+ * Track hovered row inside comparison table
+ */
 const onRowMouseEnter = (rowIndex: number) => {
   isHovering.value = true
   activeRowIndex.value = rowIndex
   activeColIndex.value = null
 }
 
+/**
+ * Track hovered column header inside comparison table
+ */
 const onHeaderMouseEnter = (colIndex: number) => {
   isHovering.value = true
   activeRowIndex.value = null
   activeColIndex.value = colIndex
 }
 
+/**
+ * Reset hover tracking states on mouse exit
+ */
 const onMouseLeave = () => {
   isHovering.value = false
   activeRowIndex.value = null
@@ -100,97 +120,98 @@ const onMouseLeave = () => {
   <div class="ticket-root">
     <SharedBackground variant="homepage" />
 
-
     <div class="container">
       <div class="border">
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
           <div class="btn">
-            <button class="sectionbtn" @click="goHome">{{ $t('ticket.backHome') }}</button>
             <button class="sectionbtn" @click="toggleMode">
               {{ currentMode === 'detailed' ? $t('ticket.viewTable') : $t('ticket.viewDetailed') }}
             </button>
           </div>
 
-          <!-- Detailed View -->
-          <div v-if="currentMode === 'detailed'" id="section1" class="section show">
-            <a
-              v-for="(tier, index) in tiers"
-              :key="tier.id"
-              :href="tier.url"
-              target="_blank"
-              class="block-link"
-            >
-              <div
-                class="block"
-                :style="{ color: tier.color }"
+          <!-- Detailed vs. Table View transition switcher -->
+          <Transition name="fade-slide" mode="out-in">
+            <!-- Detailed View (Card List) -->
+            <div v-if="currentMode === 'detailed'" id="section1" class="section show">
+              <a
+                v-for="(tier, index) in tiers"
+                :key="tier.id"
+                :href="tier.url"
+                target="_blank"
+                class="block-link"
               >
-                <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
-                <div class="ticket-text">
-                  <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
-                  <div class="description">
-                    <div class="desc-top">
-                      <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
-                    </div>
-                    <div class="desc-bottom">
-                      {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+                <div
+                  class="block"
+                  :style="{ color: tier.color }"
+                >
+                  <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
+                  <div class="ticket-text">
+                    <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
+                    <div class="description">
+                      <div class="desc-top">
+                        <span :style="{ color: tier.subColor }">{{ $t(`ticket.descriptions.${tier.id}`) }}</span>
+                      </div>
+                      <div class="desc-bottom">
+                        {{ $t('ticket.includes') }}{{ featuresList.filter(f => f.availability[index]).map(f => $t(`ticket.features.${f.key}`)).join('、') }}
+                      </div>
                     </div>
                   </div>
+                  <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
                 </div>
-                <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Table View -->
-          <div v-if="currentMode === 'table'" id="section2" class="section show">
-            <div class="compare-wrap">
-              <table :class="['compare-table', { 'is-hovering': isHovering }]" @mouseleave="onMouseLeave">
-                <thead>
-                  <tr>
-                    <th class="feature-head"></th>
-                    <th
-                      v-for="(tier, index) in tiers"
-                      :key="tier.id"
-                      class="tier-head"
-                      :class="{ 'active-col': activeColIndex === index }"
-                      @mouseenter="onHeaderMouseEnter(index)"
-                    >
-                      <span :class="['tier-label', tier.id]">{{ $t(`ticket.tiers.${tier.id}`) }}</span>
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr
-                    v-for="(feature, rIndex) in featuresList"
-                    :key="feature.key"
-                    :class="{ 'active-row': activeRowIndex === rIndex }"
-                  >
-                    <th
-                      class="feature-name"
-                      @mouseenter="onRowMouseEnter(rIndex)"
-                    >
-                      {{ $t(`ticket.features.${feature.key}`) }}
-                    </th>
-                    <td
-                      v-for="(avail, cIndex) in feature.availability"
-                      :key="cIndex"
-                      :class="[
-                        'col-' + (cIndex + 1),
-                        avail ? 'yes' : 'no',
-                        { 'active-col': activeColIndex === cIndex }
-                      ]"
-                      @mouseenter="onCellMouseEnter(rIndex, cIndex)"
-                    >
-                      {{ avail ? '✔' : '✖' }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              </a>
             </div>
-          </div>
+
+            <!-- Table View (Comparison Grid) -->
+            <div v-else-if="currentMode === 'table'" id="section2" class="section show">
+              <div class="compare-wrap">
+                <table :class="['compare-table', { 'is-hovering': isHovering }]" @mouseleave="onMouseLeave">
+                  <thead>
+                    <tr>
+                      <th class="feature-head"></th>
+                      <th
+                        v-for="(tier, index) in tiers"
+                        :key="tier.id"
+                        class="tier-head"
+                        :class="{ 'active-col': activeColIndex === index }"
+                        @mouseenter="onHeaderMouseEnter(index)"
+                      >
+                        <span :class="['tier-label', tier.id]">{{ $t(`ticket.tiers.${tier.id}`) }}</span>
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr
+                      v-for="(feature, rIndex) in featuresList"
+                      :key="feature.key"
+                      :class="{ 'active-row': activeRowIndex === rIndex }"
+                    >
+                      <th
+                        class="feature-name"
+                        @mouseenter="onRowMouseEnter(rIndex)"
+                      >
+                        {{ $t(`ticket.features.${feature.key}`) }}
+                      </th>
+                      <td
+                        v-for="(avail, cIndex) in feature.availability"
+                        :key="cIndex"
+                        :class="[
+                          'col-' + (cIndex + 1),
+                          avail ? 'yes' : 'no',
+                          { 'active-col': activeColIndex === cIndex }
+                        ]"
+                        @mouseenter="onCellMouseEnter(rIndex, cIndex)"
+                      >
+                        {{ avail ? '✔' : '✖' }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Transition>
         </div>
       </div>
     </div>
