@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance } from 'vue'
 
-const rememberOpenedMail = true //記憶封蠟狀態
+/**
+ * News Page Component
+ * Displays list of letter envelopes that open on hover and click, showing the detailed news post content in an interactive modal.
+ */
+
+// Configuration for persisting the opened/unopened state of letters
+const rememberOpenedMail = true 
 const openedStorageKey = 'twbc-opened-news'
 
 const { t, locale } = useI18n()
-const localePath = useLocalePath()
-const router = useRouter()
 
-const goHome = () => {
-  router.push(localePath('/'))
-}
 
 useHead({
   title: () => t('newsPage.title')
@@ -456,11 +457,6 @@ onBeforeUnmount(() => {
         <div class="news-head">
           <h1>{{ t('newsPage.heading') }}</h1>
           <p>{{ t('newsPage.description') }}</p>
-          <div style="margin-top: 1.5rem; display: flex; justify-content: center;">
-            <button class="back-btn" @click="goHome">
-              {{ t('news.actions.backHome') }}
-            </button>
-          </div>
         </div>
         
         <div class="mail-list">
@@ -517,71 +513,56 @@ onBeforeUnmount(() => {
       </section>
 
       <Teleport to="body">
-        <div
-          v-if="selectedPost"
-          class="modal show"
-          @click.self="closeMail"
-        >
-        <div class="paper">
-          <button
-            class="close-btn"
-            type="button"
-            @click="closeMail"
+        <Transition name="modal">
+          <div
+            v-if="selectedPost"
+            class="modal show"
+            @click.self="closeMail"
           >
-            ✕
-          </button>
-
-          <div id="paperBody">
-            <h2>{{ selectedPost.title }}</h2>
-
-            <div class="paper-meta">
-              {{ t('news.labels.time') }}：{{ selectedPost.time }}
-
-              <span style="float: right;">
-                {{ t('news.labels.author') }}：{{ selectedPost.author }}
-              </span>
-            </div>
-
-            <div class="paper-content">
-              <template
-                v-for="(part, index) in contentParts"
-                :key="index"
-              >
-                <a
-                  v-if="part.type === 'link'"
-                  :href="part.value"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  @click.stop
-                >
-                  {{ part.value }}
-                </a>
-
-                <span v-else>
-                  {{ part.value }}
-                </span>
-              </template>
-            </div>
-
-            <!-- <div class="paper-tools">
+            <div class="paper">
               <button
+                class="close-btn"
                 type="button"
-                @click="copyLink(selectedPost.url)"
+                @click="closeMail"
               >
-                {{ t('news.actions.copyLink') }}
+                ✕
               </button>
 
-              <a
-                :href="selectedPost.url || '#'"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ t('news.actions.openPost') }}
-              </a>
-            </div> -->
+              <div id="paperBody">
+                <h2>{{ selectedPost.title }}</h2>
+
+                <div class="paper-meta">
+                  {{ t('news.labels.time') }}：{{ selectedPost.time }}
+
+                  <span style="float: right;">
+                    {{ t('news.labels.author') }}：{{ selectedPost.author }}
+                  </span>
+                </div>
+
+                <div class="paper-content">
+                  <template
+                    v-for="(part, index) in contentParts"
+                    :key="index"
+                  >
+                    <a
+                      v-if="part.type === 'link'"
+                      :href="part.value"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      @click.stop
+                    >
+                      {{ part.value }}
+                    </a>
+
+                    <span v-else>
+                      {{ part.value }}
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </Transition>
       </Teleport>
       <Footer />
     </div>
@@ -622,41 +603,5 @@ onBeforeUnmount(() => {
 
 .paper-content a:hover {
   opacity: .75;
-}
-
-.back-btn {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 9.5rem;
-  padding: 0.75em 1.5em;
-  font-size: 1rem;
-  font-family: 'LXGW WenKai Mono TC', monospace;
-  color: #ffe9b5;
-  background:
-    linear-gradient(180deg, rgba(110, 64, 145, 0.85), rgba(66, 34, 86, 0.92));
-  border: 1px solid rgba(239, 200, 120, 0.62);
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 244, 220, 0.08),
-    0 6px 18px rgba(0, 0, 0, 0.24);
-  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
-}
-
-.back-btn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 244, 220, 0.14),
-    0 10px 24px rgba(0, 0, 0, 0.28),
-    0 0 16px rgba(255, 218, 136, 0.1);
-}
-
-.back-btn:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 244, 220, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.2);
 }
 </style>
