@@ -76,7 +76,7 @@ body::before {
 
 .border {
     width: 100%;
-    min-height: 91vh;
+    min-height: 85vh;
     box-sizing: border-box;
     padding: 0.65rem;
     border-radius: 1.4rem;
