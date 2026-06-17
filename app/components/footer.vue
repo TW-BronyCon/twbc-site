@@ -157,7 +157,7 @@ const updateLogs = [
   },
   {
     version: 'v0.3.5 (BETA)',
-    date: '2026-06-16',
+    date: '2026-06-17',
     changes: [
       '網站更新',
     ]
