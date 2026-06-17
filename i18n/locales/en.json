@@ -118,8 +118,14 @@
     "about": "About Us",
     "events": "Events",
     "apply": "Apply",
-    "timetable": "Timetable",
-    "location": "Venue (Coming Soon)"
+    "ticket": "Register",
+    "schedule": "Schedule",
+    "venue": "Venue"
+  },
+  "tba": {
+    "about": "About Us(TBA)",
+    "schedule": "Schedule(TBA)",
+    "venue": "Venue(TBA)"
   },
   "news": {
     "labels": {
@@ -180,7 +186,15 @@
         "title": "Official Website Now Live!",
         "author": "TWBC Taiwan BronyCon",
         "time": "05/06/2026",
-        "content": "The official TWBC website is now online!\nAfter months of preparation, we're excited to officially launch the Taiwan BronyCon website.\n\nYou can now find:\n✦ Ticket Information\n✦ Community Event Applications\n✦ Vendor Applications\n✦ Volunteer Recruitment Information\n\nMore content and updates will be added soon!\nOfficial Website:\nhttps://twbronycon.org/",
+        "content": "The official TWBC website is now online!\nAfter months of preparation, we're excited to officially launch the Taiwan BronyCon website.\n\nYou can now find:\n✦ Ticket Information\n✦ Community Event Applications\n✦ Vendor Applications\n✦ Volunteer Recruitment Information\n\nMore content and updates will be added soon!\nOur Website:\nhttps://twbronycon.org/",
+        "url": "#"
+      },
+      {
+        "id": "post_007",
+        "title": "The website has received a new update!",
+        "author": "TWBC 網頁組",
+        "time": "2026/05/17",
+        "content": "This update includes various interface improvements and content additions, making it easier than ever to access event information.\n\nNewly added:\n✦ News\n\nWe will continue refining the website's visual design and expanding its content to make the official site even more lively and complete.\nOur Website：https://twbronycon.org/",
         "url": "#"
       }
     ]
@@ -190,11 +204,6 @@
     "volunteer": "Volunteer",
     "vendor": "Vendor",
     "event": "Event"
-  },
-  "nav": {
-    "ticket": "Register",
-    "about": "About",
-    "schedule": "Schedule"
   },
   "about": {
     "title": "About Us",
