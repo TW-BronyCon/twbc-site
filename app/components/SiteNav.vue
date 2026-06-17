@@ -39,11 +39,15 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   <nav class="top-nav" :class="{ open: isNavOpen }">
     <NuxtLink :to="localePath('/')">{{ $t('menu.home') }}</NuxtLink>
     <NuxtLink :to="localePath('/news')">{{ $t('menu.news') }}</NuxtLink>
-    <NuxtLink :to="localePath('/ticket')">{{ $t('nav.ticket') }}</NuxtLink>
-    <!-- <NuxtLink :to="localePath('/about')">{{ $t('nav.about') }}</NuxtLink>
-    <NuxtLink :to="localePath('/schedule')">{{ $t('nav.schedule') }}</NuxtLink> -->
+    <NuxtLink :to="localePath('/ticket')">{{ $t('menu.ticket') }}</NuxtLink>
+    <NuxtLink v-if="false" :to="localePath('/about')">{{ $t('menu.about') }}</NuxtLink>
+    <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
+    <NuxtLink v-if="false" :to="localePath('/schedule')">{{ $t('menu.schedule') }}</NuxtLink>
+    <span v-else class="nav-coming-soon">{{ $t('tba.schedule') }}</span>
+    <NuxtLink v-if="false" :to="localePath('/venue')">{{ $t('menu.venue') }}</NuxtLink>
+    <span v-else class="nav-coming-soon">{{ $t('tba.venue') }}</span>
     
-    <ul class="menu">
+    <ul class="menu" style="transform: translateY(-1px);">
       <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
         <span @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</span>
         <ul class="submenu">
@@ -53,9 +57,6 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
         </ul>
       </li>
     </ul>
-    <!-- <span class="nav-coming-soon">{{ $t('nav.schedule') }}</span>
-    <span class="nav-coming-soon">{{ $t('nav.about') }}</span> -->
-    <span class="nav-coming-soon">{{ $t('menu.location') }}</span>
 
     <div class="lang-switcher">
       <NuxtLink
