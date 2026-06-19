@@ -45,7 +45,7 @@ type SealData = {
 }
 
 const { data: rawPosts } = await useAsyncData(
-  'news-posts',
+  () => `news-posts-${locale.value}`,
   async () => {
     try {
       return await $fetch<RawNewsPost[]>(`/content/news/posts.${locale.value}.json`)
@@ -101,7 +101,7 @@ const posts = computed<NewsPost[]>(() => {
 
   return list
     .map((post, index) => {
-      const id = post.id || `post_${index + 1}`
+      const id = post.id || `post_${String(index + 1).padStart(3, '0')}`
 
       return {
         id,
@@ -488,6 +488,7 @@ onBeforeUnmount(() => {
                 v-if="!isMailOpened(post.id)"
                 src="/img/WaxSeal.avif"
                 class="wax-closed"
+                alt=""
               >
 
               <template v-else>

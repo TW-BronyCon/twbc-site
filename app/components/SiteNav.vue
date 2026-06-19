@@ -37,23 +37,23 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   </button>
 
   <nav class="top-nav" :class="{ open: isNavOpen }">
-    <NuxtLink :to="localePath('/')">{{ $t('menu.home') }}</NuxtLink>
-    <NuxtLink :to="localePath('/news')">{{ $t('menu.news') }}</NuxtLink>
-    <NuxtLink :to="localePath('/ticket')">{{ $t('menu.ticket') }}</NuxtLink>
-    <NuxtLink v-if="false" :to="localePath('/about')">{{ $t('menu.about') }}</NuxtLink>
+    <NuxtLink :to="localePath('/')" @click="isNavOpen = false">{{ $t('menu.home') }}</NuxtLink>
+    <NuxtLink :to="localePath('/news')" @click="isNavOpen = false">{{ $t('menu.news') }}</NuxtLink>
+    <NuxtLink :to="localePath('/ticket')" @click="isNavOpen = false">{{ $t('menu.ticket') }}</NuxtLink>
+    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false">{{ $t('menu.about') }}</NuxtLink>
     <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
-    <NuxtLink v-if="false" :to="localePath('/schedule')">{{ $t('menu.schedule') }}</NuxtLink>
+    <NuxtLink v-if="false" :to="localePath('/schedule')" @click="isNavOpen = false">{{ $t('menu.schedule') }}</NuxtLink>
     <span v-else class="nav-coming-soon">{{ $t('tba.schedule') }}</span>
-    <NuxtLink v-if="false" :to="localePath('/venue')">{{ $t('menu.venue') }}</NuxtLink>
+    <NuxtLink v-if="false" :to="localePath('/venue')" @click="isNavOpen = false">{{ $t('menu.venue') }}</NuxtLink>
     <span v-else class="nav-coming-soon">{{ $t('tba.venue') }}</span>
     
     <ul class="menu" style="transform: translateY(-1px);">
       <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
-        <span @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</span>
+        <button @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</button>
         <ul class="submenu">
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform" target="_blank">{{ $t('apply.volunteer') }}</a></li>
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform" target="_blank">{{ $t('apply.vendor') }}</a></li>
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf1h5OaWHYf2cdqkEwWk_SWcNioLj89ilOAtr1g1sbupTPk1w/viewform" target="_blank">{{ $t('apply.event') }}</a></li>
+          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.volunteer') }}</a></li>
+          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.vendor') }}</a></li>
+          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf1h5OaWHYf2cdqkEwWk_SWcNioLj89ilOAtr1g1sbupTPk1w/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.event') }}</a></li>
         </ul>
       </li>
     </ul>
@@ -116,7 +116,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 }
 
 .top-nav a,
-.top-nav .menu-group > span {
+.top-nav .menu-group > button {
   position: relative;
 
   color: #fff;
@@ -128,7 +128,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 }
 
 .top-nav a::after,
-.top-nav .menu-group > span::after {
+.top-nav .menu-group > button::after {
   content: '';
 
   position: absolute;
@@ -146,8 +146,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 }
 
 .top-nav > a:hover::after,
-.top-nav .menu-group > span:hover::after,
-.top-nav .menu-group.open > span::after,
+.top-nav .menu-group > button:hover::after,
+.top-nav .menu-group.open > button::after,
 .top-nav > a.router-link-active::after,
 .top-nav > a.router-link-exact-active::after {
   left: 0;
@@ -155,8 +155,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 }
 
 .top-nav a:hover,
-.top-nav .menu-group > span:hover,
-.top-nav .menu-group.open > span,
+.top-nav .menu-group > button:hover,
+.top-nav .menu-group.open > button,
 .top-nav > a.router-link-active,
 .top-nav > a.router-link-exact-active {
   color: #ffe6a7;
@@ -181,7 +181,10 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   position: relative;
 }
 
-.top-nav .menu-group > span {
+.top-nav .menu-group > button {
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
 }
 
@@ -327,7 +330,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   }
 
   .top-nav a,
-  .top-nav .menu-group > span,
+  .top-nav .menu-group > button,
   .nav-coming-soon {
     display: block;
 
@@ -337,7 +340,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   }
 
   .top-nav a::after,
-  .top-nav .menu-group > span::after {
+  .top-nav .menu-group > button::after {
     display: none;
   }
 

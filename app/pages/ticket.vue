@@ -203,7 +203,7 @@ const onMouseLeave = () => {
 <style scoped>
 .ticket-root {
   position: relative;
-  padding-top: clamp(3.5rem, 1vw, 4.5rem);
+  padding-top: 3.5rem;
 }
 
 .block-link {
