@@ -353,24 +353,30 @@ body {
     text-align: justify;
 }
 
-.paper-tools {
-    display: flex;
-    gap: .8rem;
-    flex-wrap: wrap;
-    margin-top: 2rem;
+/* Modal Entry/Exit Animations */
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.3s ease;
 }
 
-.paper-tools button,
-.paper-tools a {
-    border: 0;
-    background: #222;
-    color: white;
-    padding: .8rem 1rem;
-    border-radius: 999px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: .92rem;
+.modal-enter-active .paper,
+.modal-leave-active .paper {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
+.modal-enter-from .paper {
+    transform: scale(0.9) translateY(20px);
+}
+
+.modal-leave-to .paper {
+    transform: scale(0.95) translateY(10px);
+}
+
 
 .close-btn {
     position: absolute;
@@ -484,5 +490,44 @@ body {
 @media (max-width:1000px) {
     .why {
         display: none;
+    }
+}
+
+/* Vivid Hover Magic Animations for Envelopes */
+@keyframes magicPulse {
+    0%, 100% {
+        transform: translateY(-8px) rotate(-.5deg) scale(1.02);
+        box-shadow:
+            0 0 12px rgba(255, 255, 255, 0.55),
+            0 0 25px rgba(255, 120, 220, 0.5),
+            0 0 55px rgba(255, 120, 220, 0.3),
+            0 0 110px rgba(255, 120, 220, 0.2);
+    }
+    50% {
+        transform: translateY(-8px) rotate(-.5deg) scale(1);
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.35),
+            0 0 15px rgba(255, 120, 220, 0.3),
+            0 0 45px rgba(255, 120, 220, 0.2),
+            0 0 90px rgba(255, 120, 220, 0.1);
+    }
+}
+
+@keyframes magicOutline {
+    0%, 100% {
+        border-color: rgba(255, 130, 225, .85);
+        box-shadow:
+            0 0 18px rgba(255, 231, 249, 1),
+            0 0 35px rgba(201, 125, 183, 0.65),
+            0 0 70px rgba(201, 125, 183, 0.4),
+            0 0 100px rgba(201, 125, 183, .2);
+    }
+    50% {
+        border-color: rgba(255, 130, 225, .45);
+        box-shadow:
+            0 0 12px rgba(255, 231, 249, 0.7),
+            0 0 25px rgba(201, 125, 183, 0.45),
+            0 0 50px rgba(201, 125, 183, 0.2),
+            0 0 80px rgba(201, 125, 183, .08);
     }
 }
