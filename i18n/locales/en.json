@@ -112,16 +112,45 @@
     }
   },
   "menu": {
+    "home": "Home",
     "about": "About Us",
-    "events": "Events",
+    "news": "News",
+    "ticket": "Tickets",
     "apply": "Apply",
     "timetable": "Timetable",
-    "location": "Location"
+    "location": "Location",
+    "schedule": "Schedule",
+    "venue": "Venue"
+  },
+  "tba": {
+    "about": "About Us(TBA)",
+    "schedule": "Schedule(TBA)",
+    "venue": "Venue(TBA)"
   },
   "apply": {
     "comingSoon": "TBD",
     "volunteer": "Volunteer",
     "vendor": "Vendor",
     "event": "Event"
+  },
+  "newsPage": {
+    "title": "News",
+    "heading": "Village Mailbox",
+    "description": "Announcements and updates from Kirin Village will be delivered here."
+  },
+  "news": {
+    "labels": {
+      "time": "Time",
+      "author": "Sender"
+    },
+    "actions": {
+      "copyLink": "Copy Post Link",
+      "openPost": "Open Original Post",
+      "backHome": "Back to Home"
+    },
+    "messages": {
+      "copied": "Link copied",
+      "copyFailed": "Failed to copy. Please copy it manually."
+    }
   }
 }

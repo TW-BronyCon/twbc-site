@@ -113,16 +113,45 @@
     }
   },
   "menu": {
+    "home": "首頁",
     "about": "關於我們",
-    "events": "活動資訊",
+    "news": "最新消息",
+    "ticket": "購票資訊",
     "apply": "活動申請",
     "timetable": "時程表",
-    "location": "場地資訊"
+    "location": "場地資訊",
+    "schedule": "時程表",
+    "venue": "場地資訊"
+  },
+  "tba": {
+    "about": "關於我們(即將公佈)",
+    "schedule": "時程表(即將公佈)",
+    "venue": "場地資訊(即將公佈)"
   },
   "apply": {
     "comingSoon": "規劃中",
     "volunteer": "志工申請",
     "vendor": "攤位申請",
     "event": "自主活動申請"
+  },
+  "newsPage": {
+    "title": "最新消息",
+    "heading": "村口信箱",
+    "description": "來自麒麟村的公告與消息，都會寄到這裡。"
+  },
+  "news": {
+    "labels": {
+      "time": "時間",
+      "author": "寄件人"
+    },
+    "actions": {
+      "copyLink": "複製貼文網址",
+      "openPost": "前往原貼文",
+      "backHome": "回首頁"
+    },
+    "messages": {
+      "copied": "已複製網址",
+      "copyFailed": "複製失敗，請手動複製"
+    }
   }
 }
