@@ -18,8 +18,8 @@
     "nav": {
       "tickets": "立即購票",
       "volunteer": "志工申請",
-      "vendor": "攤位申請",
-      "event": "自主活動申請",
+      "vendor": "攤位申請(已截止)",
+      "event": "自主活動申請(已截止)",
       "apply": "活動申請",
       "comingSoon": "規劃中"
     },
@@ -127,8 +127,8 @@
   "apply": {
     "comingSoon": "規劃中",
     "volunteer": "志工申請",
-    "vendor": "攤位申請",
-    "event": "自主活動申請"
+    "vendor": "攤位申請(已截止)",
+    "event": "自主活動申請(已截止)"
   },
   "newsPage": {
     "title": "最新消息",
