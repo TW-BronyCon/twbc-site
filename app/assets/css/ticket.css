@@ -342,16 +342,6 @@ h2 {
         0 0 20px rgba(255, 251, 238, 0.3);
 }
 
-.ticket-price::before {
-    content: "NO.";
-    display: block;
-    margin-bottom: 0.25rem;
-    font-size: 0.65rem;
-    letter-spacing: 0.22em;
-    font-weight: 700;
-    color: rgba(114, 82, 45, 0.65);
-}
-
 /* ===== 比較表 ===== */
 .compare-wrap {
     max-width: 1040px;
