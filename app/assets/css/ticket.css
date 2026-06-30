@@ -82,16 +82,6 @@ h1 {
     transition: all .2s ease-out;
 }
 
-h1::before,
-h1::after {
-    content: "❦";
-    display: inline-block;
-    margin: 0 0.45em;
-    font-size: 0.55em;
-    color: rgba(243, 204, 120, 0.9);
-    transform: translateY(-0.12em);
-}
-
 h2 {
     font-family: 'LXGW WenKai Mono TC', monospace;
     font-size: clamp(1.1rem, 2vw, 1.4rem);
