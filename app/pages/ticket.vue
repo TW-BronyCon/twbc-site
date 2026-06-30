@@ -72,7 +72,7 @@ const tiers = [
     subColor: '#6baaca', 
     img: '/img/B.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
-    closeTime: null,
+    closeTime: '2026-07-26T23:59:59+08:00',
     price: "NT$ 500"
   },
   { 
@@ -81,7 +81,7 @@ const tiers = [
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
-    closeTime: null,
+    closeTime: '2026-07-26T23:59:59+08:00',
     price: "NT$ 600"
   },
   { 
@@ -90,7 +90,7 @@ const tiers = [
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
-    closeTime: null,
+    closeTime: '2026-07-26T23:59:59+08:00',
     price: "NT$ 1,000"
   },
   { 
