@@ -75,6 +75,8 @@
     "viewDetailed": "Detailed List",
     "purchase": "Buy Now",
     "includes": "Includes: ",
+    "closed": "Closed",
+    "royaleClosedBanner": "5000 NTD Royale ticket: Sales Closed",
     "tiers": {
       "budget": "Budget",
       "standard": "Standard",
@@ -86,12 +88,6 @@
       "standard": "Comes with small souvenirs!",
       "sponsor": "Thank you for supporting TWBC!",
       "royale": "Premium choice, thank you for your support!"
-    },
-    "prices": {
-      "budget": "$500",
-      "standard": "$600",
-      "sponsor": "$1000",
-      "royale": "$5000"
     },
     "features": {
       "badge": "ID Badge",

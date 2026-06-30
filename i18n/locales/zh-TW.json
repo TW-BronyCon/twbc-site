@@ -75,6 +75,8 @@
     "viewDetailed": "詳細清單",
     "purchase": "立即購票",
     "includes": "內含：",
+    "closed": "已截止",
+    "royaleClosedBanner": "5000 NTD 貴賓票已截止",
     "tiers": {
       "budget": "經濟票",
       "standard": "標準票",
@@ -86,12 +88,6 @@
       "standard": "贈送小小紀念品！",
       "sponsor": "謝謝你對TWBC的支持！",
       "royale": "尊貴之選，感謝支持！"
-    },
-    "prices": {
-      "budget": "$500",
-      "standard": "$600",
-      "sponsor": "$1000",
-      "royale": "$5000"
     },
     "features": {
       "id": "活動識別證",
