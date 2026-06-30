@@ -50,8 +50,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
         <button @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</button>
         <ul class="submenu">
           <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.volunteer') }}</a></li>
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.vendor') }}</a></li>
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf1h5OaWHYf2cdqkEwWk_SWcNioLj89ilOAtr1g1sbupTPk1w/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.event') }}</a></li>
+          <li><span class="submenu-disabled">{{ $t('apply.vendor') }}</span></li>
+          <li><span class="submenu-disabled">{{ $t('apply.event') }}</span></li>
         </ul>
       </li>
     </ul>
@@ -203,10 +203,18 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   transition: all .25s ease;
 }
 
-.top-nav .submenu li a {
+.top-nav .submenu li a,
+.top-nav .submenu li .submenu-disabled {
   display: block;
   padding: .6em 1em;
   font-size: .95em;
+}
+
+.top-nav .submenu li .submenu-disabled {
+  color: rgba(255, 255, 255, .45);
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
 }
 
 .top-nav .menu-group:hover .submenu,
@@ -297,7 +305,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 
   .top-nav a,
   .top-nav .menu-group > button,
-  .nav-coming-soon {
+  .nav-coming-soon,
+  .top-nav .submenu li .submenu-disabled {
     display: block;
 
     padding: .55rem .7rem;

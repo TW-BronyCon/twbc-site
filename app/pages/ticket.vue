@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 /**
  * Ticket Page Component
@@ -28,6 +28,42 @@ const toggleMode = () => {
   currentMode.value = currentMode.value === 'detailed' ? 'table' : 'detailed'
 }
 
+// Ticket expiration status check
+const currentTime = ref(Date.now())
+const timeOffset = ref(0)
+
+const isTierClosed = (closeTimeStr?: string | null) => {
+  if (!closeTimeStr) return false
+  const now = new Date(currentTime.value + timeOffset.value)
+  return now >= new Date(closeTimeStr)
+}
+
+async function syncTime() {
+  try {
+    const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Taipei')
+    const data = await res.json()
+    const serverTime = new Date(data.dateTime)
+    const localTime = new Date()
+    timeOffset.value = serverTime.getTime() - localTime.getTime()
+  } catch (error) {
+    timeOffset.value = 0
+    console.error("Failed to sync network time, using local time", error)
+  }
+}
+
+let statusTimer: ReturnType<typeof setInterval> | null = null
+
+onMounted(async () => {
+  await syncTime()
+  statusTimer = setInterval(() => {
+    currentTime.value = Date.now()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (statusTimer) clearInterval(statusTimer)
+})
+
 // Ticket tier configurations containing layout colors, graphic assets, and purchase forms
 const tiers = [
   { 
@@ -35,28 +71,36 @@ const tiers = [
     color: '#73bfe5', 
     subColor: '#6baaca', 
     img: '/img/B.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
+    closeTime: '2026-07-26T23:59:59+08:00',
+    price: "NT$ 500"
   },
   { 
     id: 'standard', 
     color: '#8673e5', 
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
+    closeTime: '2026-07-26T23:59:59+08:00',
+    price: "NT$ 600"
   },
   { 
     id: 'sponsor', 
     color: '#e57399', 
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
+    closeTime: '2026-07-26T23:59:59+08:00',
+    price: "NT$ 1,000"
   },
   { 
     id: 'royale', 
     color: '#e5d273', 
     subColor: '#b4a34c', 
     img: '/img/Y.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
+    closeTime: '2026-06-30T23:59:59+08:00',
+    price: "NT$ 5,000"
   }
 ]
 
@@ -125,6 +169,10 @@ const onMouseLeave = () => {
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
+          <div v-if="isTierClosed(tiers.find(t => t.id === 'royale')?.closeTime)" class="ticket-status-banner">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ $t('ticket.royaleClosedBanner') }}</span>
+          </div>
           <div class="btn">
             <button class="sectionbtn" @click="toggleMode">
               {{ currentMode === 'detailed' ? $t('ticket.viewTable') : $t('ticket.viewDetailed') }}
@@ -138,14 +186,20 @@ const onMouseLeave = () => {
               <a
                 v-for="(tier, index) in tiers"
                 :key="tier.id"
-                :href="tier.url"
-                target="_blank"
+                :href="isTierClosed(tier.closeTime) ? undefined : tier.url"
+                :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
                 class="block-link"
+                :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
               >
                 <div
                   class="block"
                   :style="{ color: tier.color }"
+                  :class="{ 'is-closed': isTierClosed(tier.closeTime) }"
                 >
+                  <!-- Ribbon Banner for Royale card if closed -->
+                  <div v-if="isTierClosed(tier.closeTime)" class="ribbon-closed">
+                    <span>{{ $t('ticket.closed') }}</span>
+                  </div>
                   <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
                   <div class="ticket-text">
                     <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
@@ -158,7 +212,7 @@ const onMouseLeave = () => {
                       </div>
                     </div>
                   </div>
-                  <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
+                  <div class="ticket-price">{{ tier.price }}</div>
                 </div>
               </a>
             </div>
@@ -174,7 +228,10 @@ const onMouseLeave = () => {
                         v-for="(tier, index) in tiers"
                         :key="tier.id"
                         class="tier-head"
-                        :class="{ 'active-col': activeColIndex === index }"
+                        :class="{ 
+                          'active-col': activeColIndex === index,
+                          'is-closed-col': isTierClosed(tier.closeTime)
+                        }"
                         @mouseenter="onHeaderMouseEnter(index)"
                       >
                         <span :class="['tier-label', tier.id]">{{ $t(`ticket.tiers.${tier.id}`) }}</span>
@@ -200,7 +257,10 @@ const onMouseLeave = () => {
                         :class="[
                           'col-' + (cIndex + 1),
                           avail ? 'yes' : 'no',
-                          { 'active-col': activeColIndex === cIndex }
+                          { 
+                            'active-col': activeColIndex === cIndex,
+                            'is-closed-col': isTierClosed(tiers[cIndex].closeTime)
+                          }
                         ]"
                         @mouseenter="onCellMouseEnter(rIndex, cIndex)"
                       >
