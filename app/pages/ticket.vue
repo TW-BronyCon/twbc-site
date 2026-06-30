@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 /**
  * Ticket Page Component
@@ -65,15 +65,14 @@ onUnmounted(() => {
 })
 
 // Ticket tier configurations containing layout colors, graphic assets, and purchase forms
-const tiers = computed(() => [
+const tiers = [
   { 
     id: 'budget', 
     color: '#73bfe5', 
     subColor: '#6baaca', 
     img: '/img/B.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
-    closeTime: null,
-    closed: isTierClosed(null)
+    closeTime: null
   },
   { 
     id: 'standard', 
@@ -81,8 +80,7 @@ const tiers = computed(() => [
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
-    closeTime: null,
-    closed: isTierClosed(null)
+    closeTime: null
   },
   { 
     id: 'sponsor', 
@@ -90,8 +88,7 @@ const tiers = computed(() => [
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
-    closeTime: null,
-    closed: isTierClosed(null)
+    closeTime: null
   },
   { 
     id: 'royale', 
@@ -99,10 +96,9 @@ const tiers = computed(() => [
     subColor: '#b4a34c', 
     img: '/img/Y.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
-    closeTime: '2026-06-30T23:59:59+08:00',
-    closed: isTierClosed('2026-06-30T23:59:59+08:00')
+    closeTime: '2026-06-30T23:59:59+08:00'
   }
-])
+]
 
 // Matrix mapping features to their availability across [budget, standard, sponsor, royale] tiers
 const featuresList = [
@@ -169,7 +165,7 @@ const onMouseLeave = () => {
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
-          <div v-if="tiers.find(t => t.id === 'royale')?.closed" class="ticket-status-banner">
+          <div v-if="isTierClosed(tiers.find(t => t.id === 'royale')?.closeTime)" class="ticket-status-banner">
             <i class="fa-solid fa-circle-exclamation"></i>
             <span>{{ $t('ticket.royaleClosedBanner') }}</span>
           </div>
@@ -186,18 +182,18 @@ const onMouseLeave = () => {
               <a
                 v-for="(tier, index) in tiers"
                 :key="tier.id"
-                :href="tier.closed ? undefined : tier.url"
-                :target="tier.closed ? undefined : '_blank'"
+                :href="isTierClosed(tier.closeTime) ? undefined : tier.url"
+                :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
                 class="block-link"
-                :class="{ 'is-disabled': tier.closed }"
+                :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
               >
                 <div
                   class="block"
                   :style="{ color: tier.color }"
-                  :class="{ 'is-closed': tier.closed }"
+                  :class="{ 'is-closed': isTierClosed(tier.closeTime) }"
                 >
                   <!-- Ribbon Banner for Royale card if closed -->
-                  <div v-if="tier.closed" class="ribbon-closed">
+                  <div v-if="isTierClosed(tier.closeTime)" class="ribbon-closed">
                     <span>{{ $t('ticket.closed') }}</span>
                   </div>
                   <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
@@ -230,7 +226,7 @@ const onMouseLeave = () => {
                         class="tier-head"
                         :class="{ 
                           'active-col': activeColIndex === index,
-                          'is-closed-col': tier.closed
+                          'is-closed-col': isTierClosed(tier.closeTime)
                         }"
                         @mouseenter="onHeaderMouseEnter(index)"
                       >
@@ -259,7 +255,7 @@ const onMouseLeave = () => {
                           avail ? 'yes' : 'no',
                           { 
                             'active-col': activeColIndex === cIndex,
-                            'is-closed-col': tiers[cIndex].closed
+                            'is-closed-col': isTierClosed(tiers[cIndex].closeTime)
                           }
                         ]"
                         @mouseenter="onCellMouseEnter(rIndex, cIndex)"
