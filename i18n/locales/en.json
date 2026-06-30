@@ -18,8 +18,8 @@
     "nav": {
       "tickets": "Register",
       "volunteer": "Volunteer",
-      "vendor": "Vendor",
-      "event": "Event",
+      "vendor": "Vendor (Closed)",
+      "event": "Event (Closed)",
       "apply": "Applications",
       "comingSoon": "Coming Soon"
     },
@@ -126,8 +126,8 @@
   "apply": {
     "comingSoon": "TBD",
     "volunteer": "Volunteer",
-    "vendor": "Vendor",
-    "event": "Event"
+    "vendor": "Vendor (Closed)",
+    "event": "Event (Closed)"
   },
   "newsPage": {
     "title": "News",
