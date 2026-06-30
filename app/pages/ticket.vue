@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 /**
  * Ticket Page Component
@@ -64,36 +64,40 @@ onUnmounted(() => {
 })
 
 // Ticket tier configurations containing layout colors, graphic assets, and purchase forms
-const tiers = [
+const tiers = computed(() => [
   { 
     id: 'budget', 
     color: '#73bfe5', 
     subColor: '#6baaca', 
     img: '/img/B.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
+    closed: false
   },
   { 
     id: 'standard', 
     color: '#8673e5', 
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
+    closed: false
   },
   { 
     id: 'sponsor', 
     color: '#e57399', 
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
+    closed: false
   },
   { 
     id: 'royale', 
     color: '#e5d273', 
     subColor: '#b4a34c', 
     img: '/img/Y.avif',
-    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)"
+    url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
+    closed: isRoyaleClosed.value
   }
-]
+])
 
 // Matrix mapping features to their availability across [budget, standard, sponsor, royale] tiers
 const featuresList = [
@@ -160,7 +164,7 @@ const onMouseLeave = () => {
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
-          <div v-if="isRoyaleClosed" class="ticket-status-banner">
+          <div v-if="tiers.find(t => t.id === 'royale')?.closed" class="ticket-status-banner">
             <i class="fa-solid fa-circle-exclamation"></i>
             <span>{{ $t('ticket.royaleClosedBanner') }}</span>
           </div>
@@ -177,18 +181,18 @@ const onMouseLeave = () => {
               <a
                 v-for="(tier, index) in tiers"
                 :key="tier.id"
-                :href="isRoyaleClosed && tier.id === 'royale' ? undefined : tier.url"
-                :target="isRoyaleClosed && tier.id === 'royale' ? undefined : '_blank'"
+                :href="tier.closed ? undefined : tier.url"
+                :target="tier.closed ? undefined : '_blank'"
                 class="block-link"
-                :class="{ 'is-disabled': isRoyaleClosed && tier.id === 'royale' }"
+                :class="{ 'is-disabled': tier.closed }"
               >
                 <div
                   class="block"
                   :style="{ color: tier.color }"
-                  :class="{ 'is-closed': isRoyaleClosed && tier.id === 'royale' }"
+                  :class="{ 'is-closed': tier.closed }"
                 >
                   <!-- Ribbon Banner for Royale card if closed -->
-                  <div v-if="isRoyaleClosed && tier.id === 'royale'" class="ribbon-closed">
+                  <div v-if="tier.closed" class="ribbon-closed">
                     <span>{{ $t('ticket.closed') }}</span>
                   </div>
                   <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
@@ -221,7 +225,7 @@ const onMouseLeave = () => {
                         class="tier-head"
                         :class="{ 
                           'active-col': activeColIndex === index,
-                          'is-closed-col': isRoyaleClosed && tier.id === 'royale'
+                          'is-closed-col': tier.closed
                         }"
                         @mouseenter="onHeaderMouseEnter(index)"
                       >
@@ -250,7 +254,7 @@ const onMouseLeave = () => {
                           avail ? 'yes' : 'no',
                           { 
                             'active-col': activeColIndex === cIndex,
-                            'is-closed-col': isRoyaleClosed && tiers[cIndex].id === 'royale'
+                            'is-closed-col': tiers[cIndex].closed
                           }
                         ]"
                         @mouseenter="onCellMouseEnter(rIndex, cIndex)"
