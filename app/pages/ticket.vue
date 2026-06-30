@@ -28,14 +28,14 @@ const toggleMode = () => {
   currentMode.value = currentMode.value === 'detailed' ? 'table' : 'detailed'
 }
 
-// Ticket expiration status check (Royale ticket 5000 NTD expires on 6/30 23:59:59 UTC+8)
-const isRoyaleClosed = ref(false)
-const cutoffTime = new Date('2026-06-30T23:59:59+08:00')
+// Ticket expiration status check
+const currentTime = ref(Date.now())
 const timeOffset = ref(0)
 
-const checkRoyaleStatus = () => {
-  const now = new Date(Date.now() + timeOffset.value)
-  isRoyaleClosed.value = now >= cutoffTime
+const isTierClosed = (closeTimeStr?: string | null) => {
+  if (!closeTimeStr) return false
+  const now = new Date(currentTime.value + timeOffset.value)
+  return now >= new Date(closeTimeStr)
 }
 
 async function syncTime() {
@@ -55,8 +55,9 @@ let statusTimer: ReturnType<typeof setInterval> | null = null
 
 onMounted(async () => {
   await syncTime()
-  checkRoyaleStatus()
-  statusTimer = setInterval(checkRoyaleStatus, 1000)
+  statusTimer = setInterval(() => {
+    currentTime.value = Date.now()
+  }, 1000)
 })
 
 onUnmounted(() => {
@@ -71,7 +72,8 @@ const tiers = computed(() => [
     subColor: '#6baaca', 
     img: '/img/B.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
-    closed: false
+    closeTime: null,
+    closed: isTierClosed(null)
   },
   { 
     id: 'standard', 
@@ -79,7 +81,8 @@ const tiers = computed(() => [
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
-    closed: false
+    closeTime: null,
+    closed: isTierClosed(null)
   },
   { 
     id: 'sponsor', 
@@ -87,7 +90,8 @@ const tiers = computed(() => [
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
-    closed: false
+    closeTime: null,
+    closed: isTierClosed(null)
   },
   { 
     id: 'royale', 
@@ -95,7 +99,8 @@ const tiers = computed(() => [
     subColor: '#b4a34c', 
     img: '/img/Y.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
-    closed: isRoyaleClosed.value
+    closeTime: '2026-06-30T23:59:59+08:00',
+    closed: isTierClosed('2026-06-30T23:59:59+08:00')
   }
 ])
 
