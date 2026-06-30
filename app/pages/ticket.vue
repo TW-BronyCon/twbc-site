@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 /**
  * Ticket Page Component
@@ -27,6 +27,41 @@ const activeColIndex = ref<number | null>(null)
 const toggleMode = () => {
   currentMode.value = currentMode.value === 'detailed' ? 'table' : 'detailed'
 }
+
+// Ticket expiration status check (Royale ticket 5000 NTD expires on 6/30 23:59:59 UTC+8)
+const isRoyaleClosed = ref(false)
+const cutoffTime = new Date('2026-06-30T23:59:59+08:00')
+const timeOffset = ref(0)
+
+const checkRoyaleStatus = () => {
+  const now = new Date(Date.now() + timeOffset.value)
+  isRoyaleClosed.value = now >= cutoffTime
+}
+
+async function syncTime() {
+  try {
+    const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Taipei')
+    const data = await res.json()
+    const serverTime = new Date(data.dateTime)
+    const localTime = new Date()
+    timeOffset.value = serverTime.getTime() - localTime.getTime()
+  } catch (error) {
+    timeOffset.value = 0
+    console.error("Failed to sync network time, using local time", error)
+  }
+}
+
+let statusTimer: ReturnType<typeof setInterval> | null = null
+
+onMounted(async () => {
+  await syncTime()
+  checkRoyaleStatus()
+  statusTimer = setInterval(checkRoyaleStatus, 1000)
+})
+
+onUnmounted(() => {
+  if (statusTimer) clearInterval(statusTimer)
+})
 
 // Ticket tier configurations containing layout colors, graphic assets, and purchase forms
 const tiers = [
@@ -125,6 +160,10 @@ const onMouseLeave = () => {
         <div class="border">
           <h1>{{ $t('ticket.title') }}</h1>
           <h2>{{ $t('ticket.subtitle') }}</h2>
+          <div v-if="isRoyaleClosed" class="ticket-status-banner">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ $t('ticket.royaleClosedBanner') }}</span>
+          </div>
           <div class="btn">
             <button class="sectionbtn" @click="toggleMode">
               {{ currentMode === 'detailed' ? $t('ticket.viewTable') : $t('ticket.viewDetailed') }}
@@ -138,14 +177,20 @@ const onMouseLeave = () => {
               <a
                 v-for="(tier, index) in tiers"
                 :key="tier.id"
-                :href="tier.url"
-                target="_blank"
+                :href="isRoyaleClosed && tier.id === 'royale' ? undefined : tier.url"
+                :target="isRoyaleClosed && tier.id === 'royale' ? undefined : '_blank'"
                 class="block-link"
+                :class="{ 'is-disabled': isRoyaleClosed && tier.id === 'royale' }"
               >
                 <div
                   class="block"
                   :style="{ color: tier.color }"
+                  :class="{ 'is-closed': isRoyaleClosed && tier.id === 'royale' }"
                 >
+                  <!-- Ribbon Banner for Royale card if closed -->
+                  <div v-if="isRoyaleClosed && tier.id === 'royale'" class="ribbon-closed">
+                    <span>{{ $t('ticket.closed') }}</span>
+                  </div>
                   <img :src="tier.img" :alt="$t(`ticket.tiers.${tier.id}`)" class="ticket-img">
                   <div class="ticket-text">
                     <div class="ticket-title">{{ $t(`ticket.tiers.${tier.id}`) }}</div>
@@ -174,7 +219,10 @@ const onMouseLeave = () => {
                         v-for="(tier, index) in tiers"
                         :key="tier.id"
                         class="tier-head"
-                        :class="{ 'active-col': activeColIndex === index }"
+                        :class="{ 
+                          'active-col': activeColIndex === index,
+                          'is-closed-col': isRoyaleClosed && tier.id === 'royale'
+                        }"
                         @mouseenter="onHeaderMouseEnter(index)"
                       >
                         <span :class="['tier-label', tier.id]">{{ $t(`ticket.tiers.${tier.id}`) }}</span>
@@ -200,7 +248,10 @@ const onMouseLeave = () => {
                         :class="[
                           'col-' + (cIndex + 1),
                           avail ? 'yes' : 'no',
-                          { 'active-col': activeColIndex === cIndex }
+                          { 
+                            'active-col': activeColIndex === cIndex,
+                            'is-closed-col': isRoyaleClosed && tiers[cIndex].id === 'royale'
+                          }
                         ]"
                         @mouseenter="onCellMouseEnter(rIndex, cIndex)"
                       >
