@@ -75,6 +75,8 @@
     "viewDetailed": "詳細清單",
     "purchase": "立即購票",
     "includes": "內含：",
+    "closed": "已截止",
+    "royaleClosedBanner": "5000 NTD 貴賓票已截止",
     "tiers": {
       "budget": "經濟票",
       "standard": "標準票",

@@ -75,6 +75,8 @@
     "viewDetailed": "Detailed List",
     "purchase": "Buy Now",
     "includes": "Includes: ",
+    "closed": "Closed",
+    "royaleClosedBanner": "5000 NTD Royale ticket: Sales Closed",
     "tiers": {
       "budget": "Budget",
       "standard": "Standard",
