@@ -72,7 +72,8 @@ const tiers = [
     subColor: '#6baaca', 
     img: '/img/B.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
-    closeTime: null
+    closeTime: null,
+    price: "NT$ 500"
   },
   { 
     id: 'standard', 
@@ -80,7 +81,8 @@ const tiers = [
     subColor: '#7c6ccc', 
     img: '/img/PU.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
-    closeTime: null
+    closeTime: null,
+    price: "NT$ 600"
   },
   { 
     id: 'sponsor', 
@@ -88,7 +90,8 @@ const tiers = [
     subColor: '#ce6e8e', 
     img: '/img/PI.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
-    closeTime: null
+    closeTime: null,
+    price: "NT$ 1,000"
   },
   { 
     id: 'royale', 
@@ -96,7 +99,8 @@ const tiers = [
     subColor: '#b4a34c', 
     img: '/img/Y.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
-    closeTime: '2026-06-30T23:59:59+08:00'
+    closeTime: '2026-06-30T23:59:59+08:00',
+    price: "NT$ 5,000"
   }
 ]
 
@@ -208,7 +212,7 @@ const onMouseLeave = () => {
                       </div>
                     </div>
                   </div>
-                  <div class="ticket-price">{{ $t(`ticket.prices.${tier.id}`) }}</div>
+                  <div class="ticket-price">{{ tier.price }}</div>
                 </div>
               </a>
             </div>
