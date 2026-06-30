@@ -89,12 +89,6 @@
       "sponsor": "Thank you for supporting TWBC!",
       "royale": "Premium choice, thank you for your support!"
     },
-    "prices": {
-      "budget": "$500",
-      "standard": "$600",
-      "sponsor": "$1000",
-      "royale": "$5000"
-    },
     "features": {
       "badge": "ID Badge",
       "pin": "Button Pin",

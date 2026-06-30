@@ -89,12 +89,6 @@
       "sponsor": "謝謝你對TWBC的支持！",
       "royale": "尊貴之選，感謝支持！"
     },
-    "prices": {
-      "budget": "$500",
-      "standard": "$600",
-      "sponsor": "$1000",
-      "royale": "$5000"
-    },
     "features": {
       "id": "活動識別證",
       "badge": "活動識別證",
