@@ -11,8 +11,6 @@ const rememberOpenedMail = true
 const openedStorageKey = 'twbc-opened-news'
 
 const { t, locale } = useI18n()
-const publicAsset = usePublicAsset()
-
 
 useHead({
   title: () => t('newsPage.title')
@@ -46,12 +44,12 @@ type SealData = {
   bottomClip: string
 }
 
-const { data: rawPosts, refresh: refreshPosts } = await useAsyncData(
+const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
   () => `news-posts-${locale.value}`,
   async () => {
     try {
       return await $fetch<RawNewsPost[]>(
-        publicAsset(`/content/news/posts.${locale.value}.json`),
+        `/content/news/posts.${locale.value}.json`,
         {
           query: {
             t: Date.now()
