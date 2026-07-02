@@ -448,8 +448,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="legacy-page-root">
-    <SharedBackground variant="homepage" />
-
     <img
     src="/img/Why.avif"
     alt=""

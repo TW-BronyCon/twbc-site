@@ -162,8 +162,6 @@ const onMouseLeave = () => {
 
 <template>
   <div class="ticket-root">
-    <SharedBackground variant="homepage" />
-
     <div class="container">
       <div class="border">
         <div class="border">

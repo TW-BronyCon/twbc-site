@@ -1,6 +1,22 @@
 <template>
-  <div>
-    <SiteNav />
-    <slot />
+  <div class="site-shell">
+    <SharedBackground variant="homepage" />
+
+    <div class="site-content">
+      <SiteNav />
+      <slot />
+    </div>
   </div>
 </template>
+
+<style scoped>
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.site-content {
+  position: relative;
+  z-index: 1;
+}
+</style>
