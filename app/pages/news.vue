@@ -11,6 +11,7 @@ const rememberOpenedMail = true
 const openedStorageKey = 'twbc-opened-news'
 
 const { t, locale } = useI18n()
+const publicAsset = usePublicAsset()
 
 
 useHead({
@@ -45,17 +46,27 @@ type SealData = {
   bottomClip: string
 }
 
-const { data: rawPosts } = await useAsyncData(
+const { data: rawPosts, refresh: refreshPosts } = await useAsyncData(
   () => `news-posts-${locale.value}`,
   async () => {
     try {
-      return await $fetch<RawNewsPost[]>(`/content/news/posts.${locale.value}.json`)
+      return await $fetch<RawNewsPost[]>(
+        publicAsset(`/content/news/posts.${locale.value}.json`),
+        {
+          query: {
+            t: Date.now()
+          }
+        }
+      )
     } catch (err) {
       console.error('Failed to load news posts:', err)
       return []
     }
   },
   {
+    server: false,
+    immediate: false,
+    default: () => [],
     watch: [locale]
   }
 )
@@ -412,6 +423,7 @@ function handleEsc(e: KeyboardEvent) {
 
 onMounted(async () => {
   loadOpenedMap()
+  await refreshPosts()
 
   window.addEventListener('keydown', handleEsc)
   window.addEventListener('resize', handleResize)
