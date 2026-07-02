@@ -23,10 +23,6 @@ const translatedCountdownMsg = computed(() => {
 
 <template>
   <div class="homepage-root">
-    <SharedBackground variant="homepage" />
-
-
-
     <main class="container">
       <section class="hero">
         <img class="logo" src="/img/text-logo.avif" alt="TWBC">
