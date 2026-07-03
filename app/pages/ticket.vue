@@ -187,7 +187,10 @@ const onMouseLeave = () => {
                 :href="isTierClosed(tier.closeTime) ? undefined : tier.url"
                 :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
                 class="block-link"
-                :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
+                :class="{
+                  'is-disabled': isTierClosed(tier.closeTime),
+                  'is-default-pointer': tier.id === 'royale' && isTierClosed(tier.closeTime)
+                }"
               >
                 <div
                   class="block"
@@ -257,7 +260,7 @@ const onMouseLeave = () => {
                           avail ? 'yes' : 'no',
                           { 
                             'active-col': activeColIndex === cIndex,
-                            'is-closed-col': isTierClosed(tiers[cIndex].closeTime)
+                            'is-closed-col': isTierClosed(tiers[cIndex]?.closeTime)
                           }
                         ]"
                         @mouseenter="onCellMouseEnter(rIndex, cIndex)"
