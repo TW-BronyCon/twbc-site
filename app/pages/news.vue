@@ -572,7 +572,6 @@ onBeforeUnmount(() => {
           </div>
         </Transition>
       </Teleport>
-      <Footer />
     </div>
   </div>
 </template>

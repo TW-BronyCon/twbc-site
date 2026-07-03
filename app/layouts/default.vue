@@ -5,6 +5,7 @@
     <div class="site-content">
       <SiteNav />
       <slot />
+      <Footer />
     </div>
   </div>
 </template>

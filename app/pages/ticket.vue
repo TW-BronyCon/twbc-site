@@ -273,7 +273,6 @@ const onMouseLeave = () => {
         </div>
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
