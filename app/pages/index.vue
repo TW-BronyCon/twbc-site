@@ -73,7 +73,6 @@ const translatedCountdownMsg = computed(() => {
       </section>
     </main>
 
-    <Footer />
   </div>
 </template>
 
