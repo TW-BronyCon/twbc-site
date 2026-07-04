@@ -6,41 +6,25 @@ const { t } = useI18n()
 
 // Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
 const isDev = computed(() => {
-  const metaVal = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
-  
-  // Debug output in browser console to help diagnose visibility issues
-  if (import.meta.client) {
-    console.log('[DevWatermark] Checking route:', route.path, 'isDev:', !!metaVal)
-  }
-  
-  return !!metaVal
+  return !!(route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment))
 })
 
 // Get localized text for watermark and ribbon
 const watermarkText = computed(() => t('development.watermark'))
 const ribbonText = computed(() => t('development.ribbon'))
-
-// Dynamic SVG background for repeating watermark text
-const svgBackground = computed(() => {
-  if (import.meta.server) return ''
-  const text = watermarkText.value || 'UNDER DEVELOPMENT'
-  const svg = `<svg width="280" height="180" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
-    <text x="140" y="90" fill="%23ffbdde" fill-opacity="0.08" font-size="13" font-weight="bold" font-family="'Noto Sans TC', system-ui, -apple-system, sans-serif" text-anchor="middle" transform="rotate(-25 140 90)">${text}</text>
-  </svg>`
-  // Use Base64 encoding to guarantee CSS rendering across Safari, Chrome, and Firefox
-  const base64 = btoa(unescape(encodeURIComponent(svg)))
-  return `url("data:image/svg+xml;base64,${base64}")`
-})
 </script>
 
 <template>
   <ClientOnly>
     <div v-if="isDev" class="dev-watermark-container">
-      <!-- Full screen repeating background watermark -->
-      <div 
-        class="dev-watermark-bg" 
-        :style="{ backgroundImage: svgBackground }"
-      />
+      <!-- Grid of glassmorphic watermark cards with backdrop filter -->
+      <div class="dev-watermark-grid">
+        <div v-for="i in 80" :key="i" class="dev-watermark-item">
+          <div class="dev-watermark-card">
+            {{ watermarkText }}
+          </div>
+        </div>
+      </div>
 
       <!-- Diagonal corner ribbon -->
       <div class="dev-ribbon-wrapper">
@@ -58,12 +42,49 @@ const svgBackground = computed(() => {
   pointer-events: none;
 }
 
-.dev-watermark-bg {
+/* Full screen grid of watermarks */
+.dev-watermark-grid {
   position: fixed;
-  inset: 0;
+  inset: -10%; /* Offset slightly to handle rotation overflow */
   pointer-events: none;
   z-index: 9998;
-  background-repeat: repeat;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px;
+  padding: 50px;
+  overflow: hidden;
+}
+
+.dev-watermark-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(-18deg);
+  user-select: none;
+}
+
+/* Glassmorphic watermark card */
+.dev-watermark-card {
+  padding: 14px 28px;
+  background: rgba(255, 189, 222, 0.02);
+  border: 1px solid rgba(255, 189, 222, 0.08);
+  border-radius: 12px;
+  /* Apply backdrop filter to stand out on dark/complex backgrounds */
+  backdrop-filter: blur(4px) brightness(1.25) contrast(0.95);
+  -webkit-backdrop-filter: blur(4px) brightness(1.25) contrast(0.95);
+  
+  /* Text styling */
+  color: rgba(255, 189, 222, 0.22);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  
+  /* Subtle drop shadows for high legibility */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .dev-ribbon-wrapper {
