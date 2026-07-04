@@ -4,8 +4,17 @@ import { computed } from 'vue'
 const route = useRoute()
 const { t } = useI18n()
 
-// Check if page/route metadata has 'underDevelopment' set to true
-const isDev = computed(() => !!route.meta.underDevelopment)
+// Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
+const isDev = computed(() => {
+  const metaVal = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
+  
+  // Debug output in browser console to help diagnose visibility issues
+  if (import.meta.client) {
+    console.log('[DevWatermark] Checking route:', route.path, 'isDev:', !!metaVal)
+  }
+  
+  return !!metaVal
+})
 
 // Get localized text for watermark and ribbon
 const watermarkText = computed(() => t('development.watermark'))
@@ -13,11 +22,14 @@ const ribbonText = computed(() => t('development.ribbon'))
 
 // Dynamic SVG background for repeating watermark text
 const svgBackground = computed(() => {
+  if (import.meta.server) return ''
   const text = watermarkText.value || 'UNDER DEVELOPMENT'
   const svg = `<svg width="280" height="180" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
-    <text x="140" y="90" fill="rgba(255, 189, 222, 0.05)" font-size="13" font-weight="bold" font-family="'Noto Sans TC', system-ui, -apple-system, sans-serif" text-anchor="middle" transform="rotate(-25 140 90)">${text}</text>
+    <text x="140" y="90" fill="%23ffbdde" fill-opacity="0.08" font-size="13" font-weight="bold" font-family="'Noto Sans TC', system-ui, -apple-system, sans-serif" text-anchor="middle" transform="rotate(-25 140 90)">${text}</text>
   </svg>`
-  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`
+  // Use Base64 encoding to guarantee CSS rendering across Safari, Chrome, and Firefox
+  const base64 = btoa(unescape(encodeURIComponent(svg)))
+  return `url("data:image/svg+xml;base64,${base64}")`
 })
 </script>
 
@@ -71,7 +83,7 @@ const svgBackground = computed(() => {
   right: -42px;
   width: 220px;
   padding: 8px 0;
-  background: linear-gradient(135deg, rgba(255, 189, 222, 0.9), rgba(255, 230, 167, 0.9));
+  background: linear-gradient(135deg, rgba(255, 189, 222, 0.95), rgba(255, 230, 167, 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1.5px solid rgba(255, 255, 255, 0.4);
