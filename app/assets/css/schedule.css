@@ -35,18 +35,6 @@ body {
     color: #4d3b27;
 }
 
-.expo-tt::before {
-    content: "";
-    position: absolute;
-    top: -.6em;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5em;
-    height: 1.5em;
-    border-radius: .4em;
-    background: rgba(236, 224, 179, .95);
-}
-
 .expo-tt-header {
     text-align: center;
     margin: .5em 0 -.5em;
