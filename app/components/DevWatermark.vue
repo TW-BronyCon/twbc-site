@@ -5,8 +5,18 @@ const route = useRoute()
 const { t } = useI18n()
 
 // Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
+// OR if the site is not on the primary domain 'twbronycon.org'
 const isDev = computed(() => {
-  return !!(route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment))
+  const routeMetaDev = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
+  if (routeMetaDev) return true
+
+  if (import.meta.client) {
+    const hostname = window.location.hostname
+    // Show watermark if we are not on the primary production domain (e.g. localhost, staging, preview, etc.)
+    return hostname !== 'twbronycon.org' && hostname !== 'www.twbronycon.org'
+  }
+
+  return false
 })
 
 // Get localized text for watermark and ribbon
