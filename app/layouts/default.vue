@@ -1,6 +1,7 @@
 <template>
   <div class="site-shell">
     <SharedBackground variant="homepage" />
+    <DevWatermark />
 
     <div class="site-content">
       <SiteNav />

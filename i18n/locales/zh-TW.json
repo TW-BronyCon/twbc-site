@@ -161,5 +161,10 @@
     "duration": "時長",
     "area": "區域",
     "detailPlaceholder": "詳細資訊之後補上。"
+  },
+  "development": {
+    "watermark": "開發中",
+    "ribbon": "開發中",
+    "preview": "預覽版"
   }
 }
