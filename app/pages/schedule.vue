@@ -105,6 +105,32 @@ function normalizeHexColor(color?: string) {
   return hex
 }
 
+function getContrastColor(hexColor: string) {
+  let hex = hexColor.trim()
+  if (hex.startsWith('#')) hex = hex.slice(1)
+
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('')
+  }
+
+  if (hex.length !== 6) return '#222'
+
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+
+  // Relative luminance formula (ITU-R BT.709)
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+  return luminance > 0.55 ? '#222' : '#fff'
+}
+
+function getDynamicFontSize(rowSpan: number) {
+  if (rowSpan <= 2) return '0.72rem'
+  if (rowSpan <= 4) return '0.84rem'
+  if (rowSpan <= 6) return '0.94rem'
+  return 'inherit'
+}
+
 const processedEvents = computed(() => {
   const isEn = locale.value.startsWith('en')
   return rawEvents.map((event, index) => {
@@ -114,7 +140,8 @@ const processedEvents = computed(() => {
     const isCompact = rowSpan <= 5
 
     const eventColor = normalizeHexColor(event.color)
-    const textColor = event.textColor || '#222'
+    const textColor = event.textColor || getContrastColor(eventColor)
+    const fontSize = getDynamicFontSize(rowSpan)
     const titleText = isEn ? event.title.en : event.title.zh
     const detailText = event.detail ? (isEn ? event.detail.en : event.detail.zh) : ''
     const formattedTitle = titleText.replace(/\n/g, '<br>')
@@ -138,6 +165,7 @@ const processedEvents = computed(() => {
       isCompact,
       backgroundColor: eventColor,
       textColor,
+      fontSize,
       duration,
       area: areaLabel,
     }
@@ -432,6 +460,7 @@ onUnmounted(() => {
                 gridRow: `${event.startRow} / span ${event.rowSpan}`,
                 background: event.backgroundColor,
                 color: event.textColor,
+                fontSize: event.fontSize,
                 pointerEvents: event.PointerEvent === false ? 'none' : 'auto'
               }"
               :data-index="event.index"

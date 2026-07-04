@@ -66,7 +66,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '09:30',
     end: '10:00',
-    textColor: '#000',
     color: '#ececec',
     detail: {
       zh: '開放入場與自由交流時間，可以先熟悉場地、攤位位置，和其他小馬迷打招呼。',
@@ -78,7 +77,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '10:00',
     end: '10:30',
-    textColor: '#000',
     color: '#d7d8f3',
     detail: {
       zh: '活動正式開始，介紹本日流程、活動區域、注意事項，以及各項精彩內容。',
@@ -90,7 +88,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '10:45',
     end: '11:45',
-    textColor: '#000',
     color: '#ee7ab0',
     detail: {
       zh: '一起分享那些最混亂、最爆笑、最不可思議的小馬故事與回憶，看看誰才是真正的友情傳奇。',
@@ -105,7 +102,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '12:00',
     end: '13:00',
-    textColor: '#000',
     color: '#c7c6df',
     detail: {
       zh: '午間休息時段，現場將播放《A Decade of Pony》，一起回顧十年來的小馬旅程與社群記憶。',
@@ -117,7 +113,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '13:00',
     end: '14:00',
-    textColor: '#000',
     color: '#efd992',
     detail: {
       zh: '由青焰帶來的小馬主題分享，內容可能包含創作、社群、翻譯或多年來的心得與經歷。',
@@ -129,7 +124,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '14:15',
     end: '15:15',
-    textColor: '#000',
     color: '#ee7ab0',
     detail: {
       zh: '考驗大家對 MLP 世界的了解程度，從角色、劇情到冷知識，看看誰才是真正的小馬百科。',
@@ -144,7 +138,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '15:30',
     end: '16:30',
-    textColor: '#000',
     color: '#ee7ab0',
     detail: {
       zh: '透過經典劇照與翻譯片段挑戰記憶與默契，重溫那些只有老粉才懂的名場面與迷因。',
@@ -156,7 +149,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '18:00',
     end: '19:50',
-    textColor: '#fff',
     color: '#175b9f',
     detail: {
       zh: '夜晚的小馬音樂時間，現場播放各種 Brony 音樂與 Remix，一起享受友情與節奏。',
@@ -168,7 +160,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '19:50',
     end: '20:30',
-    textColor: '#fff',
     color: '#235cc9',
     detail: {
       zh: '一起合唱熟悉的小馬歌曲，為活動留下最熱鬧也最難忘的回憶。',
@@ -180,7 +171,6 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '20:30',
     end: '21:00',
-    textColor: '#000',
     color: '#d9ebf5',
     detail: {
       zh: '活動尾聲的大合照時間，歡迎帶上裝扮、OC 或周邊，一起留下紀念。',
@@ -192,7 +182,6 @@ export const events: TimetableEvent[] = [
     track: 'workshop',
     start: '10:30',
     end: '17:00',
-    textColor: '#000',
     color: '#ffaa82',
     detail: {
       zh: '工坊區全天開放，現場提供手作與創作交流空間，可以自由參與體驗。',
@@ -204,7 +193,6 @@ export const events: TimetableEvent[] = [
     track: 'vendor',
     start: '10:30',
     end: '12:00',
-    textColor: '#000',
     color: '#d6aa03',
     detail: {
       zh: '上午攤位街開放，可以逛創作攤位、收藏周邊，支持喜歡的創作者。',
@@ -216,7 +204,6 @@ export const events: TimetableEvent[] = [
     track: 'vendor',
     start: '13:00',
     end: '17:00',
-    textColor: '#000',
     color: '#d6aa03',
     detail: {
       zh: '下午攤位街持續開放，歡迎慢慢探索各式小馬創作與特色商品。',
@@ -228,7 +215,6 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '10:30',
     end: '12:00',
-    textColor: '#000',
     color: '#81fff9',
     detail: {
       zh: '自由桌遊時段，可以和其他參加者一起遊玩各種桌遊與互動遊戲。',
@@ -243,7 +229,6 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '12:00',
     end: '13:00',
-    textColor: '#fff',
     color: '#149be6',
     detail: {
       zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
@@ -255,7 +240,6 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '13:00',
     end: '17:00',
-    textColor: '#000',
     color: '#81fff9',
     detail: {
       zh: '下午自由桌遊時段，歡迎隨時加入，一起享受友情與遊戲時光。',
