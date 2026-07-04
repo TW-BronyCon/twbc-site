@@ -174,7 +174,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
 .lang-link {
   font-size: 0.85rem;
-  color: #ffbdde;
+  color: var(--color-pink);
   text-decoration: none;
   opacity: 0.6;
   transition: all 0.2s ease;
@@ -182,7 +182,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
 .lang-link:hover {
   opacity: 1;
-  text-shadow: 0 0 8px rgba(255, 189, 222, 0.5);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--color-pink) 50%, transparent);
 }
 
 .lang-link.active {
@@ -193,7 +193,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
 .footer-tagline {
   font-size: 0.9rem;
-  color: #ffbdde;
+  color: var(--color-pink);
   margin: 0;
   opacity: 0.8;
 }
@@ -205,7 +205,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
 .social-icon {
   font-size: 1.5rem;
-  color: #ffbdde;
+  color: var(--color-pink);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -239,7 +239,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
 .footer-copyright {
   font-size: 0.85rem;
-  color: #ffbdde;
+  color: var(--color-pink);
   opacity: 0.7;
 }
 
@@ -256,7 +256,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 .quote-text {
   margin: 0;
   font-size: 0.95rem;
-    color: #ffbdde;
+  color: var(--color-pink);
   font-style: italic;
   transition: all 0.3s ease-in-out;
 }
