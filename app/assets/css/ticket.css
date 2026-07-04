@@ -761,6 +761,14 @@ h2 {
     cursor: not-allowed !important;
 }
 
+.block-link.is-default-pointer {
+    cursor: default !important;
+}
+
+.block-link.is-default-pointer .block {
+    cursor: default !important;
+}
+
 .block-link.is-disabled .block {
     opacity: 0.65;
     filter: grayscale(0.5);

@@ -2,7 +2,7 @@
   "seo": {
     "title": "Home",
     "description": "Taiwan BronyCon is a fan event combining creation, market, and exchange, featuring vendors, venue maps, schedules, and complete event information. We invite everyone who loves ponies and creative culture to participate.",
-    "ogSiteName": "TWBC Taiwan BronyCon"
+    "ogSiteName": "Taiwan BronyCon"
   },
   "home": {
     "subtitle": "August 15, 2026",
@@ -16,16 +16,12 @@
       "eventStarted": "Event has started"
     },
     "nav": {
-      "tickets": "Register",
-      "volunteer": "Volunteer",
-      "vendor": "Vendor (Closed)",
-      "event": "Event (Closed)",
-      "apply": "Applications",
-      "comingSoon": "Coming Soon"
+      "tickets": "Register"
     },
     "footer": {
       "copyright": "All Rights Reserved",
-      "copyrightNotice": "© 2026 TWBC"
+      "copyrightNotice": "© 2026 TWBC",
+      "logoAlt": "Taiwan BronyCon"
     },
     "about": {
       "title": "About Us",
@@ -68,12 +64,10 @@
     "quotesLoading": "Loading..."
   },
   "ticket": {
-    "title": "Tickets",
+    "title": "Register",
     "subtitle": "Please choose your ticket",
-    "backHome": "Back to Home",
     "viewTable": "Compare Tiers",
     "viewDetailed": "Detailed List",
-    "purchase": "Buy Now",
     "includes": "Includes: ",
     "closed": "Closed",
     "royaleClosedBanner": "5000 NTD Royale ticket: Sales Closed",
@@ -89,7 +83,14 @@
       "sponsor": "Thank you for supporting TWBC!",
       "royale": "Premium choice, thank you for your support!"
     },
+    "prices": {
+      "budget": "NTD$500",
+      "standard": "NTD$600",
+      "sponsor": "NTD$1000",
+      "royale": "NTD$5000"
+    },
     "features": {
+      "id": "Event ID Badge",
       "badge": "ID Badge",
       "pin": "Button Pin",
       "postcard": "Postcard",
@@ -109,12 +110,10 @@
   },
   "menu": {
     "home": "Home",
-    "about": "About Us",
     "news": "News",
-    "ticket": "Tickets",
+    "about": "About Us",
     "apply": "Apply",
-    "timetable": "Timetable",
-    "location": "Location",
+    "ticket": "Register",
     "schedule": "Schedule",
     "venue": "Venue"
   },
@@ -123,17 +122,6 @@
     "schedule": "Schedule(TBA)",
     "venue": "Venue(TBA)"
   },
-  "apply": {
-    "comingSoon": "TBD",
-    "volunteer": "Volunteer",
-    "vendor": "Vendor (Closed)",
-    "event": "Event (Closed)"
-  },
-  "newsPage": {
-    "title": "News",
-    "heading": "Village Mailbox",
-    "description": "Announcements and updates from Kirin Village will be delivered here."
-  },
   "news": {
     "labels": {
       "time": "Time",
@@ -141,12 +129,186 @@
     },
     "actions": {
       "copyLink": "Copy Post Link",
-      "openPost": "Open Original Post",
-      "backHome": "Back to Home"
+      "openPost": "Open Original Post"
     },
     "messages": {
       "copied": "Link copied",
       "copyFailed": "Failed to copy. Please copy it manually."
     }
+  },
+  "apply": {
+    "volunteer": "Volunteer",
+    "vendor": "Vendor (Ended)",
+    "event": "Event (Ended)"
+  },
+  "about": {
+    "title": "About Us",
+    "boardTitle": "» Kirin Village Prayer Board «",
+    "boardDesc": "Pick up a prayer note and discover the stories left behind.",
+    "back": "Back",
+    "copy": "Copy Link",
+    "copied": "Copied!",
+    "copyFailed": "Failed",
+    "papers": {
+      "introduction": {
+        "title": "Introduction",
+        "desc": "Learn about TWBC's vision, event theme, and the story of Kirin Village."
+      },
+      "coc": {
+        "title": "Code of Conduct",
+        "desc": "Read the event guidelines and help maintain a warm and welcoming environment."
+      },
+      "mascot": {
+        "title": "Mascot",
+        "desc": "Meet this year's event mascot and experience the spirit of Kirin Village."
+      },
+      "thanks": {
+        "title": "Thanks",
+        "desc": "Thank every staff member, volunteer, and supporter who helped make this event possible."
+      }
+    },
+    "sections": {
+      "introduction": {
+        "title": "✦ Introduction ✦",
+        "whatTitle": "What is TWBC?",
+        "what": [
+          "Taiwan BronyCon is a community event created by fans who love My Little Pony. We believe the Magic of Friendship is not just a story, but a spirit that can be practiced in real life.",
+          "Here, you can freely express yourself and share your creations. Whether it is art, music, cosplay, or simply meeting new friends, every passion deserves to be seen.",
+          "We hope to create a warm, inclusive, and creative space where every participant can leave with wonderful memories."
+        ],
+        "specialTitle": "What Makes TWBC Special?",
+        "special": [
+          "A Spacious 200-Ping Venue",
+          "This event will be held at Asi Space, offering approximately 200 ping of open space.",
+          "The spacious and comfortable environment allows everyone to socialize freely and enjoy a full day of activities.",
+          "Day & Night Sessions | 11 Hours of Non-Stop Celebration",
+          "From 10 AM to 9 PM, enjoy a complete experience spanning day and night.",
+          "Daytime: quizzes, pony-themed games, creative workshops, and more.",
+          "Nighttime: a DJ party and a community sing-along of everyone's favorite pony songs."
+        ],
+        "singAlongText": "Leave your favorite songs for the community sing-along here!",
+        "singAlongLink": "Community Sing-Along ↗",
+        "themeTitle": "Website Theme: Kirin Village Beside the Taipei Basin",
+        "theme": [
+          "At the edge of the Taipei Basin lies a place known as Kirin Village.",
+          "It is neither as bright and bustling as the city nor completely isolated from civilization.",
+          "Legend says a Kirin once descended here, leaving blessings and protection upon the land.",
+          "Every encounter and every story quietly continues that gentle miracle."
+        ],
+        "buildTitle": "An Event Built Together",
+        "build": [
+          "Don't just be a spectator—be one of the people who make this event shine!",
+          "Don't just watch—help this event glow because of you!",
+          "Step forward and become part of what makes this event special."
+        ],
+        "communityTitle": "Community Activities",
+        "communityText": "The event will feature stage interactions, creator presentations, and themed discussions so everyone can find something to enjoy.",
+        "communityInvite1": "Do you have a game, story, creation, or anything you'd like to share?",
+        "communityInvite2": "Anyone can take the stage and let others hear their passion and ideas.",
+        "communityLink": "Community Activity Application ↗",
+        "vendorTitle": "Vendor Area",
+        "vendorText": "The venue will feature booths from creators and fans selling pony-related merchandise and original works.",
+        "vendorInvite1": "Creators and artists are welcome to showcase and sell their work.",
+        "vendorInvite2": "Let more people discover your creations and add even more color to the event.",
+        "vendorLink": "Vendor Application ↗",
+        "mascotTitle": "Mascot",
+        "mascotText": "This year's mascot symbolizes a place where friendship and creativity gather.",
+        "mascotLink": "Mascot Introduction ↗",
+        "volunteerTitle": "Volunteer Recruitment",
+        "volunteerText": "Volunteers are an essential part of the event, helping with operations, guidance, and support.",
+        "volunteerInvite1": "We're looking for passionate people to help create an even better event experience.",
+        "volunteerLink": "Volunteer Application ↗",
+        "invitationTitle": "✦ Invitation ✦",
+        "invitation": [
+          "At the edge of the Taipei Basin, a softly glowing invitation drifts through Kirin Village.",
+          "It unfolds before your eyes as words appear like light."
+        ],
+        "invitation2": [
+          "Whoever you are, if you love My Little Pony: Friendship is Magic!",
+          "Whether you're a new fan or a longtime one, regardless of age, gender, or background—this place is for you.",
+          "We warmly invite you to step into this land between reality and imagination.",
+          "Join this celebration created by pony fans and experience creativity, friendship, and unforgettable encounters.",
+          "Let us gather here and write the next chapter together."
+        ],
+        "ticketLink": "📜 Register Now"
+      },
+      "coc": {
+        "title": "✦ Code of Conduct ✦",
+        "intro": [
+          "To ensure every traveler can enjoy the event safely and comfortably, we ask everyone to treat one another with respect, kindness, and inclusiveness.",
+          "Please help create a safe, inclusive, and enjoyable environment.",
+          "Please follow the rules below and help maintain this welcoming space."
+        ],
+        "rules": [
+          "1. Smoking is prohibited throughout the building. Please smoke outside on the first floor if necessary.",
+          "2. Keep all aisles clear to ensure emergency exits remain accessible.",
+          "3. Harassment or inappropriate behavior toward other attendees will not be tolerated.",
+          "4. Please take care of your belongings. Lost items should be handed to event staff.",
+          "5. Please respect the venue and its facilities. Food, drinks, and difficult-to-clean materials are restricted in designated areas."
+        ]
+      },
+      "mascot": {
+        "title": "✦ Mascot ✦",
+        "guardianTitle": "Guardian of Kirin Village",
+        "guardianText": "Hidden within the mist at the edge of the Taipei Basin, she quietly watches over travelers and guides those who lose their way.",
+        "basicTitle": "Information",
+        "basic": [
+          "Name: Taoyi",
+          "Gender: Female",
+          "Species: Kirin",
+          "Age: Unknown",
+          "Symbol: Friendship, Blessings, and New Beginnings"
+        ],
+        "messageTitle": "A Message From Her",
+        "message": [
+          "Welcome to Kirin Village. I've been waiting for you.",
+          "Fan creations featuring Taoyi are warmly welcomed. Please avoid inappropriate content."
+        ]
+      },
+      "thanks": {
+        "title": "✦ Behind-the-Scenes Team ✦",
+        "staffTitle": "Organizing Team",
+        "staff": [
+          "Lead Organizer: jerro",
+          "Art & Design: Rhyme Joy, Jerro, Acedia",
+          "Merchandise Production: Needle, Wushi",
+          "Event Planning: Needle, Jerro",
+          "Website Development and Operations: Rhyme Joy, Bradly",
+          "Mascot Performer: Taoyi"
+        ],
+        "volunteerTitle": "Staff",
+        "volunteers": [
+          "Jerro",
+          "Rhyme Joy",
+          "Needle",
+          "Bradly",
+          "Xiao Xuan",
+          "Tuna",
+          "Lao Cai",
+          "Xiao Qiu",
+          "Mantou",
+          "(DJ)lixound",
+          "(DJ)PP"
+        ],
+        "specialTitle": "Special Thanks",
+        "special": [
+          "華南馬聚 South China BronyCon",
+          "BronyFestival",
+          "NorseHorseCon",
+          "MLPCON.INFO",
+          "MalangPony2",
+          "馬圈視野 Pony Fandom Vision",
+          "Every brony who helped us"
+        ]
+      }
+    }
+  },
+  "newsPage": {
+    "title": "News",
+    "heading": "✦ Village Mailbox ✦",
+    "description": "Announcements and updates from Kirin Village will be delivered here."
+  },
+  "common": {
+    "close": "Close"
   }
 }

@@ -19,5 +19,12 @@
 .site-content {
   position: relative;
   z-index: 1;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content :deep(.footer-root) {
+  margin-top: auto;
 }
 </style>

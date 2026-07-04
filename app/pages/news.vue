@@ -9,6 +9,14 @@ import type { ComponentPublicInstance } from 'vue'
 // Configuration for persisting the opened/unopened state of letters
 const rememberOpenedMail = true 
 const openedStorageKey = 'twbc-opened-news'
+const openedCookie = useCookie<Record<string, boolean> | null>(
+  openedStorageKey,
+  {
+    maxAge: 60 * 60 * 24 * 365,
+    path: '/',
+    sameSite: 'lax'
+  }
+)
 
 const { t, locale } = useI18n()
 
@@ -355,40 +363,62 @@ function trimText(text = '', max = 90) {
 }
 
 function saveOpenedMap() {
-  if (!rememberOpenedMail) return
+  if (!rememberOpenedMail) {
+    openedCookie.value = null
+    return
+  }
 
-  localStorage.setItem(
-    openedStorageKey,
-    JSON.stringify(openedMap.value)
-  )
+  const value = JSON.stringify(openedMap.value)
+  openedCookie.value = openedMap.value
+
+  try {
+    localStorage.setItem(openedStorageKey, value)
+  } catch {
+    // Cookie fallback still preserves opened mail state.
+  }
+}
+
+function parseOpenedMap(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return {}
+  }
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([, isOpened]) => isOpened === true)
+  ) as Record<string, boolean>
 }
 
 function loadOpenedMap() {
   if (!rememberOpenedMail) {
-    localStorage.removeItem(openedStorageKey)
+    try {
+      localStorage.removeItem(openedStorageKey)
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+
+    openedCookie.value = null
     openedMap.value = {}
     return
   }
 
-  const saved = localStorage.getItem(openedStorageKey)
+  let saved: string | null = null
 
-  if (!saved) {
-    openedMap.value = {}
-    return
+  try {
+    saved = localStorage.getItem(openedStorageKey)
+  } catch {
+    saved = null
   }
 
   try {
-    const parsed = JSON.parse(saved)
-
-    openedMap.value =
-      parsed &&
-      typeof parsed === 'object' &&
-      !Array.isArray(parsed)
-        ? parsed
-        : {}
+    openedMap.value = saved
+      ? parseOpenedMap(JSON.parse(saved))
+      : parseOpenedMap(openedCookie.value)
   } catch {
-    openedMap.value = {}
+    openedMap.value = parseOpenedMap(openedCookie.value)
   }
+
+  saveOpenedMap()
 }
 
 function openMail(post: NewsPost) {
