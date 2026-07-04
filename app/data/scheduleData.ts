@@ -118,8 +118,8 @@ export const events: TimetableEvent[] = [
     end: '11:45',
     type: 'community',
     detail: {
-      zh: '一起分享那些最混亂、最爆笑、最不可思議的小馬故事與回憶，看看誰才是真正的友情傳奇。',
-      en: 'Share the most chaotic, hilarious, and unbelievable pony stories and memories.',
+      zh: '來玩瘋狂填詞吧！這是一款特別的故事填空遊戲，所有故事都以小馬為主題。\n究竟大家能填出一篇爆笑故事，還是創造出一場離譜的事故呢？',
+      en: 'Lets play Mad Libs! This is a unique fill-in-the-blank story game, and all the stories are pony-themed. \nWill we end up with a hilarious story, or will we create an absolute disaster?',
     },
   },
   {
@@ -148,35 +148,60 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: '小馬知識大挑戰', en: 'Pony Trivia Challenge' },
+    title: { zh: '劇照大挑戰', en: 'Pony Still Challenge' },
     track: 'main',
     start: '14:15',
     end: '15:15',
     type: 'community',
     detail: {
-      zh: '考驗大家對 MLP 世界的了解程度，從角色、劇情到冷知識，看看誰才是真正的小馬百科。',
-      en: 'Test your knowledge of the MLP world, from characters and stories to fun trivia.',
+      zh: '考驗大家對 MLP 的了解程度，能否根據一張畫面就能猜出集數嗎?',
+      en: 'Test your knowledge of the MLP! Can you guess the episode just by looking at a single screenshot?',
     },
   },
+  //{
+  //  title: { zh: '小馬知識大挑戰', en: 'Pony Trivia Challenge' },
+  //  track: 'main',
+  //  start: '14:15',
+  //  end: '15:15',
+  //  type: 'community',
+  //  detail: {
+  //    zh: '考驗大家對 MLP 世界的了解程度，從角色、劇情到冷知識，看看誰才是真正的小馬百科。',
+  //    en: 'Test your knowledge of the MLP world, from characters and stories to fun trivia.',
+  //  },
+  //},
   {
     title: {
-      zh: '友誼回憶錄\n劇照大挑戰\n友誼就是翻譯災難',
-      en: 'Friendship Memories\nScreenshot Challenge\nFriendship Is Translation Chaos',
+      zh: '友誼的小船說翻就翻',
+      en: 'The boat of friendship tips over',
     },
     track: 'main',
     start: '15:30',
     end: '16:30',
     type: 'community',
     detail: {
-      zh: '透過經典劇照與翻譯片段挑戰記憶與默契，重溫那些只有老粉才懂的名場面與迷因。',
-      en: 'Challenge your memory with classic screenshots and translation moments, revisiting memes and scenes longtime fans know well.',
+      zh: '最刺激的友誼破冰遊戲，你與朋友之間的友情是否經得起考驗(本活動將會有大型社死現場，歡迎內心勇敢堅強的你前來挑戰)',
+      en: 'The most thrilling friendship icebreaker! Is your bond with your friends strong enough to survive the ultimate test? (This event features massive public embarrassment and hilarious cringe moments. Brave and fearless souls are highly welcome to take on the challenge!)',
     },
   },
+  //{
+  //  title: {
+  //    zh: '友誼回憶錄\n劇照大挑戰\n友誼就是翻譯災難',
+  //    en: 'Friendship Memories\nScreenshot Challenge\nFriendship Is Translation Chaos',
+  //  },
+  //  track: 'main',
+  //  start: '15:30',
+  //  end: '16:30',
+  //  type: 'community',
+  //  detail: {
+  //    zh: '透過經典劇照與翻譯片段挑戰記憶與默契，重溫那些只有老粉才懂的名場面與迷因。',
+  //    en: 'Challenge your memory with classic screenshots and translation moments, revisiting memes and scenes longtime fans know well.',
+  //  },
+  //},
   {
-    title: { zh: '音樂派對', en: 'Music Party' },
+    title: { zh: '彩虹音爆', en: 'Sonic Rainboom' },
     track: 'main',
     start: '18:00',
-    end: '19:50',
+    end: '20:00',
     type: 'music',
     detail: {
       zh: '夜晚的小馬音樂時間，現場播放各種 Brony 音樂與 Remix，一起享受友情與節奏。',
@@ -186,8 +211,8 @@ export const events: TimetableEvent[] = [
   {
     title: { zh: '大合唱', en: 'Sing-along' },
     track: 'main',
-    start: '19:50',
-    end: '20:30',
+    start: '20:00',
+    end: '20:50',
     type: 'sing',
     detail: {
       zh: '一起合唱熟悉的小馬歌曲，為活動留下最熱鬧也最難忘的回憶。',
@@ -197,7 +222,7 @@ export const events: TimetableEvent[] = [
   {
     title: { zh: '大合照', en: 'Group Photo' },
     track: 'main',
-    start: '20:30',
+    start: '20:50',
     end: '21:00',
     type: 'photo',
     detail: {
@@ -239,7 +264,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: '桌遊', en: 'Board Games' },
+    title: { zh: '遊戲區', en: 'Games Area' },
     track: 'game',
     start: '10:30',
     end: '12:00',
@@ -249,22 +274,22 @@ export const events: TimetableEvent[] = [
       en: 'Free board game time. Join other attendees for board games and interactive games.',
     },
   },
+  //{
+  //  title: {
+  //    zh: '誰是幻形靈\n桌遊時間',
+  //    en: 'Who Is the Changeling?\nBoard Game Time',
+  //  },
+  //  track: 'game',
+  //  start: '12:00',
+  //  end: '13:00',
+  //  type: 'game-special',
+  //  detail: {
+  //    zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
+  //    en: 'Play a social deduction board game and find the changeling hidden among the group.',
+  //  },
+  //},
   {
-    title: {
-      zh: '誰是幻形靈\n桌遊時間',
-      en: 'Who Is the Changeling?\nBoard Game Time',
-    },
-    track: 'game',
-    start: '12:00',
-    end: '13:00',
-    type: 'game-special',
-    detail: {
-      zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
-      en: 'Play a social deduction board game and find the changeling hidden among the group.',
-    },
-  },
-  {
-    title: { zh: '桌遊', en: 'Board Games' },
+    title: { zh: '遊戲區', en: 'Games Area' },
     track: 'game',
     start: '13:00',
     end: '17:00',
