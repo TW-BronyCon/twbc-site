@@ -576,10 +576,8 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style src="~/assets/css/font.css"></style>
-<style scoped src="~/assets/css/news.css"></style>
-
 <style scoped>
+/* Scoped styles for News Page */
 .legacy-page-root {
   position: relative;
   padding-top: clamp(4.5rem, 7vw, 6.5rem);
@@ -597,18 +595,508 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
+/* 暗遮罩 */
+.bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.2);
+}
+
+/* 主容器 */
+.news-wrap {
+    width: min(900px, 92%);
+    margin: 0 auto -1rem;
+    padding: 0;
+}
+
+/* 標題 */
+.news-head {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.news-head h1 {
+    margin: 0;
+    font-size: clamp(2rem,5vw,4rem);
+    letter-spacing: .05em;
+    text-shadow: 0 0 15px rgba(255,255,255,.25);
+}
+
+.news-head p {
+    margin-top: .7rem;
+    color: rgba(255,255,255,.75);
+    font-size: 1rem;
+}
+
+/* 信件列表 */
+.mail-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: stretch;
+    width: min(900px, 100%);
+    max-width: 600px;
+    margin: 0 auto 5rem;
+}
+
+/* 信封 */
+.mail {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-rows: 5em auto auto;
+    grid-template-areas:
+        "blank blank"
+        "title preview"
+        "meta meta";
+    gap: .75rem;
+
+    min-height: clamp(230px, 22vw, 300px);
+    background: var(--color-paper-bg-gradient);
+    border-radius: 1rem;
+    padding: 1.2rem 1.35rem 1rem;
+    color: var(--color-paper-text);
+    cursor: pointer;
+    box-shadow: 0 18px 35px rgba(0,0,0,.35);
+    transition: .25s ease;
+    overflow: hidden;
+}
+
+.mail:hover {
+    transform: translateY(-8px) rotate(-.5deg);
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.45),
+        0 0 20px rgba(255,120,220,.4),
+        0 0 55px rgba(255,120,220,.25),
+        0 0 110px rgba(255,120,220,.15);
+
+    animation: magicPulse 1.2s ease-in-out infinite;
+}
+
+.mail:hover::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border-radius: 1.4rem;
+    pointer-events: none;
+    z-index: 6;
+    border: 2px solid rgba(255, 130, 225, .65);
+    box-shadow:
+        0 0 15px rgba(255, 231, 249, 0.9),
+        0 0 30px rgba(201, 125, 183, 0.55),
+        0 0 60px rgba(201, 125, 183, 0.3),
+        0 0 90px rgba(201, 125, 183, .12);
+    animation: magicOutline 1.2s ease-in-out infinite;
+}
+
+/* 上方倒三角封口區 */
+.mail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(
+        135deg,
+        rgba(250,250,250,.25) 0%,
+        rgba(250,250,250,.25) 45%,
+        rgba(250,250,250,.5) 50%,
+        rgba(250,250,250,.25) 55%,
+        rgba(250,250,250,.25) 100%
+    );
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.mail.opened::before {
+    height: 35px;
+    background: rgba(185, 153, 130, 0.25);
+}
+
+/* 郵票 */
+.stamp {
+    position: absolute;
+    top: .85rem;
+    right: 1rem;
+    width: 52px;
+    height: 52px;
+    border: 2px dashed rgba(255,255,255,.8);
+    border-radius: .5rem;
+    background: var(--color-purple-light);
+    opacity: .95;
+    z-index: 2;
+}
+
+.mail h3 {
+    grid-area: title;
+    margin: 0;
+    align-self: start;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    padding-top: .5rem;
+    position: relative;
+    z-index: 1;
+    display: -webkit-box;
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.preview {
+    grid-area: preview;
+    margin: 0;
+    align-self: center;
+    font-size: .95rem;
+    line-height: 1.7;
+    color: var(--color-paper-text-muted);
+    position: relative;
+    z-index: 1;
+    text-align: justify;
+    display: -webkit-box;
+    line-clamp: 4;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: break-word;
+}
+
+.mail-meta {
+    grid-area: meta;
+    margin-top: .15rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    font-size: .82rem;
+    opacity: .72;
+    position: relative;
+    z-index: 1;
+}
+
+.mail-meta .time {
+    margin: 0;
+    font-size: 1rem;
+    opacity: .9;
+    color: var(--color-paper-text-dark);
+}
+
+.mail-meta .author {
+    text-align: right;
+    font-weight: 600;
+    margin-left: auto;
+    font-size: .9rem;
+}
+
+/* 圓形封蠟 */
+.wax-seal {
+    position: absolute;
+    top: 2.05rem;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translateX(-50%) translateY(-25px);
+    transform-origin: center;
+    z-index: 5;
+    pointer-events: none;
+    filter:
+        drop-shadow(0 1px 2px rgba(0,0,0,.1))
+        drop-shadow(0 2px 4px rgba(0,0,0,.055))
+        drop-shadow(0 5px 10px rgba(0,0,0,.01));
+}
+
+.wax-closed {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    transform: rotate(var(--seal-angle, 0deg));
+    transform-origin: center;
+}
+
+.wax-top,
+.wax-bottom {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    transition:
+        transform .6s cubic-bezier(.22,.8,.2,1),
+        opacity .35s ease;
+}
+
+.wax-piece-img {
+    position: absolute;
+    inset: 0;
+    background-image: url('/img/WaxSeal.avif');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(var(--seal-angle, 0deg));
+    transform-origin: center;
+    filter:
+        drop-shadow(0 1px 2px rgba(0,0,0,.2))
+        drop-shadow(0 2px 4px rgba(0,0,0,.105))
+        drop-shadow(0 5px 10px rgba(0,0,0,.01));
+}
+
+.wax-top {
+    clip-path: var(--crack-top);
+}
+
+.wax-bottom {
+    clip-path: var(--crack-bottom);
+}
+
+.mail.opened .wax-top {
+    transform:
+        translateY(-20px)
+        rotate(-5deg);
+}
+
+.mail.opened .wax-bottom {
+    transform:
+        translateY(0px)
+        rotate(10deg);
+}
+
+.why {
+    z-index: 5;
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+    transform: translate3d(var(--why-x, 120vw), var(--why-y, 40vh), 0);
+    transition:
+        transform .5s cubic-bezier(.22, .8, .2, 1),
+        opacity .5s ease;
+    animation: why-float 5s ease-in-out infinite;
+}
+
+.why.why-ready {
+    opacity: 1;
+}
+
+@keyframes why-float {
+    0% { margin-top: 0; }
+    50% { margin-top: 10px; }
+    100% { margin-top: 0; }
+}
+
+@media (max-width:1000px) {
+    .why {
+        display: none;
+    }
+}
+
+/* Vivid Hover Magic Animations for Envelopes */
+@keyframes magicPulse {
+    0%, 100% {
+        transform: translateY(-8px) rotate(-.5deg) scale(1.02);
+        box-shadow:
+            0 0 12px rgba(255, 255, 255, 0.55),
+            0 0 25px rgba(255, 120, 220, 0.5),
+            0 0 55px rgba(255, 120, 220, 0.3),
+            0 0 110px rgba(255, 120, 220, 0.2);
+    }
+    50% {
+        transform: translateY(-8px) rotate(-.5deg) scale(1);
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.35),
+            0 0 15px rgba(255, 120, 220, 0.3),
+            0 0 45px rgba(255, 120, 220, 0.2),
+            0 0 90px rgba(255, 120, 220, 0.1);
+    }
+}
+
+@keyframes magicOutline {
+    0%, 100% {
+        border-color: rgba(255, 130, 225, .85);
+        box-shadow:
+            0 0 18px rgba(255, 231, 249, 1),
+            0 0 35px rgba(201, 125, 183, 0.65),
+            0 0 70px rgba(201, 125, 183, 0.4),
+            0 0 100px rgba(201, 125, 183, .2);
+    }
+    50% {
+        border-color: rgba(255, 130, 225, .45);
+        box-shadow:
+            0 0 12px rgba(255, 231, 249, 0.7),
+            0 0 25px rgba(201, 125, 183, 0.45),
+            0 0 50px rgba(201, 125, 183, 0.2),
+            0 0 80px rgba(201, 125, 183, .08);
+    }
+}
+
+/* 手機 */
+@media (max-width:700px) {
+    .news-wrap {
+        padding-top: 0;
+    }
+
+    .mail-list {
+        grid-template-columns: 1fr;
+    }
+
+    .mail {
+        grid-template-columns: 1fr;
+        grid-template-rows: 78px auto auto auto;
+        grid-template-areas:
+            "blank"
+            "title"
+            "preview"
+            "meta";
+        gap: .7rem;
+        min-height: auto;
+        padding: 1.1rem 1.1rem .95rem;
+    }
+
+    .mail::before {
+        height: 82px;
+    }
+
+    .mail h3,
+    .preview {
+        align-self: start;
+    }
+
+    .mail h3 {
+        font-size: 1.12rem;
+        padding-top: 0;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+    }
+
+    .preview {
+        font-size: .93rem;
+        line-height: 1.65;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+    }
+
+    .mail-meta {
+        font-size: .78rem;
+    }
+}
+</style>
+
+<style>
+/* Unscoped Styles for Teleported Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s;
+    z-index: 99;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 信紙 */
+.paper {
+    width: min(760px,100%);
+    max-height: 88vh;
+    overflow-y: auto;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            #fffdf8 0px,
+            #fffdf8 34px,
+            #f2efe6 35px
+        );
+    color: var(--color-paper-text-dark);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 25px 50px rgba(0,0,0,.45);
+    position: relative;
+}
+
+.paper h2 {
+    margin: 0 0 .5rem;
+    padding-right: 1.25rem;
+    font-size: 2rem;
+}
+
+.paper-meta {
+    font-size: .9rem;
+    color: var(--color-paper-text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
 .paper-content {
-  white-space: pre-line;
+    line-height: 1.5;
+    white-space: pre-line;
+    text-align: justify;
 }
 
 .paper-content a {
-  color: #803bff;
-  font-weight: 700;
-  text-decoration: underline;
-  word-break: break-all;
+    color: var(--color-purple-accent);
+    font-weight: 700;
+    text-decoration: underline;
+    word-break: break-all;
 }
 
 .paper-content a:hover {
-  opacity: .75;
+    opacity: .75;
+}
+
+/* Modal Entry/Exit Animations */
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.modal-enter-active .paper,
+.modal-leave-active .paper {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
+.modal-enter-from .paper {
+    transform: scale(0.9) translateY(20px);
+}
+
+.modal-leave-to .paper {
+    transform: scale(0.95) translateY(10px);
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #ddd;
+    color: #111;
+}
+
+@media (max-width:700px) {
+    .paper {
+        padding: 1.2rem;
+    }
+
+    .paper h2 {
+        font-size: 1.4rem;
+    }
 }
 </style>
