@@ -1,3 +1,17 @@
+export type EventType =
+  | 'entry'
+  | 'opening'
+  | 'community'
+  | 'break'
+  | 'talk'
+  | 'music'
+  | 'sing'
+  | 'photo'
+  | 'workshop'
+  | 'vendor'
+  | 'game'
+  | 'game-special'
+
 export interface LocalizedText {
   zh: string
   en: string
@@ -16,11 +30,25 @@ export interface TimetableEvent {
   track: string
   start: string
   end: string
-  textColor?: string
-  color?: string
+  type: EventType
   detail?: LocalizedText
   vertical?: boolean
   PointerEvent?: boolean
+}
+
+export const EVENT_COLORS: Record<EventType, string> = {
+  entry: '#ececec',
+  opening: '#d7d8f3',
+  community: '#ee7ab0',
+  break: '#c7c6df',
+  talk: '#efd992',
+  music: '#175b9f',
+  sing: '#235cc9',
+  photo: '#d9ebf5',
+  workshop: '#ffaa82',
+  vendor: '#d6aa03',
+  game: '#81fff9',
+  'game-special': '#149be6',
 }
 
 export const startHour = 9
@@ -66,7 +94,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '09:30',
     end: '10:00',
-    color: '#ececec',
+    type: 'entry',
     detail: {
       zh: '開放入場與自由交流時間，可以先熟悉場地、攤位位置，和其他小馬迷打招呼。',
       en: 'Entry and free social time. Get familiar with the venue and vendor area, and say hello to fellow pony fans.',
@@ -77,7 +105,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '10:00',
     end: '10:30',
-    color: '#d7d8f3',
+    type: 'opening',
     detail: {
       zh: '活動正式開始，介紹本日流程、活動區域、注意事項，以及各項精彩內容。',
       en: 'The event officially begins with an introduction to the schedule, areas, rules, and highlights of the day.',
@@ -88,7 +116,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '10:45',
     end: '11:45',
-    color: '#ee7ab0',
+    type: 'community',
     detail: {
       zh: '一起分享那些最混亂、最爆笑、最不可思議的小馬故事與回憶，看看誰才是真正的友情傳奇。',
       en: 'Share the most chaotic, hilarious, and unbelievable pony stories and memories.',
@@ -102,7 +130,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '12:00',
     end: '13:00',
-    color: '#c7c6df',
+    type: 'break',
     detail: {
       zh: '午間休息時段，現場將播放《A Decade of Pony》，一起回顧十年來的小馬旅程與社群記憶。',
       en: 'During the noon break, A Decade of Pony will be screened as we look back on years of pony memories.',
@@ -113,7 +141,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '13:00',
     end: '14:00',
-    color: '#efd992',
+    type: 'talk',
     detail: {
       zh: '由青焰帶來的小馬主題分享，內容可能包含創作、社群、翻譯或多年來的心得與經歷。',
       en: 'A pony-themed talk by Qingyan, possibly covering creation, community, translation, and years of experience.',
@@ -124,7 +152,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '14:15',
     end: '15:15',
-    color: '#ee7ab0',
+    type: 'community',
     detail: {
       zh: '考驗大家對 MLP 世界的了解程度，從角色、劇情到冷知識，看看誰才是真正的小馬百科。',
       en: 'Test your knowledge of the MLP world, from characters and stories to fun trivia.',
@@ -138,7 +166,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '15:30',
     end: '16:30',
-    color: '#ee7ab0',
+    type: 'community',
     detail: {
       zh: '透過經典劇照與翻譯片段挑戰記憶與默契，重溫那些只有老粉才懂的名場面與迷因。',
       en: 'Challenge your memory with classic screenshots and translation moments, revisiting memes and scenes longtime fans know well.',
@@ -149,7 +177,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '18:00',
     end: '19:50',
-    color: '#175b9f',
+    type: 'music',
     detail: {
       zh: '夜晚的小馬音樂時間，現場播放各種 Brony 音樂與 Remix，一起享受友情與節奏。',
       en: 'An evening pony music session with Brony music and remixes. Enjoy friendship and rhythm together.',
@@ -160,7 +188,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '19:50',
     end: '20:30',
-    color: '#235cc9',
+    type: 'sing',
     detail: {
       zh: '一起合唱熟悉的小馬歌曲，為活動留下最熱鬧也最難忘的回憶。',
       en: 'Sing familiar pony songs together and create a lively, unforgettable memory.',
@@ -171,7 +199,7 @@ export const events: TimetableEvent[] = [
     track: 'main',
     start: '20:30',
     end: '21:00',
-    color: '#d9ebf5',
+    type: 'photo',
     detail: {
       zh: '活動尾聲的大合照時間，歡迎帶上裝扮、OC 或周邊，一起留下紀念。',
       en: 'Group photo time near the end of the event. Bring your cosplay, OC, or merch for a keepsake.',
@@ -182,7 +210,7 @@ export const events: TimetableEvent[] = [
     track: 'workshop',
     start: '10:30',
     end: '17:00',
-    color: '#ffaa82',
+    type: 'workshop',
     detail: {
       zh: '工坊區全天開放，現場提供手作與創作交流空間，可以自由參與體驗。',
       en: 'The workshop area is open all day, offering space for hands-on creation and creative exchange.',
@@ -193,7 +221,7 @@ export const events: TimetableEvent[] = [
     track: 'vendor',
     start: '10:30',
     end: '12:00',
-    color: '#d6aa03',
+    type: 'vendor',
     detail: {
       zh: '上午攤位街開放，可以逛創作攤位、收藏周邊，支持喜歡的創作者。',
       en: 'Vendor Alley opens in the morning. Browse creator booths, collect merch, and support your favorite artists.',
@@ -204,7 +232,7 @@ export const events: TimetableEvent[] = [
     track: 'vendor',
     start: '13:00',
     end: '17:00',
-    color: '#d6aa03',
+    type: 'vendor',
     detail: {
       zh: '下午攤位街持續開放，歡迎慢慢探索各式小馬創作與特色商品。',
       en: 'Vendor Alley remains open in the afternoon. Take your time exploring pony creations and special goods.',
@@ -215,7 +243,7 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '10:30',
     end: '12:00',
-    color: '#81fff9',
+    type: 'game',
     detail: {
       zh: '自由桌遊時段，可以和其他參加者一起遊玩各種桌遊與互動遊戲。',
       en: 'Free board game time. Join other attendees for board games and interactive games.',
@@ -229,7 +257,7 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '12:00',
     end: '13:00',
-    color: '#149be6',
+    type: 'game-special',
     detail: {
       zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
       en: 'Play a social deduction board game and find the changeling hidden among the group.',
@@ -240,7 +268,7 @@ export const events: TimetableEvent[] = [
     track: 'game',
     start: '13:00',
     end: '17:00',
-    color: '#81fff9',
+    type: 'game',
     detail: {
       zh: '下午自由桌遊時段，歡迎隨時加入，一起享受友情與遊戲時光。',
       en: 'Afternoon free board game time. Join anytime and enjoy friendship and games.',

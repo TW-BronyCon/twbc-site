@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { columns as rawColumns, events as rawEvents, startHour, endHour, slotMinutes } from '~/data/scheduleData'
+import { columns as rawColumns, events as rawEvents, startHour, endHour, slotMinutes, EVENT_COLORS } from '~/data/scheduleData'
 
 const { t, locale } = useI18n()
 
@@ -139,7 +139,8 @@ const processedEvents = computed(() => {
     const rowSpan = timeSpanSlots(event.start, event.end)
     const isCompact = rowSpan <= 5
 
-    const eventColor = normalizeHexColor(event.color)
+    const rawColor = EVENT_COLORS[event.type]
+    const eventColor = normalizeHexColor(rawColor)
     const textColor = event.textColor || getContrastColor(eventColor)
     const fontSize = getDynamicFontSize(rowSpan)
     const titleText = isEn ? event.title.en : event.title.zh
