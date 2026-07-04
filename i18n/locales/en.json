@@ -148,5 +148,11 @@
       "copied": "Link copied",
       "copyFailed": "Failed to copy. Please copy it manually."
     }
+  },
+    "schedule": {
+    "title": "Schedule",
+    "hint": "Tap an event block to view details.",
+    "mobilehint": "← Swipe to view the Schedule →",
+    "note": "The schedule below is not final and may still be adjusted."
   }
 }
