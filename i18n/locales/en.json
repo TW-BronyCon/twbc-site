@@ -171,7 +171,7 @@
       "workshop": "Workshop Area",
       "game": "Game Area",
       "info": "Info Desk",
-      "photo": "Photo Zone",
+      "bar": "Bar",
       "entrance": "Entrance",
       "booth": "Vendor Booth"
     },
@@ -199,7 +199,7 @@
       "workshop": "An interactive creative space where you can join hands-on crafting workshops or sit down to exchange ideas and draw with fellow pony fans.",
       "game": "A dedicated space for board games, card games, and community icebreakers. Pull up a chair and make new friends here!",
       "info": "Need help? Stop by the Info Desk for lost and found, ticket verification, event inquiries, and assistance from our staff.",
-      "photo": "The place to capture memories. Take pictures with beautiful character standees, background boards, or pose in your cosplay costumes.",
+      "bar": "Bar & Lounge. Offers drinks, light snacks, and a cozy seating area for attendees to relax and socialize.",
       "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
     }
   },

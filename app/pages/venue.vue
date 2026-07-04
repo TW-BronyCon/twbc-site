@@ -321,11 +321,11 @@ onUnmounted(() => {
                   </g>
                 </g>
 
-                <!-- Interactive Zone: Photo Zone -->
-                <g class="zone-group photo-group" :class="{ active: hoveredZoneId === 'photo' }" @mouseover="hoveredZoneId = 'photo'" @mouseleave="hoveredZoneId = null" @click="openZone('photo')">
-                  <polygon class="zone-shape shape-photo" points="29.35 112.3 32.17 117.3 35.46 121.99 39.2 126.34 43.35 130.31 47.87 133.85 52.71 136.93 57.83 139.51 63.18 141.59 68.71 143.13 74.36 144.12 80.08 144.55 85.82 144.42 91.52 143.73 97.12 142.48 102.57 140.69 107.82 138.37 112.82 135.56 117.51 132.26 121.87 128.52 125.83 124.37 129.37 119.85 132.45 115.01 135.04 109.89 137.11 104.54 138.65 99.01 139.64 93.36 140.07 87.64 139.94 81.9 139.25 76.2 138 70.6 136.21 65.15 133.9 59.9 131.08 54.9 127.78 50.21 124.04 45.85 119.89 41.89 115.37 38.35 110.53 35.27 105.41 32.68 100.06 30.61 94.53 29.07 88.88 28.08 83.16 27.65 77.42 27.78 71.73 28.47 66.12 29.72 60.67 31.51 55.42 33.82 50.42 36.64 45.73 39.94 41.38 43.68 37.41 47.83 33.87 52.35 30.79 57.19 28.21 62.31 26.13 67.66 24.59 73.19 23.6 78.84 23.17 84.56 23.3 90.3 23.99 95.99 25.24 101.6 27.03 107.05 29.35 112.3"/>
-                  <g class="zone-characters font-photo">
-                    <!-- 拍照 -->
+                <!-- Interactive Zone: Bar -->
+                <g class="zone-group bar-group" :class="{ active: hoveredZoneId === 'bar' }" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="openZone('bar')">
+                  <polygon class="zone-shape shape-bar" points="29.35 112.3 32.17 117.3 35.46 121.99 39.2 126.34 43.35 130.31 47.87 133.85 52.71 136.93 57.83 139.51 63.18 141.59 68.71 143.13 74.36 144.12 80.08 144.55 85.82 144.42 91.52 143.73 97.12 142.48 102.57 140.69 107.82 138.37 112.82 135.56 117.51 132.26 121.87 128.52 125.83 124.37 129.37 119.85 132.45 115.01 135.04 109.89 137.11 104.54 138.65 99.01 139.64 93.36 140.07 87.64 139.94 81.9 139.25 76.2 138 70.6 136.21 65.15 133.9 59.9 131.08 54.9 127.78 50.21 124.04 45.85 119.89 41.89 115.37 38.35 110.53 35.27 105.41 32.68 100.06 30.61 94.53 29.07 88.88 28.08 83.16 27.65 77.42 27.78 71.73 28.47 66.12 29.72 60.67 31.51 55.42 33.82 50.42 36.64 45.73 39.94 41.38 43.68 37.41 47.83 33.87 52.35 30.79 57.19 28.21 62.31 26.13 67.66 24.59 73.19 23.6 78.84 23.17 84.56 23.3 90.3 23.99 95.99 25.24 101.6 27.03 107.05 29.35 112.3"/>
+                  <g class="zone-characters font-bar">
+                    <!-- 吧台 -->
                     <path d="M84.08,90.89h1.01v9.58h-1.01v-9.58ZM84.71,90.89h3.27v8.17h-3.27v-1.02h2.24v-6.12h-2.24v-1.02ZM89.27,90.45h1.07v10.19c0,.27.03.48.09.63s.17.25.33.3.4.08.72.08h3.48c.29,0,.51-.06.65-.17.14-.12.24-.33.31-.63s.11-.73.14-1.29c.14.1.3.19.5.26.19.08.37.13.53.16-.06.67-.15,1.2-.28,1.59-.13.39-.33.67-.6.84s-.67.26-1.18.26h-3.6c-.55,0-.97-.06-1.29-.17s-.53-.32-.67-.61c-.13-.3-.2-.72-.2-1.26v-10.17ZM89.75,96.19h6.07v.99h-6.07v-.99ZM89.8,90.45h6.7v7.67h-1.08v-6.65h-5.61v-1.02ZM92.34,90.81h1.01v5.7h-1.01v-5.7Z"/>
                     <path d="M99.4,95.55c0-.08-.04-.18-.09-.31-.05-.13-.1-.27-.14-.41-.04-.14-.09-.26-.14-.36.17-.03.35-.12.54-.28.19-.16.41-.35.66-.58.13-.13.32-.33.58-.6.26-.27.56-.6.88-.98.32-.38.65-.79.99-1.24.34-.44.65-.89.94-1.35l1.1.48c-.47.64-.96,1.27-1.47,1.88-.51.61-1.03,1.18-1.56,1.71-.53.53-1.06,1.01-1.57,1.44v.04c-.14.07-.26.13-.36.19-.1.06-.19.12-.26.18s-.1.12-.1.18ZM99.4,95.55v-.86s.8-.42.8-.42l9.34-.42c0,.15.03.32.05.51s.05.35.07.47c-1.46.08-2.72.15-3.78.2-1.06.06-1.95.11-2.67.15s-1.31.08-1.77.11c-.46.04-.82.06-1.08.09s-.47.05-.61.08-.26.06-.36.1ZM100.18,96.78h9.39v6.13h-1.17v-5.07h-7.11v5.1h-1.11v-6.16ZM100.73,101.07h8.23v1.07h-8.23v-1.07ZM106.32,91.73l.86-.58c.48.42.97.88,1.48,1.39.51.51.97,1.01,1.4,1.52.43.51.77.96,1.02,1.38l-.94.67c-.24-.41-.57-.87-.99-1.39-.41-.52-.87-1.04-1.37-1.56s-.99-1-1.47-1.43Z"/>
                   </g>
@@ -343,11 +343,11 @@ onUnmounted(() => {
 
                 <!-- Interactive Booths Layer -->
                 <g id="booths-layer">
-                  <g v-for="booth in booths" :key="booth.id" class="booth-group" :class="{ active: hoveredBoothId === booth.id }" @mouseover="hoveredBoothId = booth.id" @mouseleave="hoveredBoothId = null" @click.stop="openBooth(booth)">
+                  <g v-for="booth in booths" :key="booth.id" class="booth-group" :class="{ active: hoveredBoothId === booth.id }" :transform="`translate(${booth.x}, ${booth.y}) rotate(${booth.rotate})`" @mouseover="hoveredBoothId = booth.id" @mouseleave="hoveredBoothId = null" @click.stop="openBooth(booth)">
                     <!-- Table / slot rectangle -->
-                    <rect class="booth-rect" :x="booth.x - 11" :y="booth.y - 7.5" width="22" height="15" rx="2" ry="2" :transform="`rotate(${booth.rotate} ${booth.x} ${booth.y})`" />
+                    <rect class="booth-rect" x="-11" y="-7.5" width="22" height="15" rx="2" ry="2" />
                     <!-- Label inside booth -->
-                    <text class="booth-label" :x="booth.x" :y="booth.y + 0.5" :transform="`rotate(${booth.rotate} ${booth.x} ${booth.y})`" dominant-baseline="central" text-anchor="middle">
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">
                       {{ booth.id }}
                     </text>
                   </g>
@@ -415,9 +415,9 @@ onUnmounted(() => {
                 <span class="legend-dot dot-game"></span>
                 <span>{{ t('venue.legend.game') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'photo'" @mouseleave="hoveredZoneId = null" @click="openZone('photo')">
-                <span class="legend-dot dot-photo"></span>
-                <span>{{ t('venue.legend.photo') }}</span>
+              <div class="legend-item" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="openZone('bar')">
+                <span class="legend-dot dot-bar"></span>
+                <span>{{ t('venue.legend.bar') }}</span>
               </div>
               <div class="legend-item" @mouseover="hoveredZoneId = 'info'" @mouseleave="hoveredZoneId = null" @click="openZone('info')">
                 <span class="legend-dot dot-info"></span>
@@ -818,22 +818,22 @@ onUnmounted(() => {
   fill: #ba55d3;
 }
 
-/* Photo Zone Color System */
-.shape-photo {
+/* Bar Zone Color System */
+.shape-bar {
   fill: #ffbdde;
   stroke: #ffbdde;
 }
-.font-photo path {
+.font-bar path {
   fill: #ffbdde;
 }
-.photo-group:hover .shape-photo,
-.photo-group.active .shape-photo {
+.bar-group:hover .shape-bar,
+.bar-group.active .shape-bar {
   fill-opacity: 0.38;
   stroke: #ffffff;
   filter: url(#neon-glow);
 }
-.photo-group:hover .font-photo path,
-.photo-group.active .font-photo path {
+.bar-group:hover .font-bar path,
+.bar-group.active .font-bar path {
   fill: #ffffff;
 }
 
@@ -867,7 +867,7 @@ onUnmounted(() => {
   stroke: var(--color-gold);
   stroke-width: 1px;
   transition: all 0.25s ease;
-  transform-origin: center;
+  transform-origin: 0px 0px;
 }
 
 .booth-label {
@@ -877,7 +877,7 @@ onUnmounted(() => {
   font-family: inherit;
   pointer-events: none;
   transition: all 0.25s ease;
-  transform-origin: center;
+  transform-origin: 0px 0px;
 }
 
 .booth-group:hover .booth-rect,
@@ -950,7 +950,7 @@ onUnmounted(() => {
 .zone-badge-workshop { background-color: rgba(30, 144, 255, 0.75); }
 .zone-badge-game { background-color: rgba(26, 255, 236, 0.75); color: #120b18; }
 .zone-badge-info { background-color: rgba(240, 240, 240, 0.75); color: #120b18; }
-.zone-badge-photo { background-color: rgba(255, 189, 222, 0.75); color: #120b18; }
+.zone-badge-bar { background-color: rgba(255, 189, 222, 0.75); color: #120b18; }
 .zone-badge-entrance { background-color: rgba(255, 51, 102, 0.75); }
 .booth-badge { background-color: var(--color-gold); color: #120b18; }
 
@@ -1016,7 +1016,7 @@ onUnmounted(() => {
 .dot-vendors { background-color: #fffb1a; box-shadow: 0 0 4px #fffb1a; }
 .dot-workshop { background-color: #1a98ff; box-shadow: 0 0 4px #1a98ff; }
 .dot-game { background-color: #1affec; box-shadow: 0 0 4px #1affec; }
-.dot-photo { background-color: #ffbdde; box-shadow: 0 0 4px #ffbdde; }
+.dot-bar { background-color: #ffbdde; box-shadow: 0 0 4px #ffbdde; }
 .dot-info { background-color: #ffffff; box-shadow: 0 0 4px #ffffff; }
 .dot-entrance { background-color: #ff3366; box-shadow: 0 0 4px #ff3366; }
 .dot-booth { background-color: var(--color-gold); box-shadow: 0 0 4px var(--color-gold); }
