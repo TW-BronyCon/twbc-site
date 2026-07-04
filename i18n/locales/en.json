@@ -163,6 +163,7 @@
   },
   "development": {
     "watermark": "UNDER DEVELOPMENT",
-    "ribbon": "DEV BUILD"
+    "ribbon": "DEV BUILD",
+    "preview": "PREVIEW"
   }
 }

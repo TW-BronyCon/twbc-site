@@ -4,34 +4,37 @@ import { computed } from 'vue'
 const route = useRoute()
 const { t } = useI18n()
 
-// Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
-// OR if the site is not on the primary domain 'twbronycon.org'
-const isDev = computed(() => {
-  const routeMetaDev = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
-  if (routeMetaDev) return true
-
+const isPreview = computed(() => {
   if (import.meta.client) {
     const hostname = window.location.hostname
     // Show watermark if we are not on the primary production domain (e.g. localhost, staging, preview, etc.)
     return hostname !== 'twbronycon.org' && hostname !== 'www.twbronycon.org'
   }
+  return false
+})
 
+// Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
+// OR if the site is not on the primary domain 'twbronycon.org'
+const isDev = computed(() => {
+  const routeMetaDev = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
+  if (routeMetaDev) return true
   return false
 })
 
 // Get localized text for watermark and ribbon
 const watermarkText = computed(() => t('development.watermark'))
 const ribbonText = computed(() => t('development.ribbon'))
+const previewBuildText = computed(() => t('development.preview'))
 </script>
 
 <template>
   <ClientOnly>
-    <div v-if="isDev" class="dev-watermark-container">
+    <div v-if="isDev || isPreview" class="dev-watermark-container" aria-hidden="true">
       <!-- Grid of glassmorphic watermark cards with backdrop filter -->
       <div class="dev-watermark-grid">
         <div v-for="i in 80" :key="i" class="dev-watermark-item">
           <div class="dev-watermark-text">
-            {{ watermarkText }}
+            {{ isPreview ? previewBuildText : watermarkText }}
           </div>
         </div>
       </div>

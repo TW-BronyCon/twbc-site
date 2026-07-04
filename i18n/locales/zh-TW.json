@@ -164,6 +164,7 @@
   },
   "development": {
     "watermark": "開發中",
-    "ribbon": "開發中"
+    "ribbon": "開發中",
+    "preview": "預覽版"
   }
 }
