@@ -160,5 +160,9 @@
     "duration": "Duration",
     "area": "Area",
     "detailPlaceholder": "Details will be added later."
+  },
+  "development": {
+    "watermark": "UNDER DEVELOPMENT",
+    "ribbon": "DEV BUILD"
   }
 }
