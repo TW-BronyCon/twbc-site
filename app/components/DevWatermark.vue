@@ -20,7 +20,7 @@ const ribbonText = computed(() => t('development.ribbon'))
       <!-- Grid of glassmorphic watermark cards with backdrop filter -->
       <div class="dev-watermark-grid">
         <div v-for="i in 80" :key="i" class="dev-watermark-item">
-          <div class="dev-watermark-card">
+          <div class="dev-watermark-text">
             {{ watermarkText }}
           </div>
         </div>
@@ -45,13 +45,13 @@ const ribbonText = computed(() => t('development.ribbon'))
 /* Full screen grid of watermarks */
 .dev-watermark-grid {
   position: fixed;
-  inset: -10%; /* Offset slightly to handle rotation overflow */
+  inset: -20%; /* Offset slightly to handle rotation overflow and larger text */
   pointer-events: none;
   z-index: 9998;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
   padding: 50px;
   overflow: hidden;
 }
@@ -65,26 +65,16 @@ const ribbonText = computed(() => t('development.ribbon'))
 }
 
 /* Glassmorphic watermark card */
-.dev-watermark-card {
-  padding: 14px 28px;
-  background: rgba(255, 189, 222, 0.02);
-  border: 1px solid rgba(255, 189, 222, 0.08);
-  border-radius: 12px;
-  /* Apply backdrop filter to stand out on dark/complex backgrounds */
-  backdrop-filter: blur(4px) brightness(1.25) contrast(0.95);
-  -webkit-backdrop-filter: blur(4px) brightness(1.25) contrast(0.95);
-  
+.dev-watermark-text {
   /* Text styling */
-  color: rgba(255, 189, 222, 0.22);
-  font-size: 22px;
+  color: #ffffff;
+  mix-blend-mode: difference;
+  opacity: 0.12; /* Subtle opacity so it remains a background watermark */
+  font-size: 80px;
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
-  
-  /* Subtle drop shadows for high legibility */
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .dev-ribbon-wrapper {
