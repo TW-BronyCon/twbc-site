@@ -161,6 +161,48 @@
     "area": "Area",
     "detailPlaceholder": "Details will be added later."
   },
+  "venue": {
+    "title": "Venue Map",
+    "hint": "Hover over different zones or booths on the map to see details. Click on them for more information.",
+    "legend": {
+      "title": "Map Legend",
+      "stage": "Main Stage",
+      "vendors": "Vendor Alley",
+      "workshop": "Workshop Area",
+      "game": "Game Area",
+      "info": "Info Desk",
+      "photo": "Photo Zone",
+      "entrance": "Entrance",
+      "booth": "Vendor Booth"
+    },
+    "transport": {
+      "title": "Transport Guide",
+      "mrt": "MRT",
+      "mrtDesc": "Take the MRT Orange Line (Luzhou Line) to **Sanhe Junior High School Station (O51)**. Walk from **Exit 2** (the venue is directly adjacent to the station building).",
+      "bus": "Bus",
+      "busDesc": "Get off at **MRT Sanhe Junior High School Station**. Available routes: 225, 232, 306, 508, 704, 857, 925, etc.",
+      "driving": "Driving & Parking",
+      "drivingDesc": "Take Highway 1 to Sanchong Interchange, go toward Sanchong/Luzhou, and turn onto Sanhe Rd. Parking is available at the Sanchong District High School Underground Parking Lot nearby."
+    },
+    "modal": {
+      "events": "Scheduled Events in this Zone",
+      "noEvents": "No events scheduled currently.",
+      "visitWebsite": "Visit Website",
+      "details": "Zone Details",
+      "boothTitle": "Booth {id}",
+      "description": "Description",
+      "links": "Links"
+    },
+    "zones": {
+      "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
+      "vendors": "A bustling alley showcasing amazing pony-themed merchandise, fan art, crafts, and books created by talented community members.",
+      "workshop": "An interactive creative space where you can join hands-on crafting workshops or sit down to exchange ideas and draw with fellow pony fans.",
+      "game": "A dedicated space for board games, card games, and community icebreakers. Pull up a chair and make new friends here!",
+      "info": "Need help? Stop by the Info Desk for lost and found, ticket verification, event inquiries, and assistance from our staff.",
+      "photo": "The place to capture memories. Take pictures with beautiful character standees, background boards, or pose in your cosplay costumes.",
+      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
+    }
+  },
   "development": {
     "watermark": "UNDER DEVELOPMENT",
     "ribbon": "DEV BUILD",
