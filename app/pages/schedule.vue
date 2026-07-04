@@ -4,6 +4,10 @@ import { columns as rawColumns, events as rawEvents, startHour, endHour, slotMin
 
 const { t, locale } = useI18n()
 
+definePageMeta({
+  underDevelopment: true
+})
+
 useHead(() => ({
   title: t('schedule.title'),
 }))

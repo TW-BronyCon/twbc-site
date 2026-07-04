@@ -14,7 +14,6 @@ const isPreview = computed(() => {
 })
 
 // Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
-// OR if the site is not on the primary domain 'twbronycon.org'
 const isDev = computed(() => {
   const routeMetaDev = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
   if (routeMetaDev) return true
@@ -34,7 +33,7 @@ const previewBuildText = computed(() => t('development.preview'))
       <div class="dev-watermark-grid">
         <div v-for="i in 80" :key="i" class="dev-watermark-item">
           <div class="dev-watermark-text">
-            {{ isPreview ? previewBuildText : watermarkText }}
+            {{ isDev ? watermarkText : previewBuildText }}
           </div>
         </div>
       </div>
