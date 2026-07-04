@@ -141,7 +141,7 @@ const processedEvents = computed(() => {
 
     const rawColor = EVENT_COLORS[event.type]
     const eventColor = normalizeHexColor(rawColor)
-    const textColor = event.textColor || getContrastColor(eventColor)
+    const textColor = getContrastColor(eventColor)
     const fontSize = getDynamicFontSize(rowSpan)
     const titleText = isEn ? event.title.en : event.title.zh
     const detailText = event.detail ? (isEn ? event.detail.en : event.detail.zh) : ''
@@ -333,7 +333,36 @@ function toggleEvent(index: number, clearFocusWhenClose = true) {
 }
 
 function handleKeyDown(e: KeyboardEvent) {
+  const target = e.target as HTMLElement | null
+  if (!target) return
+
+  // Skip if typing in an input, textarea, select, or contenteditable element
+  if (
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.tagName === 'SELECT' ||
+    target.isContentEditable
+  ) {
+    return
+  }
+
   const isModalOpen = activeModalIndex.value !== null
+
+  // Escape key should close the modal globally if it is open
+  if (e.key === 'Escape') {
+    if (isModalOpen) {
+      e.preventDefault()
+      closeModal()
+      clearFocus()
+    }
+    return
+  }
+
+  // Scope WASD/Arrow/Space/Enter navigation specifically to the timetable grid
+  const isFocusInGrid = gridContainer.value?.contains(target) || false
+  if (!isFocusInGrid) {
+    return
+  }
 
   switch (e.key.toLowerCase()) {
     case 'w':
@@ -379,12 +408,6 @@ function handleKeyDown(e: KeyboardEvent) {
       openEvent(targetIndex)
       break
     }
-
-    case 'escape':
-      e.preventDefault()
-      closeModal()
-      clearFocus()
-      break
   }
 }
 
