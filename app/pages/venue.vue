@@ -341,6 +341,17 @@ onUnmounted(() => {
                   </g>
                 </g>
 
+                <!-- Interactive Zone: Check-in Desk (報到處) -->
+                <g class="zone-group checkin-group" :class="{ active: hoveredZoneId === 'checkin' }" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
+                  <rect class="zone-shape shape-checkin" x="384.64" y="357" width="109.41" height="38" rx="4" ry="4"/>
+                  <g class="zone-characters font-checkin">
+                    <!-- 報到處 - text outline paths (simplified representative shape) -->
+                    <path d="M404.1,371.5h7.6v.9h-7.6v-.9ZM404.5,367h6.8v.9h-6.8v-.9ZM407.5,366.8h.7v7.6h-.7v-7.6Z"/>
+                    <path d="M413.5,370.4h.7v4.2c0,.36-.04.67-.12.92s-.22.43-.43.56c-.2.13-.49.2-.86.2-.08-.12-.18-.25-.3-.37s-.23-.22-.34-.3c.29,0,.5-.02.63-.04.12-.02.2-.09.24-.19s.06-.27.06-.52v-4.48h.47ZM413.8,367.1h6.2v.8h-6.2v-.8ZM415.1,372.2h4.2v.9h-4.2v-.9ZM415.5,369.5h3.2v.85h-3.2v-.85Z"/>
+                    <path d="M421.5,366.8h7.6v.9h-7.6v-.9ZM422.1,366.9h.7v6.7c0,.3.04.5.12.63.08.12.21.2.39.23.18.03.44.05.77.05h4.1c.18,0,.33-.04.45-.11.12-.07.21-.21.27-.42.06-.21.09-.49.11-.84.1.07.21.13.33.18.12.05.24.09.35.12-.04.44-.11.8-.22,1.07-.11.27-.27.46-.48.57s-.48.17-.79.17h-4.2c-.5,0-.88-.06-1.16-.18s-.47-.33-.59-.64c-.12-.3-.17-.7-.17-1.19v-6.82Z"/>
+                  </g>
+                </g>
+
                 <!-- Interactive Booths Layer -->
                 <g id="booths-layer">
                   <g v-for="booth in booths" :key="booth.id" class="booth-group" :class="{ active: hoveredBoothId === booth.id }" :transform="`translate(${booth.x}, ${booth.y}) rotate(${booth.rotate})`" @mouseover="hoveredBoothId = booth.id" @mouseleave="hoveredBoothId = null" @click.stop="openBooth(booth)">
@@ -426,6 +437,10 @@ onUnmounted(() => {
               <div class="legend-item" @mouseover="hoveredZoneId = 'entrance'" @mouseleave="hoveredZoneId = null" @click="openZone('entrance')">
                 <span class="legend-dot dot-entrance"></span>
                 <span>{{ t('venue.legend.entrance') }}</span>
+              </div>
+              <div class="legend-item" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
+                <span class="legend-dot dot-checkin"></span>
+                <span>{{ t('venue.legend.checkin') }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot dot-booth"></span>
@@ -856,6 +871,27 @@ onUnmounted(() => {
   fill: #ffffff;
 }
 
+/* Check-in Desk Color System */
+.shape-checkin {
+  fill: #34d399;
+  stroke: #34d399;
+  fill-opacity: 0.25;
+  stroke-width: 1.5px;
+}
+.font-checkin path {
+  fill: #34d399;
+}
+.checkin-group:hover .shape-checkin,
+.checkin-group.active .shape-checkin {
+  fill-opacity: 0.45;
+  stroke: #ffffff;
+  filter: url(#neon-glow);
+}
+.checkin-group:hover .font-checkin path,
+.checkin-group.active .font-checkin path {
+  fill: #ffffff;
+}
+
 /* Booth design inside Vendor Alley */
 .booth-group {
   cursor: pointer;
@@ -952,6 +988,7 @@ onUnmounted(() => {
 .zone-badge-info { background-color: rgba(240, 240, 240, 0.75); color: #120b18; }
 .zone-badge-bar { background-color: rgba(255, 189, 222, 0.75); color: #120b18; }
 .zone-badge-entrance { background-color: rgba(255, 51, 102, 0.75); }
+.zone-badge-checkin { background-color: rgba(52, 211, 153, 0.75); color: #120b18; }
 .booth-badge { background-color: var(--color-gold); color: #120b18; }
 
 .sidebar-item-preview h3 {
@@ -1019,6 +1056,7 @@ onUnmounted(() => {
 .dot-bar { background-color: #ffbdde; box-shadow: 0 0 4px #ffbdde; }
 .dot-info { background-color: #ffffff; box-shadow: 0 0 4px #ffffff; }
 .dot-entrance { background-color: #ff3366; box-shadow: 0 0 4px #ff3366; }
+.dot-checkin { background-color: #34d399; box-shadow: 0 0 4px #34d399; }
 .dot-booth { background-color: var(--color-gold); box-shadow: 0 0 4px var(--color-gold); }
 
 /* Transport Section */

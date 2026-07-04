@@ -173,6 +173,7 @@
       "info": "Info Desk",
       "bar": "Bar",
       "entrance": "Entrance",
+      "checkin": "Check-in Desk",
       "booth": "Vendor Booth"
     },
     "transport": {
@@ -200,7 +201,8 @@
       "game": "A dedicated space for board games, card games, and community icebreakers. Pull up a chair and make new friends here!",
       "info": "Need help? Stop by the Info Desk for lost and found, ticket verification, event inquiries, and assistance from our staff.",
       "bar": "Bar & Lounge. Offers drinks, light snacks, and a cozy seating area for attendees to relax and socialize.",
-      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
+      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours.",
+      "checkin": "The registration and check-in counter. Collect your attendee badge, confirm your ticket tier, and pick up any merchandise included with your ticket."
     }
   },
   "development": {
