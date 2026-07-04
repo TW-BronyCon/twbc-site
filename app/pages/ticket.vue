@@ -68,8 +68,8 @@ onUnmounted(() => {
 const tiers = [
   { 
     id: 'budget', 
-    color: '#73bfe5', 
-    subColor: '#6baaca', 
+    color: 'var(--color-tier-budget)', 
+    subColor: 'var(--color-tier-budget-sub)', 
     img: '/img/B.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E7%B6%93%E6%BF%9F%E7%A5%A8+$NTD:+500",
     closeTime: '2026-07-26T23:59:59+08:00',
@@ -77,8 +77,8 @@ const tiers = [
   },
   { 
     id: 'standard', 
-    color: '#8673e5', 
-    subColor: '#7c6ccc', 
+    color: 'var(--color-tier-standard)', 
+    subColor: 'var(--color-tier-standard-sub)', 
     img: '/img/PU.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E6%A8%99%E6%BA%96%E7%A5%A8+$NTD:+600",
     closeTime: '2026-07-26T23:59:59+08:00',
@@ -86,8 +86,8 @@ const tiers = [
   },
   { 
     id: 'sponsor', 
-    color: '#e57399', 
-    subColor: '#ce6e8e', 
+    color: 'var(--color-tier-sponsor)', 
+    subColor: 'var(--color-tier-sponsor-sub)', 
     img: '/img/PI.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B4%BB%E5%8A%A9%E7%A5%A8+$NTD:+1000",
     closeTime: '2026-07-26T23:59:59+08:00',
@@ -95,8 +95,8 @@ const tiers = [
   },
   { 
     id: 'royale', 
-    color: '#e5d273', 
-    subColor: '#b4a34c', 
+    color: 'var(--color-tier-royale)', 
+    subColor: 'var(--color-tier-royale-sub)', 
     img: '/img/Y.avif',
     url: "https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform?usp=pp_url&entry.1319398696=%E8%B2%B4%E8%B3%93%E7%A5%A8+$NTD:+5000+(6/30%E6%88%AA%E6%AD%A2)",
     closeTime: '2026-06-30T23:59:59+08:00',
@@ -694,15 +694,15 @@ h2 {
     pointer-events: none;
 }
 
-.tier-label.budget   { color: var(--color-tier-budget); }
-.tier-label.standard { color: var(--color-tier-standard); }
-.tier-label.sponsor  { color: var(--color-tier-sponsor); }
-.tier-label.royale   { color: var(--color-tier-royale); }
+.tier-label.budget   { color: var(--color-tier-budget-dark); }
+.tier-label.standard { color: var(--color-tier-standard-dark); }
+.tier-label.sponsor  { color: var(--color-tier-sponsor-dark); }
+.tier-label.royale   { color: var(--color-tier-royale-dark); }
 
-.compare-table td.col-1.yes { color: var(--color-tier-budget); }
-.compare-table td.col-2.yes { color: var(--color-tier-standard); }
-.compare-table td.col-3.yes { color: var(--color-tier-sponsor); }
-.compare-table td.col-4.yes { color: var(--color-tier-royale); }
+.compare-table td.col-1.yes { color: var(--color-tier-budget-dark); }
+.compare-table td.col-2.yes { color: var(--color-tier-standard-dark); }
+.compare-table td.col-3.yes { color: var(--color-tier-sponsor-dark); }
+.compare-table td.col-4.yes { color: var(--color-tier-royale-dark); }
 
 .compare-table tbody tr {
     border-bottom: 1px solid rgba(137, 97, 43, 0.16);
