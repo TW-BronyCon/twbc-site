@@ -22,10 +22,10 @@ export interface Booth {
 
 export const booths: Booth[] = [
   {
-    // A1 = booth label "1" in the detailed SVG floor plan
+    // A1 = Table 1 in TWBC Venue lite.svg
     id: 'A1',
-    x: 107,
-    y: 208,
+    x: 107.57,
+    y: 260.72,
     rotate: -36.62,
     name: { zh: '彩虹畫筆', en: 'Rainbow Brush' },
     description: {
@@ -38,10 +38,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // A2 = booth label "2" in the detailed SVG floor plan
+    // A2 = Table 2 in TWBC Venue lite.svg
     id: 'A2',
-    x: 126,
-    y: 230,
+    x: 125.99,
+    y: 285.49,
     rotate: -36.62,
     name: { zh: '甜蘋果工坊', en: 'Apple Orchard Crafts' },
     description: {
@@ -53,10 +53,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // A3 = booth label "3" in the detailed SVG floor plan
+    // A3 = Table 3 in TWBC Venue lite.svg
     id: 'A3',
-    x: 154,
-    y: 262,
+    x: 152.05,
+    y: 320.55,
     rotate: -36.62,
     name: { zh: '暮光圖書館', en: "Twilight's Library" },
     description: {
@@ -68,10 +68,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // A4 = booth label "4" in the detailed SVG floor plan
+    // A4 = Table 4 in TWBC Venue lite.svg
     id: 'A4',
-    x: 173,
-    y: 285,
+    x: 170.46,
+    y: 345.34,
     rotate: -36.62,
     name: { zh: '閃電特遣隊', en: 'Wonderbolt Runway' },
     description: {
@@ -83,10 +83,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // B1 = booth label "6" in the detailed SVG floor plan (opposing row)
+    // B1 = Table 6 in TWBC Venue lite.svg (opposite row)
     id: 'B1',
-    x: 168,
-    y: 183,
+    x: 165.17,
+    y: 233.36,
     rotate: -36.62,
     name: { zh: '灰皮的小郵箱', en: "Derpy's Mailbox" },
     description: {
@@ -98,10 +98,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // B2 = booth label "7" in the detailed SVG floor plan (opposing row)
+    // B2 = Table 7 in TWBC Venue lite.svg (opposite row)
     id: 'B2',
-    x: 187,
-    y: 206,
+    x: 183.58,
+    y: 258.14,
     rotate: -36.62,
     name: { zh: '柔柔的避難所', en: "Fluttershy's Sanctuary" },
     description: {
@@ -113,10 +113,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // B3 = booth label "8" in the detailed SVG floor plan (opposing row)
+    // B3 = Table 8 in TWBC Venue lite.svg (opposite row)
     id: 'B3',
-    x: 202,
-    y: 162,
+    x: 196.96,
+    y: 209.73,
     rotate: -36.62,
     name: { zh: '珍奇精品店', en: "Rarity's Boutique" },
     description: {
@@ -128,10 +128,10 @@ export const booths: Booth[] = [
     ]
   },
   {
-    // B4 = booth label "9" in the detailed SVG floor plan (opposing row)
+    // B4 = Table 9 in TWBC Venue lite.svg (opposite row)
     id: 'B4',
-    x: 221,
-    y: 184,
+    x: 215.37,
+    y: 234.51,
     rotate: -36.62,
     name: { zh: '碧琪的派對列車', en: "Pinkie's Party Express" },
     description: {
