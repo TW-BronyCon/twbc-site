@@ -1417,11 +1417,13 @@ onUnmounted(() => {
       }
 
       .cls-2 {
-        fill: #a3a1a0;
+        fill: #2d1e3d;
+        stroke: var(--color-gold);
+        stroke-width: 1px;
       }
 
       .cls-3 {
-        fill: #443122;
+        fill: #120b18;
       }
 
       .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
@@ -1490,7 +1492,11 @@ onUnmounted(() => {
       }
 
       .cls-26, .cls-28 {
-        stroke: #a3a1a0;
+        stroke: var(--color-gold);
+      }
+
+      .cls-26 {
+        filter: drop-shadow(0 0 4px var(--color-gold));
       }
 
       .cls-26, .cls-28, .cls-29 {
@@ -1514,8 +1520,8 @@ onUnmounted(() => {
       }
 
       .cls-27 {
-        fill: #b77539;
-        stroke: #ffa348;
+        fill: #2d1e3d;
+        stroke: var(--color-gold);
         stroke-width: .5px;
       }
 
