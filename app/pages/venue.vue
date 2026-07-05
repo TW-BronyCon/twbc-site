@@ -244,156 +244,7 @@ onUnmounted(() => {
               <!-- Scalable Viewport Group -->
               <g :style="{ transform: `translate(${panX}px, ${panY}px) scale(${zoom})`, transformOrigin: '0 0' }">
                 <defs>
-    <style>
-      .cls-1 {
-        mask: url(#mask-5);
-      }
-
-      .cls-2 {
-        fill: #a3a1a0;
-      }
-
-      .cls-3 {
-        fill: #443122;
-      }
-
-      .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
-        fill-rule: evenodd;
-      }
-
-      .cls-4, .cls-8, .cls-9 {
-        fill: red;
-      }
-
-      .cls-10 {
-        mask: url(#mask-1);
-      }
-
-      .cls-11, .cls-12, .cls-13, .cls-8, .cls-9, .cls-14, .cls-15, .cls-16, .cls-17 {
-        isolation: isolate;
-      }
-
-      .cls-11, .cls-13, .cls-8, .cls-9, .cls-14, .cls-15, .cls-16, .cls-17 {
-        font-family: NotoSansTC-Regular, 'Noto Sans TC';
-        font-variation-settings: 'wght' 400;
-      }
-
-      .cls-11, .cls-13, .cls-14, .cls-15, .cls-16, .cls-17 {
-        font-size: 14.62px;
-      }
-
-      .cls-11, .cls-18 {
-        fill: #1affec;
-      }
-
-      .cls-19 {
-        filter: url(#luminosity-noclip-5);
-      }
-
-      .cls-20 {
-        mask: url(#mask);
-      }
-
-      .cls-5, .cls-21, .cls-15 {
-        fill: #fff;
-      }
-
-      .cls-22, .cls-17 {
-        fill: #1a98ff;
-      }
-
-      .cls-23 {
-        filter: url(#luminosity-noclip-2);
-      }
-
-      .cls-24 {
-        mask: url(#mask-2);
-      }
-
-      .cls-25 {
-        filter: url(#luminosity-noclip-3);
-      }
-
-      .cls-12 {
-        opacity: .25;
-      }
-
-      .cls-26, .cls-27, .cls-28 {
-        stroke-miterlimit: 10;
-      }
-
-      .cls-26, .cls-28 {
-        stroke: #a3a1a0;
-      }
-
-      .cls-26, .cls-28, .cls-29 {
-        stroke-width: 2px;
-      }
-
-      .cls-26, .cls-29 {
-        fill: none;
-      }
-
-      .cls-13, .cls-30 {
-        fill: #ff1add;
-      }
-
-      .cls-8 {
-        font-size: 10.44px;
-      }
-
-      .cls-6, .cls-14 {
-        fill: #fffb1a;
-      }
-
-      .cls-27 {
-        fill: #b77539;
-        stroke: #ffa348;
-        stroke-width: .5px;
-      }
-
-      .cls-21, .cls-29 {
-        font-family: Arial-BoldMT, Arial;
-        font-size: 8.36px;
-        font-weight: 700;
-      }
-
-      .cls-31 {
-        filter: url(#luminosity-noclip-6);
-      }
-
-      .cls-9 {
-        font-size: 12px;
-      }
-
-      .cls-28 {
-        fill: #333;
-      }
-
-      .cls-29 {
-        stroke: #444;
-      }
-
-      .cls-7, .cls-16 {
-        fill: #ffc21a;
-      }
-
-      .cls-32 {
-        filter: url(#luminosity-noclip-4);
-      }
-
-      .cls-33 {
-        mask: url(#mask-4);
-      }
-
-      .cls-34 {
-        mask: url(#mask-3);
-      }
-
-      .cls-35 {
-        filter: url(#luminosity-noclip);
-      }
-    </style>
+    
     <filter id="luminosity-noclip" x="75.91" y="181.27" width="186.48" height="270.48" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
       <feFlood flood-color="#fff" result="bg"/>
       <feBlend in="SourceGraphic" in2="bg"/>
@@ -1558,4 +1409,155 @@ onUnmounted(() => {
 #vendor_desk text {
   display: none;
 }
+
+
+/* Extracted SVG classes from TWBC Venue lite.svg */
+.cls-1 {
+        mask: url(#mask-5);
+      }
+
+      .cls-2 {
+        fill: #a3a1a0;
+      }
+
+      .cls-3 {
+        fill: #443122;
+      }
+
+      .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        fill-rule: evenodd;
+      }
+
+      .cls-4, .cls-8, .cls-9 {
+        fill: red;
+      }
+
+      .cls-10 {
+        mask: url(#mask-1);
+      }
+
+      .cls-11, .cls-12, .cls-13, .cls-8, .cls-9, .cls-14, .cls-15, .cls-16, .cls-17 {
+        isolation: isolate;
+      }
+
+      .cls-11, .cls-13, .cls-8, .cls-9, .cls-14, .cls-15, .cls-16, .cls-17 {
+        font-family: NotoSansTC-Regular, 'Noto Sans TC';
+        font-variation-settings: 'wght' 400;
+      }
+
+      .cls-11, .cls-13, .cls-14, .cls-15, .cls-16, .cls-17 {
+        font-size: 14.62px;
+      }
+
+      .cls-11, .cls-18 {
+        fill: #1affec;
+      }
+
+      .cls-19 {
+        filter: url(#luminosity-noclip-5);
+      }
+
+      .cls-20 {
+        mask: url(#mask);
+      }
+
+      .cls-5, .cls-21, .cls-15 {
+        fill: #fff;
+      }
+
+      .cls-22, .cls-17 {
+        fill: #1a98ff;
+      }
+
+      .cls-23 {
+        filter: url(#luminosity-noclip-2);
+      }
+
+      .cls-24 {
+        mask: url(#mask-2);
+      }
+
+      .cls-25 {
+        filter: url(#luminosity-noclip-3);
+      }
+
+      .cls-12 {
+        opacity: .25;
+      }
+
+      .cls-26, .cls-27, .cls-28 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-26, .cls-28 {
+        stroke: #a3a1a0;
+      }
+
+      .cls-26, .cls-28, .cls-29 {
+        stroke-width: 2px;
+      }
+
+      .cls-26, .cls-29 {
+        fill: none;
+      }
+
+      .cls-13, .cls-30 {
+        fill: #ff1add;
+      }
+
+      .cls-8 {
+        font-size: 10.44px;
+      }
+
+      .cls-6, .cls-14 {
+        fill: #fffb1a;
+      }
+
+      .cls-27 {
+        fill: #b77539;
+        stroke: #ffa348;
+        stroke-width: .5px;
+      }
+
+      .cls-21, .cls-29 {
+        font-family: Arial-BoldMT, Arial;
+        font-size: 8.36px;
+        font-weight: 700;
+      }
+
+      .cls-31 {
+        filter: url(#luminosity-noclip-6);
+      }
+
+      .cls-9 {
+        font-size: 12px;
+      }
+
+      .cls-28 {
+        fill: #333;
+      }
+
+      .cls-29 {
+        stroke: #444;
+      }
+
+      .cls-7, .cls-16 {
+        fill: #ffc21a;
+      }
+
+      .cls-32 {
+        filter: url(#luminosity-noclip-4);
+      }
+
+      .cls-33 {
+        mask: url(#mask-4);
+      }
+
+      .cls-34 {
+        mask: url(#mask-3);
+      }
+
+      .cls-35 {
+        filter: url(#luminosity-noclip);
+      }
 </style>
