@@ -307,7 +307,7 @@ onUnmounted(() => {
 
                 <!-- Interactive Zone: Check-in -->
                 <g class="zone-group checkin-group" :class="{ active: hoveredZoneId === 'checkin' }" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
-                  <rect class="zone-shape shape-checkin" x="308.75" y="392.76" width="68.84" height="30.54"/>
+                  <rect class="zone-shape shape-checkin" x="390.34" y="465.47" width="60.18" height="17.06"/>
                   <text class="zone-label-text" transform="translate(402.55 475.15)">{{ isEn ? 'Check-in' : '報到處' }}</text>
                 </g>
 
