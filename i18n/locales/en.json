@@ -170,10 +170,10 @@
       "vendors": "Vendor Alley",
       "workshop": "Workshop Area",
       "game": "Game Area",
-      "info": "Info Desk",
+      "exhibition": "Exhibition Area",
       "bar": "Bar",
+      "checkin": "Check-in",
       "entrance": "Entrance",
-      "checkin": "Check-in Desk",
       "booth": "Vendor Booth"
     },
     "transport": {
@@ -199,10 +199,10 @@
       "vendors": "A bustling alley showcasing amazing pony-themed merchandise, fan art, crafts, and books created by talented community members.",
       "workshop": "An interactive creative space where you can join hands-on crafting workshops or sit down to exchange ideas and draw with fellow pony fans.",
       "game": "A dedicated space for board games, card games, and community icebreakers. Pull up a chair and make new friends here!",
-      "info": "Need help? Stop by the Info Desk for lost and found, ticket verification, event inquiries, and assistance from our staff.",
+      "exhibition": "A spacious gallery displaying artworks, models, and community showcases.",
       "bar": "Bar & Lounge. Offers drinks, light snacks, and a cozy seating area for attendees to relax and socialize.",
-      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours.",
-      "checkin": "The registration and check-in counter. Collect your attendee badge, confirm your ticket tier, and pick up any merchandise included with your ticket."
+      "checkin": "The main check-in counter for registration, ticket scanning, and badge collections.",
+      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
     }
   },
   "development": {
