@@ -177,7 +177,7 @@ onUnmounted(() => {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background-color: #120b18; /* Dark purple matching site scheme */
+  background-color: var(--color-bg-dark); /* Dark purple matching site scheme */
 }
 
 .bg-layer {
@@ -200,7 +200,7 @@ onUnmounted(() => {
 }
 
 .village {
-  background-color: #120b18;
+  background-color: var(--color-bg-dark);
 }
 
 .bg1 { z-index: 1; }

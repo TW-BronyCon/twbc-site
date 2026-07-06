@@ -1,12 +1,49 @@
+:root {
+    /* Cosmic / Site Core Theme */
+    --color-bg-dark: #120b18;
+    --color-text-light: #ffffff;
+    --color-pink: #ffbdde;
+    --color-gold: #ffe6a7;
+    --color-gold-hover: #ffe6a7;
+    --color-nav-bg: rgba(95, 45, 100, 0.72);
+    
+    /* Parchment / Paper / Scroll Theme */
+    --color-paper-bg: #fffdf9;
+    --color-paper-bg-gradient: linear-gradient(145deg, #f7ecd6, #ead7b4);
+    --color-paper-text: #4a3522;
+    --color-paper-text-dark: #341e0d;
+    --color-paper-text-muted: #6a5642;
+    
+    /* Ticket Tiers - Cards */
+    --color-tier-budget: #73bfe5;
+    --color-tier-budget-sub: #6baaca;
+    --color-tier-standard: #8673e5;
+    --color-tier-standard-sub: #7c6ccc;
+    --color-tier-sponsor: #e57399;
+    --color-tier-sponsor-sub: #ce6e8e;
+    --color-tier-royale: #e5d273;
+    --color-tier-royale-sub: #b4a34c;
+
+    /* Ticket Tiers - Darker Contrast for Light Backgrounds / Table */
+    --color-tier-budget-dark: #5d9e38;
+    --color-tier-standard-dark: #4d6fc5;
+    --color-tier-sponsor-dark: #b8568d;
+    --color-tier-royale-dark: #bc8b2e;
+
+    /* Scrollbar */
+    --color-scrollbar-track: #1a1a1a;
+    --color-scrollbar-thumb: #444;
+    --color-scrollbar-thumb-hover: #555;
+}
+
 /* Global Reset */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     box-sizing: border-box;
-    /* Fix white background leak */
-    /* background-color: #120b18; */
-    color: #ffffff;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
     font-family: "Noto Sans TC", sans-serif;
 }
 
@@ -14,22 +51,17 @@ html, body {
     box-sizing: inherit;
 }
 
-/* Common UI Elements */
-.noblur {
-    filter: none !important;
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: var(--color-scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-    background: #444;
+    background: var(--color-scrollbar-thumb);
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--color-scrollbar-thumb-hover);
 }

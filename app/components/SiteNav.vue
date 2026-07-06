@@ -38,12 +38,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     <NuxtLink :to="localePath('/')" @click="isNavOpen = false">{{ $t('menu.home') }}</NuxtLink>
     <NuxtLink :to="localePath('/news')" @click="isNavOpen = false">{{ $t('menu.news') }}</NuxtLink>
     <NuxtLink :to="localePath('/ticket')" @click="isNavOpen = false">{{ $t('menu.ticket') }}</NuxtLink>
-    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false">{{ $t('menu.about') }}</NuxtLink>
-    <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
-    <NuxtLink v-if="false" :to="localePath('/schedule')" @click="isNavOpen = false">{{ $t('menu.schedule') }}</NuxtLink>
-    <span v-else class="nav-coming-soon">{{ $t('tba.schedule') }}</span>
-    <NuxtLink v-if="false" :to="localePath('/venue')" @click="isNavOpen = false">{{ $t('menu.venue') }}</NuxtLink>
-    <span v-else class="nav-coming-soon">{{ $t('tba.venue') }}</span>
+    <NuxtLink :to="localePath('/schedule')" @click="isNavOpen = false">{{ $t('menu.schedule') }}</NuxtLink>
+    
     
     <ul class="menu" style="transform: translateY(-1px);">
       <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
@@ -55,6 +51,11 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
         </ul>
       </li>
     </ul>
+
+    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false">{{ $t('menu.about') }}</NuxtLink>
+    <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
+    <NuxtLink v-if="false" :to="localePath('/venue')" @click="isNavOpen = false">{{ $t('menu.venue') }}</NuxtLink>
+    <span v-else class="nav-coming-soon">{{ $t('tba.venue') }}</span>
   </nav>
 </template>
 
@@ -74,8 +75,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   min-height: clamp(2em, 3.2vw, 3em);
   padding: .15em clamp(.7em, 2.5vw, 1.7em) clamp(0em, 2vw, .2em) clamp(1em, 2.5vw, 2em);
 
-  background: rgba(95, 45, 100, .72);
-  border: 1px solid rgba(255, 230, 167, .18);
+  background: var(--color-nav-bg);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
   border-top: 0;
   border-radius: 0 0 1em 1em;
 
@@ -125,7 +126,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   width: 0;
   height: 2px;
 
-  background: #ffe6a7;
+  background: var(--color-gold);
 
   transition:
     width .25s ease,
@@ -146,11 +147,11 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 .top-nav .menu-group.open > button,
 .top-nav > a.router-link-active,
 .top-nav > a.router-link-exact-active {
-  color: #ffe6a7;
+  color: var(--color-gold);
 
   text-shadow:
-    0 0 6px rgba(255, 230, 167, .75),
-    0 0 14px rgba(255, 180, 220, .45);
+    0 0 6px color-mix(in srgb, var(--color-gold) 75%, transparent),
+    0 0 14px color-mix(in srgb, var(--color-pink) 45%, transparent);
 }
 
 .top-nav .menu {
@@ -187,8 +188,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 
   list-style: none;
 
-  background: rgba(95, 45, 100, .88);
-  border: 1px solid rgba(255, 230, 167, .14);
+  background: color-mix(in srgb, var(--color-nav-bg) 88%, #000);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 14%, transparent);
   border-radius: .6em;
 
   backdrop-filter: blur(.6em);
@@ -244,8 +245,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     width: 44px;
     height: 44px;
 
-    background: rgba(95, 45, 100, .78);
-    border: 1px solid rgba(255, 230, 167, .22);
+    background: color-mix(in srgb, var(--color-nav-bg) 78%, #000);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
     border-radius: 999px;
 
     box-shadow: 0 8px 22px rgba(0, 0, 0, .3);
