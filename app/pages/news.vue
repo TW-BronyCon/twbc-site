@@ -17,12 +17,15 @@ useHead({
 })
 
 type RawNewsPost = {
-  id: string
+  id?: string
+  locales: Record<string, LocalizedNewsPost>
+}
+
+type LocalizedNewsPost = {
   title: string
   author: string
   time: string
   content: string
-  url: string
 }
 
 type NewsPost = {
@@ -31,7 +34,6 @@ type NewsPost = {
   author: string
   time: string
   content: string
-  url: string
 }
 
 type ContentPart =
@@ -45,11 +47,11 @@ type SealData = {
 }
 
 const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
-  () => `news-posts-${locale.value}`,
+  'news-posts',
   async () => {
     try {
       return await $fetch<RawNewsPost[]>(
-        `/content/news/posts.${locale.value}.json`,
+        '/content/news/posts.json',
         {
           query: {
             t: Date.now()
@@ -64,8 +66,7 @@ const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
   {
     server: false,
     immediate: false,
-    default: () => [],
-    watch: [locale]
+    default: () => []
   }
 )
 
@@ -110,17 +111,22 @@ const posts = computed<NewsPost[]>(() => {
   if (!Array.isArray(list)) return []
 
   return list
-    .map((post, index) => {
+    .flatMap((post, index) => {
       const id = post.id || `post_${String(index + 1).padStart(3, '0')}`
+      const localizedPost =
+        post.locales?.[locale.value] ??
+        post.locales?.['zh-TW'] ??
+        post.locales?.en
 
-      return {
+      if (!localizedPost) return []
+
+      return [{
         id,
-        title: post.title || '',
-        author: post.author || '',
-        time: post.time || '',
-        content: post.content || '',
-        url: post.url || '#'
-      }
+        title: localizedPost.title || '',
+        author: localizedPost.author || '',
+        time: localizedPost.time || '',
+        content: localizedPost.content || ''
+      }]
     })
     .sort((a, b) => {
       const toTime = (raw: string) => {
@@ -301,6 +307,11 @@ watch(
     for (const post of list) {
       getSealData(post.id)
     }
+
+    if (selectedPost.value) {
+      selectedPost.value =
+        list.find(post => post.id === selectedPost.value?.id) ?? null
+    }
   },
   { immediate: true }
 )
@@ -402,15 +413,6 @@ function openMail(post: NewsPost) {
 function closeMail() {
   selectedPost.value = null
   document.body.style.overflow = ''
-}
-
-async function copyLink(url?: string) {
-  try {
-    await navigator.clipboard.writeText(url || '#')
-    alert(t('news.messages.copied'))
-  } catch {
-    alert(t('news.messages.copyFailed'))
-  }
 }
 
 function handleEsc(e: KeyboardEvent) {
