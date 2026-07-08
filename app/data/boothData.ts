@@ -74,7 +74,7 @@ export const booths: Booth[] = [
       en: 'Lovely handmade tote bags, character plushies, and delicate fabric accessories.',
     },
     links: [
-      { label: 'Instagram', url: 'https://www.instagram.com/yeejay14?igsh=dzYwb2VmZzF4Nmgw', icon: 'fa-solid fa-instagram' },
+      { label: 'Instagram', url: 'https://www.instagram.com/yeejay14?igsh=dzYwb2VmZzF4Nmgw', icon: 'fa-brands fa-instagram' },
 	  
     ]
   },
@@ -91,7 +91,7 @@ export const booths: Booth[] = [
       en: 'Fanfiction booklets, postcard sets, and bookmark collections inspired by Equestria.',
     },
     links: [
-      { label: 'DeviantArt', url: 'https://www.deviantart.com/257ravenwolf/art/Stop-Bullying-MLP-and-Marvel-DD-crossover-727080061', icon: 'fa-solid fa-deviantart' }
+      { label: 'DeviantArt', url: 'https://www.deviantart.com/257ravenwolf/art/Stop-Bullying-MLP-and-Marvel-DD-crossover-727080061', icon: 'fa-brands fa-deviantart' }
     ]
   }
   // },
