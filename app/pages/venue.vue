@@ -122,10 +122,11 @@ const startTouchPan = (e: TouchEvent) => {
 
 const onTouchPan = (e: TouchEvent) => {
   if (!isDragging.value || e.touches.length !== 1) return
+  e.preventDefault()
   const dx = e.touches[0].clientX - (startX.value + panX.value)
   const dy = e.touches[0].clientY - (startY.value + panY.value)
   dragDistance.value += Math.sqrt(dx*dx + dy*dy)
-  
+
   panX.value = e.touches[0].clientX - startX.value
   panY.value = e.touches[0].clientY - startY.value
   clampPan()
@@ -375,35 +376,35 @@ onUnmounted(() => {
           <div class="legend-container">
             <h4>{{ t('venue.legend.title') }}</h4>
             <div class="legend-grid">
-              <div class="legend-item" @mouseover="hoveredZoneId = 'stage'" @mouseleave="hoveredZoneId = null" @click="openZone('stage')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'stage'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('stage')">
                 <span class="legend-dot dot-stage"></span>
                 <span>{{ t('venue.legend.stage') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="openZone('vendors')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('vendors')">
                 <span class="legend-dot dot-vendors"></span>
                 <span>{{ t('venue.legend.vendors') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'workshop'" @mouseleave="hoveredZoneId = null" @click="openZone('workshop')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'workshop'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('workshop')">
                 <span class="legend-dot dot-workshop"></span>
                 <span>{{ t('venue.legend.workshop') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'game'" @mouseleave="hoveredZoneId = null" @click="openZone('game')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'game'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('game')">
                 <span class="legend-dot dot-game"></span>
                 <span>{{ t('venue.legend.game') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="openZone('bar')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('bar')">
                 <span class="legend-dot dot-bar"></span>
                 <span>{{ t('venue.legend.bar') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="openZone('exhibition')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('exhibition')">
                 <span class="legend-dot dot-exhibition"></span>
                 <span>{{ t('venue.legend.exhibition') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('checkin')">
                 <span class="legend-dot dot-checkin"></span>
                 <span>{{ t('venue.legend.checkin') }}</span>
               </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'entrance'" @mouseleave="hoveredZoneId = null" @click="openZone('entrance')">
+              <div class="legend-item" @mouseover="hoveredZoneId = 'entrance'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('entrance')">
                 <span class="legend-dot dot-entrance"></span>
                 <span>{{ t('venue.legend.entrance') }}</span>
               </div>
