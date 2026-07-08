@@ -36,9 +36,9 @@ export const booths: Booth[] = [
       en: 'Plushies made by Neko and 雷曦（Reesee）\'s plush merchandise.',
     },
     links: [
-		{ label: 'Website', url: 'https://www.nkplush.com/', icon: 'fa-solid fa-globe' },
-		{ label: 'X (Twitter)', url: 'https://x.com/NKPlush', icon: 'fa-brands fa-x-twitter' },
-		{ label: 'Facebook', url: 'https://www.facebook.com/NKPlush', icon: 'fa-brands fa-facebook' }
+      { label: 'Website', url: 'https://www.nkplush.com/', icon: 'fa-solid fa-globe' },
+      { label: 'X (Twitter)', url: 'https://x.com/NKPlush', icon: 'fa-brands fa-x-twitter' },
+      { label: 'Facebook', url: 'https://www.facebook.com/NKPlush', icon: 'fa-brands fa-facebook' }
     ]
   },
   {
@@ -55,10 +55,9 @@ export const booths: Booth[] = [
     },
     links: [
       { label: 'Website', url: 'https://clair24552015.wixsite.com/mysite', icon: 'fa-solid fa-globe' },
-	  { label: 'Instagram', url: 'https://www.instagram.com/mian_mian1205/', icon: 'fa-brands fa-instagram' },
-	  { label: 'Facebook', url: 'https://www.facebook.com/mian.mian.459393', icon: 'fa-brands fa-facebook' },
-	  { label: 'Youtube', url: 'https://www.youtube.com/@Mianmian1205/videos', icon: 'fa-brands fa-youtube' },
-	  
+      { label: 'Instagram', url: 'https://www.instagram.com/mian_mian1205/', icon: 'fa-brands fa-instagram' },
+      { label: 'Facebook', url: 'https://www.facebook.com/mian.mian.459393', icon: 'fa-brands fa-facebook' },
+      { label: 'Youtube', url: 'https://www.youtube.com/@Mianmian1205/videos', icon: 'fa-brands fa-youtube' }
     ]
   },
   {
@@ -68,14 +67,13 @@ export const booths: Booth[] = [
     w: 18.68,
     h: 15.44,
     rotate: -36.62,
-    name: { zh: '藝潔的小木屋', en: 'YeeJay\'s Art' },
+    name: { zh: '藝潔的小木屋', en: 'YeeJay\'s Art'},
     description: {
-      zh: '充滿愛心的手工手提袋、角色絨毛布偶以及精緻小馬布藝配件。',
-      en: 'Lovely handmade tote bags, character plushies, and delicate fabric accessories.',
+      zh: '徽章、毛巾、貼紙；M6、Q版、搖滾版',
+      en: 'Badges, towels, stickers; M6, chibi version, rock version.',
     },
     links: [
-      { label: 'Instagram', url: 'https://www.instagram.com/yeejay14?igsh=dzYwb2VmZzF4Nmgw', icon: 'fa-brands fa-instagram' },
-	  
+      { label: 'Instagram', url: 'https://www.instagram.com/yeejay14?igsh=dzYwb2VmZzF4Nmgw', icon: 'fa-brands fa-instagram' }
     ]
   },
   {
