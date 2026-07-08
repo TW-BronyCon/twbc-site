@@ -85,7 +85,7 @@ export const booths: Booth[] = [
     w: 18.68,
     h: 15.44,
     rotate: -36.62,
-    name: { zh: 'RavenWolf的書報攤', en: "RavenWolf的書報攤" },
+    name: { zh: 'RavenWolf的書報攤', en: "RavenWolf's Newsstand" },
     description: {
       zh: '同人小說設定集、精美明信片與受小馬國歷史啟發的特色書籤。',
       en: 'Fanfiction booklets, postcard sets, and bookmark collections inspired by Equestria.',

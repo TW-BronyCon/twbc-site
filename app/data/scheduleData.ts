@@ -289,7 +289,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
-    title: { zh: '交誼區', en: 'Games Area' },
+    title: { zh: '交誼區', en: 'Social Area' },
     track: 'game',
     start: '13:00',
     end: '17:00',
