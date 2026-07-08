@@ -598,7 +598,7 @@ onUnmounted(() => {
 
 .map-wrapper {
   width: 100%;
-  max-width: 580px;
+  max-width: 650px;
   position: relative;
   overflow: hidden;
   user-select: none;
