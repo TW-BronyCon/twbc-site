@@ -18,20 +18,18 @@ useHead({
 
 type RawNewsPost = {
   id?: string
+  time?: string
   locales: Record<string, LocalizedNewsPost>
 }
 
 type LocalizedNewsPost = {
   title: string
-  author: string
-  time: string
   content: string
 }
 
 type NewsPost = {
   id: string
   title: string
-  author: string
   time: string
   content: string
 }
@@ -110,47 +108,48 @@ const posts = computed<NewsPost[]>(() => {
 
   if (!Array.isArray(list)) return []
 
-  return list
-    .flatMap((post, index) => {
-      const id = post.id || `post_${String(index + 1).padStart(3, '0')}`
-      const localizedPost =
-        post.locales?.[locale.value] ??
-        post.locales?.['zh-TW'] ??
-        post.locales?.en
+  const mapped = list.flatMap((post, index) => {
+    const id = post.id || `post_${String(index + 1).padStart(3, '0')}`
+    const localizedPost =
+      post.locales?.[locale.value] ??
+      post.locales?.['zh-TW'] ??
+      post.locales?.en
 
-      if (!localizedPost) return []
+    if (!localizedPost) return []
 
-      return [{
-        id,
-        title: localizedPost.title || '',
-        author: localizedPost.author || '',
-        time: localizedPost.time || '',
-        content: localizedPost.content || ''
-      }]
-    })
-    .sort((a, b) => {
-      const toTime = (raw: string) => {
-        const parts = raw.split(/[\/-]/).map(part => part.trim())
-
-        if (parts.length !== 3) return 0
-
-        const p1 = parts[0]!
-        const p2 = parts[1]!
-        const p3 = parts[2]!
-
-        const iso = /^\d{4}$/.test(p1)
-          ? `${p1}-${p2.padStart(2, '0')}-${p3.padStart(2, '0')}`
-          : /^\d{4}$/.test(p3)
-            ? `${p3}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`
-            : raw
-
-        const time = Date.parse(iso)
-
-        return Number.isNaN(time) ? 0 : time
+    let formattedTime = post.time || ''
+    if (post.time) {
+      try {
+        const date = new Date(post.time)
+        if (!Number.isNaN(date.getTime())) {
+          formattedTime = date.toLocaleDateString(locale.value, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Taipei'
+          })
+        }
+      } catch (err) {
+        console.error('Failed to format date:', err)
       }
+    }
 
-      return toTime(b.time) - toTime(a.time)
+    return [{
+      id,
+      title: localizedPost.title || '',
+      time: formattedTime,
+      rawTime: post.time || '',
+      content: localizedPost.content || ''
+    }]
+  })
+
+  return mapped
+    .sort((a, b) => {
+      const timeA = a.rawTime ? Date.parse(a.rawTime) : 0
+      const timeB = b.rawTime ? Date.parse(b.rawTime) : 0
+      return timeB - timeA
     })
+    .map(({ rawTime, ...rest }) => rest)
 })
 
 const selectedPost = ref<NewsPost | null>(null)
@@ -516,7 +515,7 @@ onBeforeUnmount(() => {
 
             <div class="mail-meta">
               <div class="time">{{ post.time }}</div>
-              <div class="author">{{ post.author }}</div>
+              <div class="author">{{ t('news.author') }}</div>
             </div>
           </article>
         </div>
@@ -545,7 +544,7 @@ onBeforeUnmount(() => {
                   {{ t('news.labels.time') }}：{{ selectedPost.time }}
 
                   <span style="float: right;">
-                    {{ t('news.labels.author') }}：{{ selectedPost.author }}
+                    {{ t('news.labels.author') }}：{{ t('news.author') }}
                   </span>
                 </div>
 
