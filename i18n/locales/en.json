@@ -171,10 +171,10 @@
     "legend": {
       "title": "Map Legend",
       "stage": "Main Stage",
-      "vendors": "Vendor Alley",
-      "workshop": "Workshop Area",
+      "vendors": "Vendor\nAlley",
+      "workshop": "Workshop",
       "social": "Social Area",
-      "exhibition": "Exhibition Area",
+      "exhibition": "Exhibition\nArea",
       "bar": "Bar",
       "checkin": "Check-in",
       "entrance": "Entrance",

@@ -18,6 +18,15 @@ const hoveredBoothId = ref<string | null>(null);
 // Helper for locale checking
 const isEn = computed(() => locale.value.startsWith("en"));
 
+// Helpers to support multiline text translations in SVG labels
+function getLines(text: string): string[] {
+  return text.split("\n");
+}
+
+function cleanLabel(text: string): string {
+  return text.replace(/\n/g, " ");
+}
+
 // Hex color normalization helper
 function normalizeHexColor(color?: string) {
   if (!color || typeof color !== "string") return "#235cc9";
@@ -524,7 +533,20 @@ onUnmounted(() => {
                     height="156.75"
                   />
                   <text class="zone-label-text" x="347.9" y="185.7">
-                    {{ t("venue.legend.stage") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(t('venue.legend.stage'))"
+                      :key="idx"
+                      x="347.9"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.stage')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -545,7 +567,20 @@ onUnmounted(() => {
                     points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"
                   />
                   <text class="zone-label-text" x="190.0" y="310.0">
-                    {{ t("venue.legend.vendors") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(t('venue.legend.vendors'))"
+                      :key="idx"
+                      x="190.0"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.vendors')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -569,7 +604,22 @@ onUnmounted(() => {
                     height="169.22"
                   />
                   <text class="zone-label-text" x="466.7" y="192.0">
-                    {{ t("venue.legend.workshop") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(
+                        t('venue.legend.workshop'),
+                      )"
+                      :key="idx"
+                      x="466.7"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.workshop')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -592,7 +642,20 @@ onUnmounted(() => {
                     height="85.13"
                   />
                   <text class="zone-label-text" x="347.9" y="306.7">
-                    {{ t("venue.legend.social") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(t('venue.legend.social'))"
+                      :key="idx"
+                      x="347.9"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.social')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -613,7 +676,22 @@ onUnmounted(() => {
                     points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"
                   />
                   <text class="zone-label-text" x="435.0" y="385.0">
-                    {{ t("venue.legend.exhibition") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(
+                        t('venue.legend.exhibition'),
+                      )"
+                      :key="idx"
+                      x="435.0"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.exhibition')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -632,7 +710,20 @@ onUnmounted(() => {
                     points="22.3 180.48 25.12 185.48 28.41 190.17 32.15 194.52 36.3 198.49 40.82 202.03 45.66 205.11 50.78 207.69 56.13 209.77 61.66 211.31 67.31 212.3 73.03 212.73 78.77 212.6 84.47 211.91 90.07 210.66 95.52 208.87 100.77 206.55 105.77 203.74 110.46 200.44 114.82 196.7 118.78 192.55 122.32 188.03 125.4 183.19 127.99 178.07 130.06 172.72 131.6 167.19 132.59 161.54 133.02 155.82 132.89 150.08 132.2 144.38 130.95 138.78 129.16 133.33 126.85 128.08 124.03 123.08 120.73 118.39 116.99 114.03 112.84 110.07 108.32 106.53 103.48 103.45 98.36 100.86 93.01 98.79 87.48 97.25 81.83 96.26 76.11 95.83 70.37 95.96 64.68 96.65 59.07 97.9 53.62 99.69 48.37 102 43.37 104.82 38.68 108.12 34.33 111.86 30.36 116.01 26.82 120.53 23.74 125.37 21.16 130.49 19.08 135.84 17.54 141.37 16.55 147.02 16.12 152.74 16.25 158.48 16.94 164.17 18.19 169.78 19.98 175.23 22.3 180.48"
                   />
                   <text class="zone-label-text" x="74.6" y="154.3">
-                    {{ t("venue.legend.bar") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(t('venue.legend.bar'))"
+                      :key="idx"
+                      x="74.6"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.bar')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -656,7 +747,20 @@ onUnmounted(() => {
                     height="17.06"
                   />
                   <text class="zone-label-text" x="420.4" y="474.0">
-                    {{ t("venue.legend.checkin") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(t('venue.legend.checkin'))"
+                      :key="idx"
+                      x="420.4"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.checkin')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -667,7 +771,22 @@ onUnmounted(() => {
                     points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"
                   />
                   <text class="zone-label-text-static" x="544.5" y="445.5">
-                    {{ t("venue.legend.entrance") }}
+                    <tspan
+                      v-for="(line, idx) in getLines(
+                        t('venue.legend.entrance'),
+                      )"
+                      :key="idx"
+                      x="544.5"
+                      :dy="
+                        idx === 0
+                          ? getLines(t('venue.legend.entrance')).length > 1
+                            ? '-0.6em'
+                            : '0'
+                          : '1.2em'
+                      "
+                    >
+                      {{ line }}
+                    </tspan>
                   </text>
                 </g>
 
@@ -1095,9 +1214,9 @@ onUnmounted(() => {
                     class="preview-badge"
                     :class="`zone-badge-${selectedZoneId}`"
                   >
-                    {{ t(`venue.legend.${selectedZoneId}`) }}
+                    {{ cleanLabel(t(`venue.legend.${selectedZoneId}`)) }}
                   </span>
-                  <h3>{{ t(`venue.legend.${selectedZoneId}`) }}</h3>
+                  <h3>{{ cleanLabel(t(`venue.legend.${selectedZoneId}`)) }}</h3>
                   <div class="sidebar-section-title">
                     {{ t("venue.modal.details") }}
                   </div>
@@ -1183,9 +1302,9 @@ onUnmounted(() => {
                   <span
                     class="preview-badge"
                     :class="`zone-badge-${hoveredZoneId}`"
-                    >{{ t(`venue.legend.${hoveredZoneId}`) }}</span
+                    >{{ cleanLabel(t(`venue.legend.${hoveredZoneId}`)) }}</span
                   >
-                  <h3>{{ t(`venue.legend.${hoveredZoneId}`) }}</h3>
+                  <h3>{{ cleanLabel(t(`venue.legend.${hoveredZoneId}`)) }}</h3>
                   <p class="preview-desc">
                     {{ t(`venue.zones.${hoveredZoneId}`) }}
                   </p>
