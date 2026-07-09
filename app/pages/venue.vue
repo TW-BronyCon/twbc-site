@@ -262,10 +262,10 @@ const openZone = (zoneId: string) => {
   
   const zoneCenters: Record<string, { x: number; y: number }> = {
     stage: { x: 347.9, y: 185.7 },
-    vendors: { x: 175, y: 315 },
+    vendors: { x: 190.0, y: 310.0 },
     workshop: { x: 466.7, y: 192.0 },
     game: { x: 347.9, y: 306.7 },
-    exhibition: { x: 456.4, y: 375.0 },
+    exhibition: { x: 435.0, y: 385.0 },
     bar: { x: 74.6, y: 154.3 },
     checkin: { x: 420.4, y: 474.0 }
   }
@@ -285,7 +285,13 @@ const openBooth = (booth: Booth) => {
     '1': { x: 107.56, y: 260.74 },
     '2': { x: 125.97, y: 285.52 },
     '3': { x: 152.03, y: 320.59 },
-    '4': { x: 170.44, y: 345.37 }
+    '4': { x: 170.44, y: 345.37 },
+    '5': { x: 196.5,  y: 380.44 },
+    '6': { x: 165.16, y: 233.38 },
+    '7': { x: 183.57, y: 258.17 },
+    '8': { x: 196.95, y: 209.75 },
+    '9': { x: 215.37, y: 234.53 },
+    '10': { x: 212.86, y: 264.25 }
   }
   const coords = boothCenters[booth.id]
   if (coords) {
@@ -370,10 +376,10 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="347.9" y="185.7">{{ isEn ? 'Stage' : '主舞台' }}</text>
                 </g>
 
-                <!-- Interactive Zone: Vendor Alley -->
+                <!-- Interactive Zone: Vendor Alley (Centered X=190.0 Y=310.0) -->
                 <g class="zone-group vendors-group" :class="{ active: hoveredZoneId === 'vendors' || selectedZoneId === 'vendors' }" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="openZone('vendors')">
                   <polygon class="zone-shape shape-vendors" points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"/>
-                  <text class="zone-label-text" x="170.0" y="315.0">{{ isEn ? 'Vendors' : '攤位區' }}</text>
+                  <text class="zone-label-text" x="190.0" y="310.0">{{ isEn ? 'Vendors' : '攤位區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Workshop Area -->
@@ -388,10 +394,10 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="347.9" y="306.7">{{ isEn ? 'Games' : '遊戲區' }}</text>
                 </g>
 
-                <!-- Interactive Zone: Exhibition -->
+                <!-- Interactive Zone: Exhibition (Centered X=435.0 Y=385.0) -->
                 <g class="zone-group exhibition-group" :class="{ active: hoveredZoneId === 'exhibition' || selectedZoneId === 'exhibition' }" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="openZone('exhibition')">
                   <polygon class="zone-shape shape-exhibition" points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"/>
-                  <text class="zone-label-text" x="456.4" y="375.0">{{ isEn ? 'Exhibition' : '展示區' }}</text>
+                  <text class="zone-label-text" x="435.0" y="385.0">{{ isEn ? 'Exhibition' : '展示區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Bar -->
@@ -406,13 +412,13 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="420.4" y="474.0">{{ isEn ? 'Check-in' : '報到處' }}</text>
                 </g>
 
-                <!-- Non-interactive Zone: Entrance (Only for visual reference) -->
+                <!-- Non-interactive Zone: Entrance (Left-aligned text to prevent right-edge clipping in English) -->
                 <g class="entrance-group">
                   <polygon class="shape-entrance" points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"/>
-                  <text class="zone-label-text-static" x="556.3" y="445.5">{{ isEn ? 'Entrance' : '入口' }}</text>
+                  <text class="zone-label-text-static" x="544.5" y="445.5">{{ isEn ? 'Entrance' : '入口' }}</text>
                 </g>
 
-                <!-- Interactive Booths Layer (Fulfill spec 6 by baking locations into SVG) -->
+                <!-- Interactive Booths Layer (Bake booths 1-10 into SVG) -->
                 <g id="booths-layer">
                   <!-- Booth 1 -->
                   <g class="booth-group" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
@@ -434,6 +440,36 @@ onUnmounted(() => {
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">4</text>
                   </g>
+                  <!-- Booth 5 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '5' || selectedBooth?.id === '5' }" transform="translate(196.5, 380.44) rotate(-36.62)" @mouseover="hoveredBoothId = '5'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('5')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">5</text>
+                  </g>
+                  <!-- Booth 6 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '6' || selectedBooth?.id === '6' }" transform="translate(165.16, 233.38) rotate(-36.62)" @mouseover="hoveredBoothId = '6'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('6')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">6</text>
+                  </g>
+                  <!-- Booth 7 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '7' || selectedBooth?.id === '7' }" transform="translate(183.57, 258.17) rotate(-36.62)" @mouseover="hoveredBoothId = '7'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('7')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">7</text>
+                  </g>
+                  <!-- Booth 8 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '8' || selectedBooth?.id === '8' }" transform="translate(196.95, 209.75) rotate(-36.62)" @mouseover="hoveredBoothId = '8'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('8')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">8</text>
+                  </g>
+                  <!-- Booth 9 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '9' || selectedBooth?.id === '9' }" transform="translate(215.37, 234.53) rotate(-36.62)" @mouseover="hoveredBoothId = '9'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('9')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">9</text>
+                  </g>
+                  <!-- Booth 10 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '10' || selectedBooth?.id === '10' }" transform="translate(212.86, 264.25) rotate(-36.62)" @mouseover="hoveredBoothId = '10'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('10')">
+                    <rect class="booth-rect" x="-7.72" y="-9.34" width="15.44" height="18.68" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">10</text>
+                  </g>
                 </g>
               </g>
             </svg>
@@ -453,7 +489,7 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Sidebar / Interactive Info Deck (Fulfill spec 2 by showing detail info directly in sidebar) -->
+        <!-- Sidebar / Interactive Info Deck -->
         <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
           <!-- Clear Selection Close Button -->
           <button v-if="selectedZoneId || selectedBooth" class="clear-selection-btn" type="button" @click="clearSelection" :title="t('common.close')">
@@ -634,10 +670,21 @@ onUnmounted(() => {
   border-radius: 1.25em;
   background: linear-gradient(180deg, rgba(46, 21, 56, 0.85), rgba(29, 13, 36, 0.95));
   box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, 0.15);
-  min-height: 380px;
-  max-height: 600px;
-  overflow-y: auto;
   transition: all 0.3s ease;
+  overflow-y: auto;
+}
+
+@media (min-width: 951px) {
+  .info-sidebar-card {
+    height: 100%;
+    max-height: 100%;
+  }
+}
+
+@media (max-width: 950px) {
+  .info-sidebar-card {
+    min-height: 380px;
+  }
 }
 
 .info-sidebar-card.has-selection {
@@ -781,7 +828,7 @@ onUnmounted(() => {
   opacity: 0.55;
   pointer-events: none;
   user-select: none;
-  text-anchor: start;
+  text-anchor: end;
   dominant-baseline: central;
 }
 
