@@ -49,6 +49,8 @@
       "a4": "There is a blank space on the badge for you to write your own name or nickname."
     },
     "quotes": [
+      "\"No, you can't give up your laughter 'Cause you're scared of a little pain.\" - Autumn Blaze",
+      "\"Rainbows won't light up the sky unless you let it rain!\" - Autumn Blaze",
       "\"No matter what you do, you're never gonna be prepared for everything.\" – Applejack",
       "\"Bad things happen, but that doesn't mean you should give up!\" – Applejack",
       "\"Don't forget who you are.\" – Fluttershy",
@@ -189,11 +191,11 @@
     },
     "zones": {
       "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
-      "vendors": "A bustling alley showcasing amazing pony-themed merchandise, fan art, crafts, and books created by talented community members.",
-      "workshop": "An interactive creative space where you can join hands-on crafting workshops or sit down to exchange ideas and draw with fellow pony fans.",
-      "social": "A dedicated space for board games, card games, and community icebreakers. Pull up a chair and make new friends here!",
+      "vendors": "A marketplace of vendor booths selling pony-themed merchandise, fan art, handicrafts, and fanzines meticulously designed by community creators.",
+      "workshop": "Interactive Creative Space. Paper and colored markers are provided. Welcome to draw and exchange creative ideas with like-minded friends here.",
+      "social": "At the large table and seating area, you can chat or play various board games and interactive games with other participants. Feel free to pull up a chair anytime to join in and meet new friends!",
       "exhibition": "A spacious gallery displaying artworks, models, and community showcases.",
-      "bar": "Bar & Lounge. Offers drinks, light snacks, and a cozy seating area for attendees to relax and socialize.",
+      "bar": "Bar & Lounge. Offers drinks and a cozy seating area for attendees to relax and socialize.",
       "checkin": "The main check-in counter for registration, ticket scanning, and badge collections.",
       "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
     }
