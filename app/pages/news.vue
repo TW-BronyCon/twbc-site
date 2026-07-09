@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="legacy-page-root">
+  <div class="page-root">
     <img
       src="/img/Why.avif"
       alt=""
@@ -446,7 +446,7 @@ onBeforeUnmount(() => {
       }"
     />
 
-    <div class="legacy-page-body">
+    <div class="page-body">
       <section class="news-wrap">
         <div class="news-head">
           <h1>{{ t("newsPage.heading") }}</h1>
@@ -554,21 +554,14 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /* Scoped styles for News Page */
-.legacy-page-root {
-  position: relative;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
+.page-root {
   overflow-x: clip;
 }
 
 @supports not (overflow: clip) {
-  .legacy-page-root {
+  .page-root {
     overflow-x: hidden;
   }
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
 }
 
 /* 暗遮罩 */
