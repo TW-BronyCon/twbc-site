@@ -165,7 +165,7 @@ const onMouseLeave = () => {
 </script>
 
 <template>
-  <div class="ticket-root">
+  <div class="page-root ticket-root">
     <div class="container">
       <div class="border">
         <div class="border">
@@ -322,7 +322,6 @@ const onMouseLeave = () => {
 <style scoped>
 .ticket-root {
   position: relative;
-  padding-top: 3.5rem;
 }
 
 .block-link {
