@@ -1342,7 +1342,7 @@ onUnmounted(() => {
 <style scoped>
 /* Page Layout */
 .venue-main-section {
-  width: min(97.5%, 76em);
+  width: var(--page-content-width);
   max-width: 100%;
   margin: 0 auto;
   display: grid;
@@ -1360,14 +1360,8 @@ onUnmounted(() => {
 .map-container-card {
   padding: 1.5em;
   border-radius: 1.25em;
-  background: linear-gradient(
-    180deg,
-    rgba(72, 38, 82, 0.75),
-    rgba(72, 38, 82, 0.75)
-  );
-  box-shadow:
-    0 1em 2em rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(127, 100, 50, 0.12);
+  background: var(--section-card-bg);
+  box-shadow: var(--section-card-shadow);
   display: flex;
   align-items: center;
   justify-content: center;

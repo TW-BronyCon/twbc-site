@@ -74,18 +74,12 @@ useHead(() => ({
 <style scoped>
 /* Page Layout */
 .transport-main-section {
-  width: min(97.5%, 76em);
+  width: var(--page-content-width);
   margin: 0 auto;
   padding: 2.5em;
   border-radius: 1.25em;
-  background: linear-gradient(
-    180deg,
-    rgba(72, 38, 82, 0.45),
-    rgba(46, 21, 56, 0.45)
-  );
-  box-shadow:
-    0 1em 2em rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(127, 100, 50, 0.08);
+  background: var(--section-card-bg);
+  box-shadow: var(--section-card-shadow);
 }
 
 .transport-grid {
