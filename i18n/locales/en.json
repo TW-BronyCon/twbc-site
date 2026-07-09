@@ -135,6 +135,7 @@
     "description": "Announcements and updates from Kirin Village will be delivered here."
   },
   "news": {
+    "author": "TWBC Team",
     "labels": {
       "time": "Time",
       "author": "Sender"
