@@ -34,9 +34,40 @@
   --color-scrollbar-track: #1a1a1a;
   --color-scrollbar-thumb: #444;
   --color-scrollbar-thumb-hover: #555;
+
+  /* ============================================================
+   * Page Layout Design Tokens
+   * Shared across all content pages (schedule, transport,
+   * venue, ticket, news). Use these to keep spacing consistent.
+   * ============================================================ */
+
+  /* Space reserved for the fixed navigation bar */
+  --page-nav-height: clamp(4.5rem, 7vw, 6.5rem);
+
+  /* Max width for centered content columns */
+  --page-content-width: min(97.5%, 76em);
+
+  /* Default page bottom padding */
+  --page-padding-bottom: 4rem;
+
+  /* Section card gradient (purple, cosmic) */
+  --section-card-bg: linear-gradient(
+    180deg,
+    rgba(72, 38, 82, 0.75),
+    rgba(72, 38, 82, 0.75)
+  );
+
+  /* Section card border / glow */
+  --section-card-shadow:
+    0 1em 2em rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(127, 100, 50, 0.12);
+
+  /* Page heading text color */
+  --page-heading-color: #efefef;
 }
 
-/* Global Reset */
+/* ================================================================
+ * Global Reset
+ * ================================================================ */
 html,
 body {
   margin: 0;
@@ -54,7 +85,9 @@ body {
   box-sizing: inherit;
 }
 
-/* Custom Scrollbar */
+/* ================================================================
+ * Custom Scrollbar
+ * ================================================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -67,4 +100,82 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-scrollbar-thumb-hover);
+}
+
+/* ================================================================
+ * Shared Page Layout Utilities
+ *
+ * These utility classes provide the standard outer shell used by
+ * all content pages (schedule, transport, venue, ticket, news).
+ * They replace duplicate per-page root/body styles.
+ *
+ * Usage in a page component:
+ *   <div class="page-root">
+ *     <div class="page-body">
+ *       ...page content...
+ *     </div>
+ *   </div>
+ * ================================================================ */
+
+/** Outermost page wrapper — provides nav clearance and bottom padding */
+.page-root {
+  position: relative;
+  min-height: auto;
+  padding-top: var(--page-nav-height);
+  padding-bottom: var(--page-padding-bottom);
+  --color-font: var(--page-heading-color);
+}
+
+/** Inner body wrapper — sits above background layers via z-index */
+.page-body {
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Standard hero header block for a content page.
+ * Centers the page title and optional subtitle at the top.
+ */
+.page-hero {
+  width: var(--page-content-width);
+  margin: 0 auto 1.5rem auto;
+  text-align: center;
+}
+
+.page-hero h1,
+.page-hero h2 {
+  margin: 0 0 0.25em;
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  line-height: 1.1;
+  color: var(--color-font);
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
+}
+
+.page-hero p {
+  margin: 0.15em 0;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.7;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/**
+ * Standard section card — the rounded, frosted-glass container
+ * used for the main content block on most content pages.
+ */
+.page-section-card {
+  width: var(--page-content-width);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2em 2.25em 2.5em;
+  border-radius: 1.25em;
+  position: relative;
+  background: var(--section-card-bg);
+  box-shadow: var(--section-card-shadow);
+}
+
+@media (max-width: 850px) {
+  .page-section-card {
+    padding: 1.5em 1.2em 2em;
+  }
 }
