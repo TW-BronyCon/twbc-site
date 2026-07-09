@@ -456,55 +456,55 @@ onUnmounted(() => {
                   <text class="zone-label-text-static" x="544.5" y="445.5">{{ isEn ? 'Entrance' : '入口' }}</text>
                 </g>
 
-                <!-- Interactive Booths Layer (Hides booths dynamically if they have no active data: Fulfill user feedback) -->
+                <!-- Interactive Booths Layer -->
                 <g id="booths-layer">
                   <!-- Booth 1 -->
-                  <g v-if="booths.some(b => b.id === '1')" class="booth-group" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '1')" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">1</text>
                   </g>
                   <!-- Booth 2 -->
-                  <g v-if="booths.some(b => b.id === '2')" class="booth-group" :class="{ active: hoveredBoothId === '2' || selectedBooth?.id === '2' }" transform="translate(125.97, 285.52) rotate(-36.62)" @mouseover="hoveredBoothId = '2'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('2')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '2')" :class="{ active: hoveredBoothId === '2' || selectedBooth?.id === '2' }" transform="translate(125.97, 285.52) rotate(-36.62)" @mouseover="hoveredBoothId = '2'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('2')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">2</text>
                   </g>
                   <!-- Booth 3 -->
-                  <g v-if="booths.some(b => b.id === '3')" class="booth-group" :class="{ active: hoveredBoothId === '3' || selectedBooth?.id === '3' }" transform="translate(152.03, 320.59) rotate(-36.62)" @mouseover="hoveredBoothId = '3'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('3')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '3')" :class="{ active: hoveredBoothId === '3' || selectedBooth?.id === '3' }" transform="translate(152.03, 320.59) rotate(-36.62)" @mouseover="hoveredBoothId = '3'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('3')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">3</text>
                   </g>
                   <!-- Booth 4 -->
-                  <g v-if="booths.some(b => b.id === '4')" class="booth-group" :class="{ active: hoveredBoothId === '4' || selectedBooth?.id === '4' }" transform="translate(170.44, 345.37) rotate(-36.62)" @mouseover="hoveredBoothId = '4'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('4')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '4')" :class="{ active: hoveredBoothId === '4' || selectedBooth?.id === '4' }" transform="translate(170.44, 345.37) rotate(-36.62)" @mouseover="hoveredBoothId = '4'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('4')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">4</text>
                   </g>
                   <!-- Booth 5 -->
-                  <g v-if="booths.some(b => b.id === '5')" class="booth-group" :class="{ active: hoveredBoothId === '5' || selectedBooth?.id === '5' }" transform="translate(196.5, 380.44) rotate(-36.62)" @mouseover="hoveredBoothId = '5'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('5')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '5')" :class="{ active: hoveredBoothId === '5' || selectedBooth?.id === '5' }" transform="translate(196.5, 380.44) rotate(-36.62)" @mouseover="hoveredBoothId = '5'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('5')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">5</text>
                   </g>
                   <!-- Booth 6 -->
-                  <g v-if="booths.some(b => b.id === '6')" class="booth-group" :class="{ active: hoveredBoothId === '6' || selectedBooth?.id === '6' }" transform="translate(165.16, 233.38) rotate(-36.62)" @mouseover="hoveredBoothId = '6'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('6')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '6')" :class="{ active: hoveredBoothId === '6' || selectedBooth?.id === '6' }" transform="translate(165.16, 233.38) rotate(-36.62)" @mouseover="hoveredBoothId = '6'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('6')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">6</text>
                   </g>
                   <!-- Booth 7 -->
-                  <g v-if="booths.some(b => b.id === '7')" class="booth-group" :class="{ active: hoveredBoothId === '7' || selectedBooth?.id === '7' }" transform="translate(183.57, 258.17) rotate(-36.62)" @mouseover="hoveredBoothId = '7'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('7')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '7')" :class="{ active: hoveredBoothId === '7' || selectedBooth?.id === '7' }" transform="translate(183.57, 258.17) rotate(-36.62)" @mouseover="hoveredBoothId = '7'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('7')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">7</text>
                   </g>
                   <!-- Booth 8 -->
-                  <g v-if="booths.some(b => b.id === '8')" class="booth-group" :class="{ active: hoveredBoothId === '8' || selectedBooth?.id === '8' }" transform="translate(196.95, 209.75) rotate(-36.62)" @mouseover="hoveredBoothId = '8'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('8')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '8')" :class="{ active: hoveredBoothId === '8' || selectedBooth?.id === '8' }" transform="translate(196.95, 209.75) rotate(-36.62)" @mouseover="hoveredBoothId = '8'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('8')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">8</text>
                   </g>
                   <!-- Booth 9 -->
-                  <g v-if="booths.some(b => b.id === '9')" class="booth-group" :class="{ active: hoveredBoothId === '9' || selectedBooth?.id === '9' }" transform="translate(215.37, 234.53) rotate(-36.62)" @mouseover="hoveredBoothId = '9'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('9')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '9')" :class="{ active: hoveredBoothId === '9' || selectedBooth?.id === '9' }" transform="translate(215.37, 234.53) rotate(-36.62)" @mouseover="hoveredBoothId = '9'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('9')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">9</text>
                   </g>
                   <!-- Booth 10 -->
-                  <g v-if="booths.some(b => b.id === '10')" class="booth-group" :class="{ active: hoveredBoothId === '10' || selectedBooth?.id === '10' }" transform="translate(212.86, 264.25) rotate(-36.62)" @mouseover="hoveredBoothId = '10'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('10')">
+                  <g class="booth-group" v-if="booths.some(b => b.id === '10')" :class="{ active: hoveredBoothId === '10' || selectedBooth?.id === '10' }" transform="translate(212.86, 264.25) rotate(-36.62)" @mouseover="hoveredBoothId = '10'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('10')">
                     <rect class="booth-rect" x="-7.72" y="-9.34" width="15.44" height="18.68" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">10</text>
                   </g>
@@ -527,96 +527,97 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Sidebar / Interactive Info Deck (Stretches to map height, handles scrollbar correctly) -->
-        <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
-          <!-- Clear Selection Close Button -->
-          <button v-if="selectedZoneId || selectedBooth" class="clear-selection-btn" type="button" @click="clearSelection" :title="t('common.close')">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+        <!-- Sidebar / Interactive Info Deck Column Wrapper (Prevents grid row height expansion: Fulfill user feedback) -->
+        <div class="sidebar-column-wrapper">
+          <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
+            <!-- Clear Selection Close Button -->
+            <button v-if="selectedZoneId || selectedBooth" class="clear-selection-btn" type="button" @click="clearSelection" :title="t('common.close')">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
 
-          <!-- Hover/Selection Context Info (Scrolls internally to avoid breaking layout) -->
-          <div class="sidebar-content-wrapper">
-            <!-- 1. Selection State: Booth -->
-            <template v-if="selectedBooth">
-              <div class="sidebar-item-detail">
-                <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: selectedBooth.id }) }}</span>
-                <h3>{{ selectedBooth.name[isEn ? 'en' : 'zh'] }}</h3>
-                <div class="sidebar-section-title">{{ t('venue.modal.description') }}</div>
-                <p class="detail-desc">{{ selectedBooth.description[isEn ? 'en' : 'zh'] }}</p>
+            <!-- Hover/Selection Context Info -->
+            <div class="sidebar-content-wrapper">
+              <!-- 1. Selection State: Booth -->
+              <template v-if="selectedBooth">
+                <div class="sidebar-item-detail">
+                  <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: selectedBooth.id }) }}</span>
+                  <h3>{{ selectedBooth.name[isEn ? 'en' : 'zh'] }}</h3>
+                  <div class="sidebar-section-title">{{ t('venue.modal.description') }}</div>
+                  <p class="detail-desc">{{ selectedBooth.description[isEn ? 'en' : 'zh'] }}</p>
 
-                <!-- Links -->
-                <div v-if="selectedBooth.links && selectedBooth.links.length > 0" class="sidebar-links-section">
-                  <div class="sidebar-section-title">{{ t('venue.modal.links') }}</div>
-                  <div class="links-grid">
-                    <a v-for="(link, idx) in selectedBooth.links" :key="idx" :href="link.url" target="_blank" rel="noopener noreferrer" class="booth-social-link">
-                      <i :class="link.icon || 'fa-solid fa-link'"></i>
-                      <span>{{ link.label }}</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </template>
-
-            <!-- 2. Selection State: Zone -->
-            <template v-else-if="selectedZoneId">
-              <div class="sidebar-item-detail">
-                <span class="preview-badge" :class="`zone-badge-${selectedZoneId}`">
-                  {{ t(`venue.legend.${selectedZoneId}`) }}
-                </span>
-                <h3>{{ t(`venue.legend.${selectedZoneId}`) }}</h3>
-                <div class="sidebar-section-title">{{ t('venue.modal.details') }}</div>
-                <p class="detail-desc">{{ t(`venue.zones.${selectedZoneId}`) }}</p>
-
-                <!-- Linked Events Schedule -->
-                <div v-if="['stage', 'vendors', 'workshop', 'game'].includes(selectedZoneId)" class="sidebar-events-section">
-                  <div class="sidebar-section-title">{{ t('venue.modal.events') }}</div>
-                  
-                  <div v-if="zoneEvents.length > 0" class="events-list">
-                    <!-- Events items themed to match schedule color scheme (Fulfill user feedback) -->
-                    <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item" :style="{ borderLeftColor: event.bg, backgroundColor: event.bg + '12' }">
-                      <div class="event-time" :style="{ color: event.bg }">🕒 {{ event.start }} - {{ event.end }}</div>
-                      <div class="event-title">{{ event.title }}</div>
-                      <div v-if="event.detail" class="event-desc">{{ event.detail }}</div>
+                  <!-- Links -->
+                  <div v-if="selectedBooth.links && selectedBooth.links.length > 0" class="sidebar-links-section">
+                    <div class="sidebar-section-title">{{ t('venue.modal.links') }}</div>
+                    <div class="links-grid">
+                      <a v-for="(link, idx) in selectedBooth.links" :key="idx" :href="link.url" target="_blank" rel="noopener noreferrer" class="booth-social-link">
+                        <i :class="link.icon || 'fa-solid fa-link'"></i>
+                        <span>{{ link.label }}</span>
+                      </a>
                     </div>
                   </div>
-                  <p v-else class="no-events-text">{{ t('venue.modal.noEvents') }}</p>
                 </div>
-              </div>
-            </template>
+              </template>
 
-            <!-- 3. Hover State: Booth -->
-            <template v-else-if="hoveredBoothId">
-              <div class="sidebar-item-preview">
-                <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: hoveredBoothId }) }}</span>
-                <h3>{{ booths.find(b => b.id === hoveredBoothId)?.name[isEn ? 'en' : 'zh'] }}</h3>
-                <p class="preview-desc">{{ booths.find(b => b.id === hoveredBoothId)?.description[isEn ? 'en' : 'zh'] }}</p>
-                <div class="tap-hint">
-                  <i class="fa-solid fa-hand-pointer"></i>
-                  <span>{{ isEn ? 'Click to show links & details' : '點擊以顯示詳情與連結' }}</span>
+              <!-- 2. Selection State: Zone -->
+              <template v-else-if="selectedZoneId">
+                <div class="sidebar-item-detail">
+                  <span class="preview-badge" :class="`zone-badge-${selectedZoneId}`">
+                    {{ t(`venue.legend.${selectedZoneId}`) }}
+                  </span>
+                  <h3>{{ t(`venue.legend.${selectedZoneId}`) }}</h3>
+                  <div class="sidebar-section-title">{{ t('venue.modal.details') }}</div>
+                  <p class="detail-desc">{{ t(`venue.zones.${selectedZoneId}`) }}</p>
+
+                  <!-- Linked Events Schedule -->
+                  <div v-if="['stage', 'vendors', 'workshop', 'game'].includes(selectedZoneId)" class="sidebar-events-section">
+                    <div class="sidebar-section-title">{{ t('venue.modal.events') }}</div>
+                    
+                    <div v-if="zoneEvents.length > 0" class="events-list">
+                      <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item" :style="{ borderLeftColor: event.bg, backgroundColor: event.bg + '12' }">
+                        <div class="event-time" :style="{ color: event.bg }">🕒 {{ event.start }} - {{ event.end }}</div>
+                        <div class="event-title">{{ event.title }}</div>
+                        <div v-if="event.detail" class="event-desc">{{ event.detail }}</div>
+                      </div>
+                    </div>
+                    <p v-else class="no-events-text">{{ t('venue.modal.noEvents') }}</p>
+                  </div>
                 </div>
-              </div>
-            </template>
+              </template>
 
-            <!-- 4. Hover State: Zone -->
-            <template v-else-if="hoveredZoneId && hoveredZoneId !== 'entrance'">
-              <div class="sidebar-item-preview">
-                <span class="preview-badge" :class="`zone-badge-${hoveredZoneId}`">{{ t(`venue.legend.${hoveredZoneId}`) }}</span>
-                <h3>{{ t(`venue.legend.${hoveredZoneId}`) }}</h3>
-                <p class="preview-desc">{{ t(`venue.zones.${hoveredZoneId}`) }}</p>
-                <div class="tap-hint" v-if="['stage', 'vendors', 'workshop', 'game'].includes(hoveredZoneId)">
-                  <i class="fa-solid fa-hand-pointer"></i>
-                  <span>{{ isEn ? 'Click to view event timetable' : '點擊以查看活動時程' }}</span>
+              <!-- 3. Hover State: Booth -->
+              <template v-else-if="hoveredBoothId">
+                <div class="sidebar-item-preview">
+                  <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: hoveredBoothId }) }}</span>
+                  <h3>{{ booths.find(b => b.id === hoveredBoothId)?.name[isEn ? 'en' : 'zh'] }}</h3>
+                  <p class="preview-desc">{{ booths.find(b => b.id === hoveredBoothId)?.description[isEn ? 'en' : 'zh'] }}</p>
+                  <div class="tap-hint">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <span>{{ isEn ? 'Click to show links & details' : '點擊以顯示詳情與連結' }}</span>
+                  </div>
                 </div>
-              </div>
-            </template>
+              </template>
 
-            <!-- 5. Default State -->
-            <template v-else>
-              <div class="sidebar-placeholder">
-                <i class="fa-solid fa-map-location-dot placeholder-icon"></i>
-                <p>{{ t('venue.hint') }}</p>
-              </div>
-            </template>
+              <!-- 4. Hover State: Zone -->
+              <template v-else-if="hoveredZoneId && hoveredZoneId !== 'entrance'">
+                <div class="sidebar-item-preview">
+                  <span class="preview-badge" :class="`zone-badge-${hoveredZoneId}`">{{ t(`venue.legend.${hoveredZoneId}`) }}</span>
+                  <h3>{{ t(`venue.legend.${hoveredZoneId}`) }}</h3>
+                  <p class="preview-desc">{{ t(`venue.zones.${hoveredZoneId}`) }}</p>
+                  <div class="tap-hint" v-if="['stage', 'vendors', 'workshop', 'game'].includes(hoveredZoneId)">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <span>{{ isEn ? 'Click to view event timetable' : '點擊以查看活動時程' }}</span>
+                  </div>
+                </div>
+              </template>
+
+              <!-- 5. Default State -->
+              <template v-else>
+                <div class="sidebar-placeholder">
+                  <i class="fa-solid fa-map-location-dot placeholder-icon"></i>
+                  <p>{{ t('venue.hint') }}</p>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </section>
@@ -701,8 +702,30 @@ onUnmounted(() => {
   user-select: none;
 }
 
-.info-sidebar-card {
+/* Sidebar Wrapper & Card Styling (Prevents content-based height expansion on desktop) */
+.sidebar-column-wrapper {
   position: relative;
+  width: 100%;
+}
+
+@media (min-width: 951px) {
+  .sidebar-column-wrapper {
+    height: 100%;
+  }
+  
+  .info-sidebar-card {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+@media (max-width: 950px) {
+  .sidebar-column-wrapper {
+    height: auto;
+  }
+}
+
+.info-sidebar-card {
   display: flex;
   flex-direction: column;
   padding: 1.8em;
@@ -710,18 +733,12 @@ onUnmounted(() => {
   background: linear-gradient(180deg, rgba(46, 21, 56, 0.85), rgba(29, 13, 36, 0.95));
   box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, 0.15);
   transition: all 0.3s ease;
-  overflow: hidden; /* Prevent double scrollbar by locking main card container */
-}
-
-@media (min-width: 951px) {
-  .info-sidebar-card {
-    height: 100%;
-    max-height: 100%;
-  }
+  overflow: hidden; /* Lock main container; only wrapper inside scrolls */
 }
 
 @media (max-width: 950px) {
   .info-sidebar-card {
+    position: relative;
     min-height: 380px;
     max-height: 500px;
   }
