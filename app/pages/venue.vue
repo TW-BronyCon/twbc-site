@@ -5,10 +5,6 @@ import { events, EVENT_COLORS } from '~/data/scheduleData'
 
 const { t, locale } = useI18n()
 
-definePageMeta({
-  underDevelopment: true
-})
-
 useHead(() => ({
   title: t('venue.title'),
 }))
