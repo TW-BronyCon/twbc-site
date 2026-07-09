@@ -9,8 +9,8 @@ export type EventType =
   | 'photo'
   | 'workshop'
   | 'vendor'
-  | 'game'
-  | 'game-special'
+  | 'social'
+  | 'social-special'
 
 export interface LocalizedText {
   zh: string
@@ -47,8 +47,8 @@ export const EVENT_COLORS: Record<EventType, string> = {
   photo: '#d9ebf5',
   workshop: '#ffaa82',
   vendor: '#d6aa03',
-  game: '#81fff9',
-  'game-special': '#149be6',
+  social: '#81fff9',
+  'social-special': '#149be6',
 }
 
 export const startHour = 9
@@ -79,8 +79,8 @@ export const columns: Column[] = [
     color: '#efefef',
   },
   {
-    key: 'game',
-    label: { zh: '遊戲區', en: 'Game Area' },
+    key: 'social',
+    label: { zh: '交誼區', en: 'Social Area' },
     min: '7.5em',
     grow: 1.05,
     color: '#efefef',
@@ -143,8 +143,8 @@ export const events: TimetableEvent[] = [
     end: '14:00',
     type: 'talk',
     detail: {
-      zh: '由青焰帶來的小馬主題分享，內容可能包含創作、社群、翻譯或多年來的心得與經歷。',
-      en: 'A pony-themed talk by Qingyan, possibly covering creation, community, translation, and years of experience.',
+      zh: '馬圈知名布偶師青焰將進行專題演講，分享小馬布偶的製作過程以及布偶商業化歷程。',
+      en: 'Neko Kevin Plushie, a famous pony plushie creator in Taiwan, will give a keynote speech, sharing the production process of pony plushies and the history of their commercialization.',
     },
   },
   {
@@ -154,8 +154,8 @@ export const events: TimetableEvent[] = [
     end: '15:15',
     type: 'community',
     detail: {
-      zh: '考驗大家對 MLP 的了解程度，能否根據一張畫面就能猜出集數嗎?',
-      en: 'Test your knowledge of the MLP! Can you guess the episode just by looking at a single screenshot?',
+      zh: '桃漪考考你有沒有認真觀看關於她來自的世界的動畫，你能否根據一張畫面就能猜出是MLP中哪一集嗎?',
+      en: 'Peach Ripple wants to test your knowledge of the world where she came from! Can you guess the episode just by looking at a single screenshot?',
     },
   },
   //{
@@ -204,8 +204,8 @@ export const events: TimetableEvent[] = [
     end: '20:00',
     type: 'music',
     detail: {
-      zh: '夜晚的小馬音樂時間，現場播放各種 Brony 音樂與 Remix，一起享受友情與節奏。',
-      en: 'An evening pony music session with Brony music and remixes. Enjoy friendship and rhythm together.',
+      zh: '身為馬迷的你，彩虹小馬的音樂是否讓你朗朗上口呢？你是否一直不斷的重複聽小馬音樂呢？夜場音樂派對將會有3位DJ輪流上台演出帶著各位狂歡，小馬歌曲你複習了嗎？',
+      en: 'As a Brony, are the catchy tunes of My Little Pony constantly stuck in your head? Do you find yourself on an endless loop listening to MLP music? The late-night music party will feature 3 DJs taking turns on stage to hype up the crowd. Have you reviewed your favorite MLP songs yet?',
     },
   },
   {
@@ -215,21 +215,21 @@ export const events: TimetableEvent[] = [
     end: '20:50',
     type: 'sing',
     detail: {
-      zh: '一起合唱熟悉的小馬歌曲，為活動留下最熱鬧也最難忘的回憶。',
-      en: 'Sing familiar pony songs together and create a lively, unforgettable memory.',
+      zh: '一起合唱各位最喜歡的小馬歌曲',
+      en: 'Let\'s sing along to everyone\'s favorite My Little Pony songs together!',
     },
   },
-  {
-    title: { zh: '大合照', en: 'Group Photo' },
-    track: 'main',
-    start: '20:50',
-    end: '21:00',
-    type: 'photo',
-    detail: {
-      zh: '活動尾聲的大合照時間，歡迎帶上裝扮、OC 或周邊，一起留下紀念。',
-      en: 'Group photo time near the end of the event. Bring your cosplay, OC, or merch for a keepsake.',
-    },
-  },
+  //{
+  //  title: { zh: '大合照', en: 'Group Photo' },
+  //  track: 'main',
+  //  start: '20:50',
+  //  end: '21:00',
+  //  type: 'photo',
+  //  detail: {
+  //    zh: '活動尾聲的大合照時間，歡迎帶上裝扮、OC 或周邊，一起留下紀念。',
+  //    en: 'Group photo time near the end of the event. Bring your cosplay, OC, or merch for a keepsake.',
+  //  },
+  //},
   {
     title: { zh: '工坊區開放', en: 'Workshop Open' },
     track: 'workshop',
@@ -237,8 +237,8 @@ export const events: TimetableEvent[] = [
     end: '17:00',
     type: 'workshop',
     detail: {
-      zh: '工坊區全天開放，現場提供手作與創作交流空間，可以自由參與體驗。',
-      en: 'The workshop area is open all day, offering space for hands-on creation and creative exchange.',
+      zh: '提供紙跟色彩筆，可以自由畫畫的地方。',
+      en: 'Paper and colored pencils are provided, and there is a place where you can draw freely.',
     },
   },
   {
@@ -248,7 +248,7 @@ export const events: TimetableEvent[] = [
     end: '12:00',
     type: 'vendor',
     detail: {
-      zh: '上午攤位街開放，可以逛創作攤位、收藏周邊，支持喜歡的創作者。',
+      zh: '攤位街開放，可以逛創作攤位、收藏周邊，支持喜歡的創作者。',
       en: 'Vendor Alley opens in the morning. Browse creator booths, collect merch, and support your favorite artists.',
     },
   },
@@ -259,19 +259,19 @@ export const events: TimetableEvent[] = [
     end: '17:00',
     type: 'vendor',
     detail: {
-      zh: '下午攤位街持續開放，歡迎慢慢探索各式小馬創作與特色商品。',
-      en: 'Vendor Alley remains open in the afternoon. Take your time exploring pony creations and special goods.',
+      zh: '攤位街開放，可以逛創作攤位、收藏周邊，支持喜歡的創作者。',
+      en: 'Vendor Alley remains open in the afternoon.',
     },
   },
   {
-    title: { zh: '遊戲區', en: 'Games Area' },
-    track: 'game',
+    title: { zh: '交誼區', en: 'Social Area' },
+    track: 'social',
     start: '10:30',
     end: '12:00',
-    type: 'game',
+    type: 'social',
     detail: {
-      zh: '自由桌遊時段，可以和其他參加者一起遊玩各種桌遊與互動遊戲。',
-      en: 'Free board game time. Join other attendees for board games and interactive games.',
+      zh: '擁有大桌及椅子的區域，可以和其他參加者一起聊天或玩各種桌遊與互動遊戲。',
+      en: 'The area features large tables and chairs where participants can chat or play various board games and interactive games.',
     },
   },
   //{
@@ -279,24 +279,24 @@ export const events: TimetableEvent[] = [
   //    zh: '誰是幻形靈\n桌遊時間',
   //    en: 'Who Is the Changeling?\nBoard Game Time',
   //  },
-  //  track: 'game',
+  //  track: 'social',
   //  start: '12:00',
   //  end: '13:00',
-  //  type: 'game-special',
+  //  type: 'social-special',
   //  detail: {
   //    zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
   //    en: 'Play a social deduction board game and find the changeling hidden among the group.',
   //  },
   //},
   {
-    title: { zh: '遊戲區', en: 'Games Area' },
-    track: 'game',
+    title: { zh: '交誼區', en: 'Social Area' },
+    track: 'social',
     start: '13:00',
     end: '17:00',
-    type: 'game',
+    type: 'social',
     detail: {
-      zh: '下午自由桌遊時段，歡迎隨時加入，一起享受友情與遊戲時光。',
-      en: 'Afternoon free board game time. Join anytime and enjoy friendship and games.',
+      zh: '擁有大桌及椅子的區域，可以和其他參加者一起聊天或玩各種桌遊與互動遊戲。',
+      en: 'The area features large tables and chairs where participants can chat or play various board games and interactive games.',
     },
   },
 ]

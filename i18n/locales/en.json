@@ -49,6 +49,8 @@
       "a4": "There is a blank space on the badge for you to write your own name or nickname."
     },
     "quotes": [
+      "\"No, you can't give up your laughter 'Cause you're scared of a little pain.\" - Autumn Blaze",
+      "\"Rainbows won't light up the sky unless you let it rain!\" - Autumn Blaze",
       "\"No matter what you do, you're never gonna be prepared for everything.\" – Applejack",
       "\"Bad things happen, but that doesn't mean you should give up!\" – Applejack",
       "\"Don't forget who you are.\" – Fluttershy",
@@ -116,7 +118,8 @@
     "timetable": "Timetable",
     "location": "Location",
     "schedule": "Schedule",
-    "venue": "Venue"
+    "venue": "Venue",
+    "transport": "Transport"
   },
   "tba": {
     "about": "About Us(TBA)",
@@ -161,6 +164,51 @@
     "duration": "Duration",
     "area": "Area",
     "detailPlaceholder": "Details will be added later."
+  },
+  "venue": {
+    "title": "Venue Map",
+    "hint": "Tap a zone or booth on the map to view detailed schedule, description, and links.",
+    "legend": {
+      "title": "Map Legend",
+      "stage": "Main Stage",
+      "vendors": "Vendor Alley",
+      "workshop": "Workshop Area",
+      "social": "Social Area",
+      "exhibition": "Exhibition Area",
+      "bar": "Bar",
+      "checkin": "Check-in",
+      "entrance": "Entrance",
+      "booth": "Vendor Booth"
+    },
+    "modal": {
+      "events": "Scheduled Events in this Zone",
+      "noEvents": "No events scheduled currently.",
+      "visitWebsite": "Visit Website",
+      "details": "Zone Details",
+      "boothTitle": "Booth {id}",
+      "description": "Description",
+      "links": "Links"
+    },
+    "zones": {
+      "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
+      "vendors": "A marketplace of vendor booths selling pony-themed merchandise, fan art, handicrafts, and fanzines meticulously designed by community creators.",
+      "workshop": "Interactive Creative Space. Paper and colored markers are provided. Welcome to draw and exchange creative ideas with like-minded friends here.",
+      "social": "At the large table and seating area, you can chat or play various board games and interactive games with other participants. Feel free to pull up a chair anytime to join in and meet new friends!",
+      "exhibition": "A spacious gallery displaying artworks, models, and community showcases.",
+      "bar": "Bar & Lounge. Offers drinks and a cozy seating area for attendees to relax and socialize.",
+      "checkin": "The main check-in counter for registration, ticket scanning, and badge collections.",
+      "entrance": "The main entry queue area for ticket validation and badge collection. Please follow staff directions during peak hours."
+    }
+  },
+  "transport": {
+    "title": "Transport Guide",
+    "mrt": "MRT",
+    "mrtDesc": "Take the MRT Orange Line (Luzhou Line) to Sanhe Junior High School Station (O51). Walk from Exit 2 (the venue is directly adjacent to the station building).",
+    "bus": "Bus",
+    "busDesc": "Get off at MRT Sanhe Junior High School Station. Available routes: 225, 232, 306, 508, 704, 857, 925, etc.",
+    "driving": "Driving & Parking",
+    "drivingDesc": "Take Highway 1 to Sanchong Interchange, go toward Sanchong/Luzhou, and turn onto Sanhe Rd. Parking is available at the Sanchong District High School Underground Parking Lot nearby.",
+    "mapTitle": "AS Life Space Map"
   },
   "development": {
     "watermark": "UNDER DEVELOPMENT",

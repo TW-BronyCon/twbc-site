@@ -35,10 +35,10 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   </button>
 
   <nav class="top-nav" :class="{ open: isNavOpen }">
-    <NuxtLink :to="localePath('/')" @click="isNavOpen = false">{{ $t('menu.home') }}</NuxtLink>
-    <NuxtLink :to="localePath('/news')" @click="isNavOpen = false">{{ $t('menu.news') }}</NuxtLink>
-    <NuxtLink :to="localePath('/ticket')" @click="isNavOpen = false">{{ $t('menu.ticket') }}</NuxtLink>
-    <NuxtLink :to="localePath('/schedule')" @click="isNavOpen = false">{{ $t('menu.schedule') }}</NuxtLink>
+    <NuxtLink :to="localePath('/')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.home') }}</NuxtLink>
+    <NuxtLink :to="localePath('/news')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.news') }}</NuxtLink>
+    <NuxtLink :to="localePath('/ticket')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.ticket') }}</NuxtLink>
+    <NuxtLink :to="localePath('/schedule')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.schedule') }}</NuxtLink>
     
     
     <ul class="menu" style="transform: translateY(-1px);">
@@ -51,11 +51,11 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
         </ul>
       </li>
     </ul>
-
-    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false">{{ $t('menu.about') }}</NuxtLink>
+    <NuxtLink :to="localePath('/venue')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.venue') }}</NuxtLink>
+    <NuxtLink :to="localePath('/transport')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.transport') }}</NuxtLink>
+    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.about')
+      }}</NuxtLink>
     <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
-    <NuxtLink v-if="false" :to="localePath('/venue')" @click="isNavOpen = false">{{ $t('menu.venue') }}</NuxtLink>
-    <span v-else class="nav-coming-soon">{{ $t('tba.venue') }}</span>
   </nav>
 </template>
 
