@@ -88,7 +88,9 @@ const panY = ref(0)
 const isDragging = ref(false)
 const startX = ref(0)
 const startY = ref(0)
-const dragDistance = ref(0)
+const dragStartX = ref(0)
+const dragStartY = ref(0)
+const dragDistance = ref(0) // Will store squared distance for performance
 
 // Touch-specific zoom states
 const startTouchDistance = ref(0)
@@ -96,17 +98,26 @@ const startZoom = ref(1)
 const touchMidX = ref(0)
 const touchMidY = ref(0)
 
+// SVG size cache to prevent synchronous reflow during panning/zooming
+let svgRectW = 0
+let svgRectH = 0
+
+const updateSvgRectSize = () => {
+  const svg = document.getElementById('venue-svg')
+  if (svg) {
+    const rect = svg.getBoundingClientRect()
+    svgRectW = rect.width
+    svgRectH = rect.height
+  }
+}
+
 const cursorStyle = computed(() => {
   if (zoom.value <= 1) return 'default'
   return isDragging.value ? 'grabbing' : 'grab'
 })
 
 const clampPan = () => {
-  const svg = document.getElementById('venue-svg')
-  if (!svg) return
-  const rect = svg.getBoundingClientRect()
-  const W = rect.width
-  const H = rect.height
+  if (svgRectW <= 0 || svgRectH <= 0) return
   
   if (zoom.value <= 1) {
     panX.value = 0
@@ -114,9 +125,9 @@ const clampPan = () => {
     return
   }
   
-  const minX = W * (1 - zoom.value)
+  const minX = svgRectW * (1 - zoom.value)
   const maxX = 0
-  const minY = H * (1 - zoom.value)
+  const minY = svgRectH * (1 - zoom.value)
   const maxY = 0
   
   panX.value = Math.max(minX, Math.min(maxX, panX.value))
@@ -127,14 +138,17 @@ const startPan = (e: MouseEvent) => {
   isDragging.value = true
   startX.value = e.clientX - panX.value
   startY.value = e.clientY - panY.value
+  dragStartX.value = e.clientX
+  dragStartY.value = e.clientY
   dragDistance.value = 0
+  updateSvgRectSize()
 }
 
 const onPan = (e: MouseEvent) => {
   if (!isDragging.value) return
-  const dx = e.clientX - (startX.value + panX.value)
-  const dy = e.clientY - (startY.value + panY.value)
-  dragDistance.value += Math.sqrt(dx*dx + dy*dy)
+  const dx = e.clientX - dragStartX.value
+  const dy = e.clientY - dragStartY.value
+  dragDistance.value = dx * dx + dy * dy
   
   panX.value = e.clientX - startX.value
   panY.value = e.clientY - startY.value
@@ -147,6 +161,7 @@ const endPan = () => {
 
 const handleWheel = (e: WheelEvent) => {
   e.preventDefault()
+  updateSvgRectSize()
   const zoomFactor = 1.15
   const nextZoom = e.deltaY < 0 ? zoom.value * zoomFactor : zoom.value / zoomFactor
   adjustZoom(nextZoom, e.clientX, e.clientY, true)
@@ -154,10 +169,13 @@ const handleWheel = (e: WheelEvent) => {
 
 // Touch event handlers (improved touch-friendliness)
 const startTouchPan = (e: TouchEvent) => {
+  updateSvgRectSize()
   if (e.touches.length === 1) {
     isDragging.value = true
     startX.value = e.touches[0].clientX - panX.value
     startY.value = e.touches[0].clientY - panY.value
+    dragStartX.value = e.touches[0].clientX
+    dragStartY.value = e.touches[0].clientY
     dragDistance.value = 0
   } else if (e.touches.length === 2) {
     isDragging.value = false
@@ -180,21 +198,20 @@ const onTouchPan = (e: TouchEvent) => {
   if (e.touches.length === 1 && isDragging.value) {
     if (zoom.value > 1) {
       e.preventDefault()
-      const dx = e.touches[0].clientX - (startX.value + panX.value)
-      const dy = e.touches[0].clientY - (startY.value + panY.value)
-      dragDistance.value += Math.sqrt(dx*dx + dy*dy)
-
       panX.value = e.touches[0].clientX - startX.value
       panY.value = e.touches[0].clientY - startY.value
       clampPan()
     } else {
       // If not zoomed, only prevent horizontal pans to allow scrolling the page vertically on mobile
-      const dx = e.touches[0].clientX - (startX.value + panX.value)
-      const dy = e.touches[0].clientY - (startY.value + panY.value)
+      const dx = e.touches[0].clientX - startX.value - panX.value
+      const dy = e.touches[0].clientY - startY.value - panY.value
       if (Math.abs(dx) > Math.abs(dy)) {
         e.preventDefault()
       }
     }
+    const dx = e.touches[0].clientX - dragStartX.value
+    const dy = e.touches[0].clientY - dragStartY.value
+    dragDistance.value = dx * dx + dy * dy
   } else if (e.touches.length === 2) {
     e.preventDefault()
     const currentDistance = Math.hypot(
@@ -217,6 +234,8 @@ const endTouchPan = (e: TouchEvent) => {
     isDragging.value = true
     startX.value = e.touches[0].clientX - panX.value
     startY.value = e.touches[0].clientY - panY.value
+    dragStartX.value = e.touches[0].clientX
+    dragStartY.value = e.touches[0].clientY
     dragDistance.value = 0
     startTouchDistance.value = 0
   }
@@ -227,11 +246,20 @@ const adjustZoom = (targetZoom: number, screenX: number, screenY: number, useCli
   const clampedZoom = Math.max(1, Math.min(4, targetZoom))
   if (clampedZoom === zoom.value) return
   
-  const svg = document.getElementById('venue-svg')
-  if (svg) {
-    const rect = svg.getBoundingClientRect()
-    const targetX = useClientCoord ? (screenX - rect.left) : screenX
-    const targetY = useClientCoord ? (screenY - rect.top) : screenY
+  if (svgRectW > 0 && svgRectH > 0) {
+    let rectLeft = 0
+    let rectTop = 0
+    if (useClientCoord) {
+      const svg = document.getElementById('venue-svg')
+      if (svg) {
+        const rect = svg.getBoundingClientRect()
+        rectLeft = rect.left
+        rectTop = rect.top
+      }
+    }
+    
+    const targetX = useClientCoord ? (screenX - rectLeft) : screenX
+    const targetY = useClientCoord ? (screenY - rectTop) : screenY
     
     const ptX = (targetX - panX.value) / zoom.value
     const ptY = (targetY - panY.value) / zoom.value
@@ -246,20 +274,18 @@ const adjustZoom = (targetZoom: number, screenX: number, screenY: number, useCli
 }
 
 const zoomIn = () => {
-  const svg = document.getElementById('venue-svg')
-  if (svg) {
-    const rect = svg.getBoundingClientRect()
-    adjustZoom(zoom.value * 1.3, rect.width / 2, rect.height / 2)
+  updateSvgRectSize()
+  if (svgRectW > 0) {
+    adjustZoom(zoom.value * 1.3, svgRectW / 2, svgRectH / 2)
   } else {
     zoom.value = Math.min(4, zoom.value * 1.3)
   }
 }
 
 const zoomOut = () => {
-  const svg = document.getElementById('venue-svg')
-  if (svg) {
-    const rect = svg.getBoundingClientRect()
-    adjustZoom(zoom.value / 1.3, rect.width / 2, rect.height / 2)
+  updateSvgRectSize()
+  if (svgRectW > 0) {
+    adjustZoom(zoom.value / 1.3, svgRectW / 2, svgRectH / 2)
   } else {
     zoom.value = Math.max(1, zoom.value / 1.3)
   }
@@ -273,28 +299,24 @@ const resetZoom = () => {
 
 // Convert SVG coordinates to screen coordinates and zoom/pan to center
 const zoomToCoords = (svgX: number, svgY: number, targetZoom = 2) => {
-  const svg = document.getElementById('venue-svg')
-  if (!svg) return
-  
-  const rect = svg.getBoundingClientRect()
-  const W = rect.width
-  const H = rect.height
+  updateSvgRectSize()
+  if (svgRectW <= 0 || svgRectH <= 0) return
   
   zoom.value = targetZoom
   
-  const scaleX = W / 598.22
-  const scaleY = H / 598.22
+  const scaleX = svgRectW / 598.22
+  const scaleY = svgRectH / 598.22
   const targetX = svgX * scaleX
   const targetY = svgY * scaleY
   
-  panX.value = W / 2 - targetX * targetZoom
-  panY.value = H / 2 - targetY * targetZoom
+  panX.value = svgRectW / 2 - targetX * targetZoom
+  panY.value = svgRectH / 2 - targetY * targetZoom
   clampPan()
 }
 
 // Handlers
 const openZone = (zoneId: string) => {
-  if (dragDistance.value > 6) return // Skip click if panned
+  if (dragDistance.value > 36) return // Skip click if panned (6px squared)
   selectedZoneId.value = zoneId
   selectedBooth.value = null
   
@@ -315,7 +337,7 @@ const openZone = (zoneId: string) => {
 }
 
 const openBooth = (booth: Booth) => {
-  if (dragDistance.value > 6) return // Skip click if panned
+  if (dragDistance.value > 36) return // Skip click if panned (6px squared)
   selectedBooth.value = booth
   selectedZoneId.value = null
   
@@ -357,10 +379,13 @@ const handleKeyDown = (e: KeyboardEvent) => {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
+  updateSvgRectSize()
+  window.addEventListener('resize', updateSvgRectSize)
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
+  window.removeEventListener('resize', updateSvgRectSize)
 })
 </script>
 
@@ -527,7 +552,7 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Sidebar / Interactive Info Deck Column Wrapper (Prevents grid row height expansion: Fulfill user feedback) -->
+        <!-- Sidebar / Interactive Info Deck Column Wrapper -->
         <div class="sidebar-column-wrapper">
           <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
             <!-- Clear Selection Close Button -->
@@ -784,7 +809,8 @@ onUnmounted(() => {
 }
 
 #venue-svg g {
-  transition: transform 0.05s ease-out; /* Smooth dragging experience */
+  /* Disabled transition for active drag/pan gesture to prevent heavy/rubbery feedback on touches */
+  transition: none;
 }
 
 #venue-svg g.smooth-pan {
