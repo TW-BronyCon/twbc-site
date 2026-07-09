@@ -211,6 +211,13 @@
     "drivingDesc": "可行經國道一號至三重交流道，往三重/蘆洲方向行駛，轉至三和路四段。周邊可停放至三和國中地下停車場。",
     "mapTitle": "阿斯生活空間地圖"
   },
+  "template": {
+    "title": "樣板頁面參考",
+    "description": "此頁面作為所有內容頁面的樣板/參考。",
+    "sectionTitle": "標準頁面區塊",
+    "paragraph": "這是展示版面配置與設計系統的範例頁面。您可以自由複製此結構來建立新頁面。此頁面採用Noto Sans TC字型、響應式網格與標準主題色彩。",
+    "button": "範例操作"
+  },
   "development": {
     "watermark": "開發中",
     "ribbon": "開發中",

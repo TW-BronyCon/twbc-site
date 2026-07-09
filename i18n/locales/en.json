@@ -210,6 +210,13 @@
     "drivingDesc": "Take Highway 1 to Sanchong Interchange, go toward Sanchong/Luzhou, and turn onto Sanhe Rd. Parking is available at the Sanchong District High School Underground Parking Lot nearby.",
     "mapTitle": "AS Life Space Map"
   },
+  "template": {
+    "title": "Template Page Reference",
+    "description": "This page serves as a boilerplate/reference for all content pages.",
+    "sectionTitle": "Standard Page Section Card",
+    "paragraph": "This is a reference page demonstrating the layout and design system. Feel free to copy this structure for any new pages. It uses Noto Sans TC, responsive grids, and standard theme colors.",
+    "button": "Sample Action"
+  },
   "development": {
     "watermark": "UNDER DEVELOPMENT",
     "ribbon": "DEV BUILD",
