@@ -11,13 +11,11 @@ useHead(() => ({
 </script>
 
 <template>
-  <div class="transport-page-root">
-    <div class="transport-page-body">
+  <div class="page-root">
+    <div class="page-body">
       <!-- Title Section -->
-      <section class="transport-hero">
-        <div class="transport-hero-header">
-          <h2>{{ t("transport.title") }}</h2>
-        </div>
+      <section class="page-hero">
+        <h2>{{ t("transport.title") }}</h2>
       </section>
 
       <!-- Transport Guide & Google Map Embed -->
@@ -75,36 +73,6 @@ useHead(() => ({
 
 <style scoped>
 /* Page Layout */
-.transport-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.transport-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.transport-hero {
-  width: min(97.5%, 76em);
-  margin: 0 auto 2.5rem auto;
-}
-
-.transport-hero-header {
-  text-align: center;
-}
-
-.transport-hero-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
-}
-
 .transport-main-section {
   width: min(97.5%, 76em);
   margin: 0 auto;
