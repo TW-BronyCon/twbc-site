@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 /**
  * Ticket Page Component
  * Handles displaying detailed ticket tiers and interactive feature comparison table.
  */
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+const isEn = computed(() => locale.value.startsWith("en"));
 
 // Page SEO metadata
 useHead({
@@ -235,7 +237,7 @@ const onMouseLeave = () => {
                           featuresList
                             .filter((f) => f.availability[index])
                             .map((f) => $t(`ticket.features.${f.key}`))
-                            .join("、")
+                            .join(isEn ? ", " : "、")
                         }}
                       </div>
                     </div>
@@ -677,7 +679,7 @@ h2 {
   width: 100%;
   max-width: 26em;
   margin: 0 auto;
-  text-align: justify;
+  text-align: center;
   word-break: break-word;
 }
 
