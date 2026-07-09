@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { booths, type Booth } from '~/data/boothData'
-import { events } from '~/data/scheduleData'
+import { events, EVENT_COLORS } from '~/data/scheduleData'
 
 const { t, locale } = useI18n()
 
@@ -22,6 +22,37 @@ const hoveredBoothId = ref<string | null>(null)
 // Helper for locale checking
 const isEn = computed(() => locale.value.startsWith('en'))
 
+// Hex color normalization helper
+function normalizeHexColor(color?: string) {
+  if (!color || typeof color !== 'string') return '#235cc9'
+  let hex = color.trim()
+  if (!hex.startsWith('#')) hex = `#${hex}`
+  if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
+    hex = `#${hex
+      .slice(1)
+      .split('')
+      .map(char => char + char)
+      .join('')}`
+  }
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return '#235cc9'
+  return hex
+}
+
+// Contrast color checker helper
+function getContrastColor(hexColor: string) {
+  let hex = hexColor.trim()
+  if (hex.startsWith('#')) hex = hex.slice(1)
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('')
+  }
+  if (hex.length !== 6) return '#222'
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+  return luminance > 0.55 ? '#222' : '#fff'
+}
+
 // Event mapping for zones
 const zoneEvents = computed(() => {
   if (!selectedZoneId.value) return []
@@ -35,12 +66,19 @@ const zoneEvents = computed(() => {
   if (!track) return []
   return events
     .filter(e => e.track === track)
-    .map(e => ({
-      title: isEn.value ? e.title.en : e.title.zh,
-      start: e.start,
-      end: e.end,
-      detail: e.detail ? (isEn.value ? e.detail.en : e.detail.zh) : ''
-    }))
+    .map(e => {
+      const rawColor = EVENT_COLORS[e.type]
+      const bg = normalizeHexColor(rawColor)
+      const text = getContrastColor(bg)
+      return {
+        title: isEn.value ? e.title.en : e.title.zh,
+        start: e.start,
+        end: e.end,
+        detail: e.detail ? (isEn.value ? e.detail.en : e.detail.zh) : '',
+        bg,
+        text
+      }
+    })
 })
 
 // Zoom and Pan States
@@ -376,7 +414,7 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="347.9" y="185.7">{{ isEn ? 'Stage' : '主舞台' }}</text>
                 </g>
 
-                <!-- Interactive Zone: Vendor Alley (Centered X=190.0 Y=310.0) -->
+                <!-- Interactive Zone: Vendor Alley -->
                 <g class="zone-group vendors-group" :class="{ active: hoveredZoneId === 'vendors' || selectedZoneId === 'vendors' }" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="openZone('vendors')">
                   <polygon class="zone-shape shape-vendors" points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"/>
                   <text class="zone-label-text" x="190.0" y="310.0">{{ isEn ? 'Vendors' : '攤位區' }}</text>
@@ -394,7 +432,7 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="347.9" y="306.7">{{ isEn ? 'Games' : '遊戲區' }}</text>
                 </g>
 
-                <!-- Interactive Zone: Exhibition (Centered X=435.0 Y=385.0) -->
+                <!-- Interactive Zone: Exhibition -->
                 <g class="zone-group exhibition-group" :class="{ active: hoveredZoneId === 'exhibition' || selectedZoneId === 'exhibition' }" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="openZone('exhibition')">
                   <polygon class="zone-shape shape-exhibition" points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"/>
                   <text class="zone-label-text" x="435.0" y="385.0">{{ isEn ? 'Exhibition' : '展示區' }}</text>
@@ -412,61 +450,61 @@ onUnmounted(() => {
                   <text class="zone-label-text" x="420.4" y="474.0">{{ isEn ? 'Check-in' : '報到處' }}</text>
                 </g>
 
-                <!-- Non-interactive Zone: Entrance (Left-aligned text to prevent right-edge clipping in English) -->
+                <!-- Non-interactive Zone: Entrance -->
                 <g class="entrance-group">
                   <polygon class="shape-entrance" points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"/>
                   <text class="zone-label-text-static" x="544.5" y="445.5">{{ isEn ? 'Entrance' : '入口' }}</text>
                 </g>
 
-                <!-- Interactive Booths Layer (Bake booths 1-10 into SVG) -->
+                <!-- Interactive Booths Layer (Hides booths dynamically if they have no active data: Fulfill user feedback) -->
                 <g id="booths-layer">
                   <!-- Booth 1 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
+                  <g v-if="booths.some(b => b.id === '1')" class="booth-group" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">1</text>
                   </g>
                   <!-- Booth 2 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '2' || selectedBooth?.id === '2' }" transform="translate(125.97, 285.52) rotate(-36.62)" @mouseover="hoveredBoothId = '2'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('2')">
+                  <g v-if="booths.some(b => b.id === '2')" class="booth-group" :class="{ active: hoveredBoothId === '2' || selectedBooth?.id === '2' }" transform="translate(125.97, 285.52) rotate(-36.62)" @mouseover="hoveredBoothId = '2'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('2')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">2</text>
                   </g>
                   <!-- Booth 3 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '3' || selectedBooth?.id === '3' }" transform="translate(152.03, 320.59) rotate(-36.62)" @mouseover="hoveredBoothId = '3'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('3')">
+                  <g v-if="booths.some(b => b.id === '3')" class="booth-group" :class="{ active: hoveredBoothId === '3' || selectedBooth?.id === '3' }" transform="translate(152.03, 320.59) rotate(-36.62)" @mouseover="hoveredBoothId = '3'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('3')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">3</text>
                   </g>
                   <!-- Booth 4 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '4' || selectedBooth?.id === '4' }" transform="translate(170.44, 345.37) rotate(-36.62)" @mouseover="hoveredBoothId = '4'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('4')">
+                  <g v-if="booths.some(b => b.id === '4')" class="booth-group" :class="{ active: hoveredBoothId === '4' || selectedBooth?.id === '4' }" transform="translate(170.44, 345.37) rotate(-36.62)" @mouseover="hoveredBoothId = '4'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('4')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">4</text>
                   </g>
                   <!-- Booth 5 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '5' || selectedBooth?.id === '5' }" transform="translate(196.5, 380.44) rotate(-36.62)" @mouseover="hoveredBoothId = '5'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('5')">
+                  <g v-if="booths.some(b => b.id === '5')" class="booth-group" :class="{ active: hoveredBoothId === '5' || selectedBooth?.id === '5' }" transform="translate(196.5, 380.44) rotate(-36.62)" @mouseover="hoveredBoothId = '5'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('5')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">5</text>
                   </g>
                   <!-- Booth 6 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '6' || selectedBooth?.id === '6' }" transform="translate(165.16, 233.38) rotate(-36.62)" @mouseover="hoveredBoothId = '6'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('6')">
+                  <g v-if="booths.some(b => b.id === '6')" class="booth-group" :class="{ active: hoveredBoothId === '6' || selectedBooth?.id === '6' }" transform="translate(165.16, 233.38) rotate(-36.62)" @mouseover="hoveredBoothId = '6'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('6')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">6</text>
                   </g>
                   <!-- Booth 7 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '7' || selectedBooth?.id === '7' }" transform="translate(183.57, 258.17) rotate(-36.62)" @mouseover="hoveredBoothId = '7'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('7')">
+                  <g v-if="booths.some(b => b.id === '7')" class="booth-group" :class="{ active: hoveredBoothId === '7' || selectedBooth?.id === '7' }" transform="translate(183.57, 258.17) rotate(-36.62)" @mouseover="hoveredBoothId = '7'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('7')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">7</text>
                   </g>
                   <!-- Booth 8 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '8' || selectedBooth?.id === '8' }" transform="translate(196.95, 209.75) rotate(-36.62)" @mouseover="hoveredBoothId = '8'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('8')">
+                  <g v-if="booths.some(b => b.id === '8')" class="booth-group" :class="{ active: hoveredBoothId === '8' || selectedBooth?.id === '8' }" transform="translate(196.95, 209.75) rotate(-36.62)" @mouseover="hoveredBoothId = '8'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('8')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">8</text>
                   </g>
                   <!-- Booth 9 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '9' || selectedBooth?.id === '9' }" transform="translate(215.37, 234.53) rotate(-36.62)" @mouseover="hoveredBoothId = '9'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('9')">
+                  <g v-if="booths.some(b => b.id === '9')" class="booth-group" :class="{ active: hoveredBoothId === '9' || selectedBooth?.id === '9' }" transform="translate(215.37, 234.53) rotate(-36.62)" @mouseover="hoveredBoothId = '9'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('9')">
                     <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">9</text>
                   </g>
                   <!-- Booth 10 -->
-                  <g class="booth-group" :class="{ active: hoveredBoothId === '10' || selectedBooth?.id === '10' }" transform="translate(212.86, 264.25) rotate(-36.62)" @mouseover="hoveredBoothId = '10'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('10')">
+                  <g v-if="booths.some(b => b.id === '10')" class="booth-group" :class="{ active: hoveredBoothId === '10' || selectedBooth?.id === '10' }" transform="translate(212.86, 264.25) rotate(-36.62)" @mouseover="hoveredBoothId = '10'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('10')">
                     <rect class="booth-rect" x="-7.72" y="-9.34" width="15.44" height="18.68" rx="2" ry="2" />
                     <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">10</text>
                   </g>
@@ -489,14 +527,14 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Sidebar / Interactive Info Deck -->
+        <!-- Sidebar / Interactive Info Deck (Stretches to map height, handles scrollbar correctly) -->
         <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
           <!-- Clear Selection Close Button -->
           <button v-if="selectedZoneId || selectedBooth" class="clear-selection-btn" type="button" @click="clearSelection" :title="t('common.close')">
             <i class="fa-solid fa-xmark"></i>
           </button>
 
-          <!-- Hover/Selection Context Info -->
+          <!-- Hover/Selection Context Info (Scrolls internally to avoid breaking layout) -->
           <div class="sidebar-content-wrapper">
             <!-- 1. Selection State: Booth -->
             <template v-if="selectedBooth">
@@ -534,8 +572,9 @@ onUnmounted(() => {
                   <div class="sidebar-section-title">{{ t('venue.modal.events') }}</div>
                   
                   <div v-if="zoneEvents.length > 0" class="events-list">
-                    <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item">
-                      <div class="event-time">🕒 {{ event.start }} - {{ event.end }}</div>
+                    <!-- Events items themed to match schedule color scheme (Fulfill user feedback) -->
+                    <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item" :style="{ borderLeftColor: event.bg, backgroundColor: event.bg + '12' }">
+                      <div class="event-time" :style="{ color: event.bg }">🕒 {{ event.start }} - {{ event.end }}</div>
                       <div class="event-title">{{ event.title }}</div>
                       <div v-if="event.detail" class="event-desc">{{ event.detail }}</div>
                     </div>
@@ -671,7 +710,7 @@ onUnmounted(() => {
   background: linear-gradient(180deg, rgba(46, 21, 56, 0.85), rgba(29, 13, 36, 0.95));
   box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, 0.15);
   transition: all 0.3s ease;
-  overflow-y: auto;
+  overflow: hidden; /* Prevent double scrollbar by locking main card container */
 }
 
 @media (min-width: 951px) {
@@ -684,6 +723,7 @@ onUnmounted(() => {
 @media (max-width: 950px) {
   .info-sidebar-card {
     min-height: 380px;
+    max-height: 500px;
   }
 }
 
@@ -1007,6 +1047,9 @@ onUnmounted(() => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Internal scrolling within stretched side panel */
+  min-height: 0; /* Flexbox safety constraint to enable internal scrollbar */
+  padding-right: 0.4rem;
 }
 
 .sidebar-placeholder {
@@ -1126,7 +1169,6 @@ onUnmounted(() => {
 }
 
 .event-item {
-  background: rgba(255, 255, 255, 0.03);
   border-left: 3px solid var(--color-gold);
   padding: 0.6rem 0.8rem;
   border-radius: 0 6px 6px 0;
@@ -1138,9 +1180,7 @@ onUnmounted(() => {
 .event-time {
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--color-gold);
   margin-bottom: 0.2rem;
-  opacity: 0.9;
 }
 
 .event-title {
