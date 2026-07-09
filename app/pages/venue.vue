@@ -416,14 +416,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="venue-page-root">
-    <div class="venue-page-body">
+  <div class="page-root">
+    <div class="page-body">
       <!-- Title Section -->
-      <section class="venue-hero">
-        <div class="venue-hero-header">
-          <h2>{{ t("venue.title") }}</h2>
-          <p>{{ t("venue.hint") }}</p>
-        </div>
+      <section class="page-hero">
+        <h2>{{ t("venue.title") }}</h2>
+        <p>{{ t("venue.hint") }}</p>
       </section>
 
       <!-- Main Layout Section -->
@@ -1343,45 +1341,6 @@ onUnmounted(() => {
 
 <style scoped>
 /* Page Layout */
-.venue-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.venue-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.venue-hero {
-  width: min(97.5%, 76em);
-  margin: 0 auto 1.5rem auto;
-}
-
-.venue-hero-header {
-  text-align: center;
-}
-
-.venue-hero-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
-}
-
-.venue-hero-header p {
-  margin: 0.15em 0;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  line-height: 1.6;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* Main map section layout */
 .venue-main-section {
   width: min(97.5%, 76em);
   max-width: 100%;
