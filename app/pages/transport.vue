@@ -61,7 +61,7 @@ useHead(() => ({
                 allowfullscreen="true" 
                 loading="lazy" 
                 referrerpolicy="no-referrer-when-downgrade"
-                title="t('transport.mapTitle')"
+                :title="t('transport.mapTitle')"
               ></iframe>
             </div>
           </div>
