@@ -9,8 +9,8 @@ export type EventType =
   | 'photo'
   | 'workshop'
   | 'vendor'
-  | 'game'
-  | 'game-special'
+  | 'social'
+  | 'social-special'
 
 export interface LocalizedText {
   zh: string
@@ -47,8 +47,8 @@ export const EVENT_COLORS: Record<EventType, string> = {
   photo: '#d9ebf5',
   workshop: '#ffaa82',
   vendor: '#d6aa03',
-  game: '#81fff9',
-  'game-special': '#149be6',
+  social: '#81fff9',
+  'social-special': '#149be6',
 }
 
 export const startHour = 9
@@ -79,7 +79,7 @@ export const columns: Column[] = [
     color: '#efefef',
   },
   {
-    key: 'game',
+    key: 'social',
     label: { zh: '交誼區', en: 'Social Area' },
     min: '7.5em',
     grow: 1.05,
@@ -265,10 +265,10 @@ export const events: TimetableEvent[] = [
   },
   {
     title: { zh: '交誼區', en: 'Social Area' },
-    track: 'game',
+    track: 'social',
     start: '10:30',
     end: '12:00',
-    type: 'game',
+    type: 'social',
     detail: {
       zh: '擁有大桌及椅子的區域，可以和其他參加者一起聊天或玩各種桌遊與互動遊戲。',
       en: 'The area features large tables and chairs where participants can chat or play various board games and interactive games.',
@@ -279,10 +279,10 @@ export const events: TimetableEvent[] = [
   //    zh: '誰是幻形靈\n桌遊時間',
   //    en: 'Who Is the Changeling?\nBoard Game Time',
   //  },
-  //  track: 'game',
+  //  track: 'social',
   //  start: '12:00',
   //  end: '13:00',
-  //  type: 'game-special',
+  //  type: 'social-special',
   //  detail: {
   //    zh: '一起進行陣營與推理類桌遊，找出隱藏在人群中的幻形靈。',
   //    en: 'Play a social deduction board game and find the changeling hidden among the group.',
@@ -290,10 +290,10 @@ export const events: TimetableEvent[] = [
   //},
   {
     title: { zh: '交誼區', en: 'Social Area' },
-    track: 'game',
+    track: 'social',
     start: '13:00',
     end: '17:00',
-    type: 'game',
+    type: 'social',
     detail: {
       zh: '擁有大桌及椅子的區域，可以和其他參加者一起聊天或玩各種桌遊與互動遊戲。',
       en: 'The area features large tables and chairs where participants can chat or play various board games and interactive games.',
