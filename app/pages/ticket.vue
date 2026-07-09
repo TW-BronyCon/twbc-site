@@ -409,7 +409,6 @@ body::before {
 
 /* ===== 標題 ===== */
 h1 {
-  font-family: "LXGW WenKai Mono TC", monospace;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.15;
   text-align: center;
@@ -423,7 +422,6 @@ h1 {
 }
 
 h2 {
-  font-family: "LXGW WenKai Mono TC", monospace;
   font-size: clamp(1.1rem, 2vw, 1.4rem);
   text-align: center;
   color: var(--color-gold-hover);
@@ -452,7 +450,6 @@ h2 {
   min-width: 9.5rem;
   padding: 0.75em 1.5em;
   font-size: 1rem;
-  font-family: "LXGW WenKai Mono TC", monospace;
   color: var(--color-gold-hover);
   background: linear-gradient(
     180deg,
@@ -642,7 +639,6 @@ h2 {
 .ticket-title {
   width: 100%;
   margin-bottom: 0.25rem;
-  font-family: "LXGW WenKai Mono TC", monospace;
   font-size: clamp(1.6rem, 2vw, 2rem);
   line-height: 1.2;
   text-align: center;
@@ -664,7 +660,6 @@ h2 {
 .description {
   width: 100%;
   margin-top: 0.3rem;
-  font-family: "LXGW WenKai Mono TC", monospace;
   font-size: 1.04rem;
   line-height: 1.7;
   color: var(--color-paper-text);
@@ -750,7 +745,6 @@ h2 {
   border-collapse: collapse;
   table-layout: fixed;
   color: var(--color-paper-text);
-  font-family: "LXGW WenKai Mono TC", monospace;
 }
 
 .compare-table thead th {
@@ -1123,7 +1117,6 @@ h2 {
   border: 1px solid rgba(211, 47, 47, 0.5);
   border-radius: 0.75rem;
   color: #ffcdd2;
-  font-family: "LXGW WenKai Mono TC", monospace;
   font-size: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
