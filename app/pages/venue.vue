@@ -653,7 +653,6 @@ onUnmounted(() => {
   min-height: auto;
   padding-top: clamp(4.5rem, 7vw, 6.5rem);
   padding-bottom: 4rem;
-  font-family: "LXGW WenKai Mono TC", monospace;
   --color-font: #efefef;
 }
 

@@ -6,7 +6,7 @@ definePageMeta({
 })
 
 useHead(() => ({
-  title: t('venue.transport.title'),
+  title: t('transport.title'),
 }))
 </script>
 
@@ -16,7 +16,7 @@ useHead(() => ({
       <!-- Title Section -->
       <section class="transport-hero">
         <div class="transport-hero-header">
-          <h2>{{ t('venue.transport.title') }}</h2>
+          <h2>{{ t('transport.title') }}</h2>
         </div>
       </section>
 
@@ -28,24 +28,24 @@ useHead(() => ({
             <div class="transport-card">
               <div class="card-icon"><i class="fa-solid fa-train-subway"></i></div>
               <div class="card-text">
-                <h5>{{ t('venue.transport.mrt') }}</h5>
-                <p v-html="t('venue.transport.mrtDesc')"></p>
+                <h5>{{ t('transport.mrt') }}</h5>
+                <p v-html="t('transport.mrtDesc')"></p>
               </div>
             </div>
 
             <div class="transport-card">
               <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
               <div class="card-text">
-                <h5>{{ t('venue.transport.bus') }}</h5>
-                <p>{{ t('venue.transport.busDesc') }}</p>
+                <h5>{{ t('transport.bus') }}</h5>
+                <p>{{ t('transport.busDesc') }}</p>
               </div>
             </div>
 
             <div class="transport-card">
               <div class="card-icon"><i class="fa-solid fa-car"></i></div>
               <div class="card-text">
-                <h5>{{ t('venue.transport.driving') }}</h5>
-                <p>{{ t('venue.transport.drivingDesc') }}</p>
+                <h5>{{ t('transport.driving') }}</h5>
+                <p>{{ t('transport.drivingDesc') }}</p>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@ useHead(() => ({
                 allowfullscreen="true" 
                 loading="lazy" 
                 referrerpolicy="no-referrer-when-downgrade"
-                title="AS Life Space Map"
+                title="t('transport.mapTitle')"
               ></iframe>
             </div>
           </div>
@@ -78,7 +78,6 @@ useHead(() => ({
   min-height: auto;
   padding-top: clamp(4.5rem, 7vw, 6.5rem);
   padding-bottom: 4rem;
-  font-family: "LXGW WenKai Mono TC", monospace;
   --color-font: #efefef;
 }
 
