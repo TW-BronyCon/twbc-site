@@ -454,8 +454,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="legacy-page-root">
-    <div class="legacy-page-body">
+  <div class="page-root">
+    <div class="page-body">
       <section class="expo-tt">
         <div class="expo-tt-header">
           <h2>{{ t("schedule.title") }}</h2>
@@ -577,18 +577,6 @@ onUnmounted(() => {
 
 <style scoped>
 /* Scoped styles for Schedule Page */
-.legacy-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
-}
 
 .expo-tt {
   width: min(97.5%, 76em);
