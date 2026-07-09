@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const { t, tm, locale, locales } = useI18n()
-const localePath = useLocalePath()
-const switchLocalePath = useSwitchLocalePath()
+const { t, tm, locale, locales } = useI18n();
+const localePath = useLocalePath();
+const switchLocalePath = useSwitchLocalePath();
 
 const partners = [
   {
-    name: 'TWBC',
-    logo: '/img/text-logo-clear.avif',
-    url: '/',
+    name: "TWBC",
+    logo: "/img/text-logo-clear.avif",
+    url: "/",
     internal: true,
-    altKey: 'home.footer.logoAlt'
+    altKey: "home.footer.logoAlt",
   },
   // {
   //   name: 'Future Con',
@@ -19,49 +19,55 @@ const partners = [
   //   url: 'https://example.com',
   //   internal: false
   // }
-]
+];
 
 // Quote Logic
 const quotes = computed(() => {
   // Method 1: Try tm (translated message)
-  const raw = tm('home.quotes')
-  let list: any[] = []
-  
-  if (raw && typeof raw !== 'string') {
-    list = Array.isArray(raw) ? raw : Object.values(raw)
+  const raw = tm("home.quotes") as any;
+  let list: any[] = [];
+
+  if (raw && typeof raw !== "string") {
+    list = Array.isArray(raw) ? raw : Object.values(raw);
   }
 
   // Method 2: Fallback to t-loop if Method 1 returned nothing
   if (list.length === 0) {
-    let i = 0
+    let i = 0;
     while (true) {
-      const key = `home.quotes.${i}`
-      const val = t(key)
-      if (val === key) break
-      list.push(val)
-      i++
-      if (i > 100) break // Safety break
+      const key = `home.quotes.${i}`;
+      const val = t(key);
+      if (val === key) break;
+      list.push(val);
+      i++;
+      if (i > 100) break; // Safety break
     }
   }
-  
-  return list.map(q => {
-    // If it's already a string, return it
-    if (typeof q === 'string') return q
-    // If it's a function (some i18n setups return message functions), call it
-    if (typeof q === 'function') return q()
-    // If it's an object, try to extract the message
-    if (q && typeof q === 'object') {
-      // Handle compiled message objects (body.static)
-      if (q.body && typeof q.body.static === 'string') return q.body.static
-      // Handle cases where static is at the top level
-      if (typeof q.static === 'string') return q.static
-      // Common properties in other i18n message formats
-      return (q as any).value || (q as any).b || (q as any).v || String(q)
-    }
-    return String(q || '')
-  }).filter(q => !!q && q.trim() !== '')
-})
-const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quotesLoading'))
+
+  return list
+    .map((q) => {
+      // If it's already a string, return it
+      if (typeof q === "string") return q;
+      // If it's a function (some i18n setups return message functions), call it
+      if (typeof q === "function") return q();
+      // If it's an object, try to extract the message
+      if (q && typeof q === "object") {
+        // Handle compiled message objects (body.static)
+        if (q.body && typeof q.body.static === "string") return q.body.static;
+        // Handle cases where static is at the top level
+        if (typeof q.static === "string") return q.static;
+        // Common properties in other i18n message formats
+        return (q as any).value || (q as any).b || (q as any).v || String(q);
+      }
+      return String(q || "");
+    })
+    .filter((q) => !!q && q.trim() !== "");
+});
+const { currentQuote, isQuoteFadingOut } = useQuotes(
+  quotes,
+  10000,
+  t("home.quotesLoading"),
+);
 </script>
 
 <template>
@@ -72,18 +78,26 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
           <div class="footer-logos">
             <template v-for="partner in partners" :key="partner.name">
               <NuxtLink v-if="partner.internal" :to="localePath(partner.url)">
-                <img :src="partner.logo" :alt="partner.altKey ? $t(partner.altKey) : partner.name" class="footer-logo">
+                <img
+                  :src="partner.logo"
+                  :alt="partner.altKey ? $t(partner.altKey) : partner.name"
+                  class="footer-logo"
+                />
               </NuxtLink>
               <a v-else :href="partner.url" target="_blank">
-                <img :src="partner.logo" :alt="partner.name" class="footer-logo">
+                <img
+                  :src="partner.logo"
+                  :alt="partner.name"
+                  class="footer-logo"
+                />
               </a>
             </template>
           </div>
 
           <div class="footer-lang-switcher">
-            <NuxtLink 
-              v-for="item in (locales as any)" 
-              :key="item.code" 
+            <NuxtLink
+              v-for="item in locales as any"
+              :key="item.code"
               :to="switchLocalePath(item.code)"
               :class="{ active: locale === item.code }"
               class="lang-link"
@@ -92,13 +106,43 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
             </NuxtLink>
           </div>
         </div>
-        
+
         <div class="footer-social">
-          <a href="https://www.youtube.com/@TWBronyCon2" target="_blank" aria-label="YouTube" class="social-icon youtube"><i class="fa-brands fa-youtube"></i></a>
-          <a href="https://discord.gg/k83NMPUKxG" target="_blank" aria-label="Discord" class="social-icon discord"><i class="fa-brands fa-discord"></i></a>
-          <a href="https://www.facebook.com/profile.php?id=61583292256078" target="_blank" aria-label="Facebook" class="social-icon facebook"><i class="fa-brands fa-facebook"></i></a>
-          <a href="https://x.com/TWBronycon2" target="_blank" aria-label="X (Twitter)" class="social-icon twitter"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.instagram.com/taiwanbronycon2" target="_blank" aria-label="Instagram" class="social-icon instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a
+            href="https://www.youtube.com/@TWBronyCon2"
+            target="_blank"
+            aria-label="YouTube"
+            class="social-icon youtube"
+            ><i class="fa-brands fa-youtube"></i
+          ></a>
+          <a
+            href="https://discord.gg/k83NMPUKxG"
+            target="_blank"
+            aria-label="Discord"
+            class="social-icon discord"
+            ><i class="fa-brands fa-discord"></i
+          ></a>
+          <a
+            href="https://www.facebook.com/profile.php?id=61583292256078"
+            target="_blank"
+            aria-label="Facebook"
+            class="social-icon facebook"
+            ><i class="fa-brands fa-facebook"></i
+          ></a>
+          <a
+            href="https://x.com/TWBronycon2"
+            target="_blank"
+            aria-label="X (Twitter)"
+            class="social-icon twitter"
+            ><i class="fa-brands fa-x-twitter"></i
+          ></a>
+          <a
+            href="https://www.instagram.com/taiwanbronycon2"
+            target="_blank"
+            aria-label="Instagram"
+            class="social-icon instagram"
+            ><i class="fa-brands fa-instagram"></i
+          ></a>
         </div>
       </div>
 
@@ -106,9 +150,12 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
 
       <div class="footer-bottom">
         <div class="footer-copyright">
-          <p>{{ $t('home.footer.copyrightNotice') }} {{ $t('home.footer.copyright') }}</p>
+          <p>
+            {{ $t("home.footer.copyrightNotice") }}
+            {{ $t("home.footer.copyright") }}
+          </p>
         </div>
-        
+
         <div class="footer-quotes">
           <p :class="['quote-text', isQuoteFadingOut ? 'fade-out' : 'fade-in']">
             {{ currentQuote }}
@@ -214,11 +261,21 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(quotes, 10000, t('home.quot
   color: #fff;
 }
 
-.social-icon.youtube:hover { color: #ff0000; }
-.social-icon.discord:hover { color: #5865F2; }
-.social-icon.facebook:hover { color: #1877F2; }
-.social-icon.twitter:hover { color: #1DA1F2; }
-.social-icon.instagram:hover { color: #E4405F; }
+.social-icon.youtube:hover {
+  color: #ff0000;
+}
+.social-icon.discord:hover {
+  color: #5865f2;
+}
+.social-icon.facebook:hover {
+  color: #1877f2;
+}
+.social-icon.twitter:hover {
+  color: #1da1f2;
+}
+.social-icon.instagram:hover {
+  color: #e4405f;
+}
 
 .footer-divider {
   height: 1px;

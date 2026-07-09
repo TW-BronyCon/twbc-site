@@ -1,61 +1,127 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from "vue";
 
-const localePath = useLocalePath()
+const localePath = useLocalePath();
 
-const isNavOpen = ref(false)
-const openSubmenu = ref<string | null>(null)
+const isNavOpen = ref(false);
+const openSubmenu = ref<string | null>(null);
 
 const toggleNav = () => {
-  isNavOpen.value = !isNavOpen.value
-  if (!isNavOpen.value) openSubmenu.value = null
-}
+  isNavOpen.value = !isNavOpen.value;
+  if (!isNavOpen.value) openSubmenu.value = null;
+};
 
 const toggleSubmenu = (name: string) => {
-  openSubmenu.value = openSubmenu.value === name ? null : name
-}
+  openSubmenu.value = openSubmenu.value === name ? null : name;
+};
 
 const closeMenus = (e: MouseEvent) => {
-  const target = e.target as HTMLElement
-  if (!target.closest('.top-nav') && !target.closest('.nav-toggle')) {
-    isNavOpen.value = false
-    openSubmenu.value = null
+  const target = e.target as HTMLElement;
+  if (!target.closest(".top-nav") && !target.closest(".nav-toggle")) {
+    isNavOpen.value = false;
+    openSubmenu.value = null;
   }
-}
+};
 
-onMounted(() => document.addEventListener('click', closeMenus))
-onUnmounted(() => document.removeEventListener('click', closeMenus))
+onMounted(() => document.addEventListener("click", closeMenus));
+onUnmounted(() => document.removeEventListener("click", closeMenus));
 </script>
 
 <template>
-  <button type="button" class="nav-toggle" :class="{ active: isNavOpen }" :aria-expanded="isNavOpen" aria-label="Toggle navigation menu" @click.stop="toggleNav">
+  <button
+    type="button"
+    class="nav-toggle"
+    :class="{ active: isNavOpen }"
+    :aria-expanded="isNavOpen"
+    aria-label="Toggle navigation menu"
+    @click.stop="toggleNav"
+  >
     <span></span>
     <span></span>
     <span></span>
   </button>
 
   <nav class="top-nav" :class="{ open: isNavOpen }">
-    <NuxtLink :to="localePath('/')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.home') }}</NuxtLink>
-    <NuxtLink :to="localePath('/news')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.news') }}</NuxtLink>
-    <NuxtLink :to="localePath('/ticket')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.ticket') }}</NuxtLink>
-    <NuxtLink :to="localePath('/schedule')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.schedule') }}</NuxtLink>
-    
-    
-    <ul class="menu" style="transform: translateY(-1px);">
+    <NuxtLink
+      :to="localePath('/')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.home") }}</NuxtLink
+    >
+    <NuxtLink
+      :to="localePath('/news')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.news") }}</NuxtLink
+    >
+    <NuxtLink
+      :to="localePath('/ticket')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.ticket") }}</NuxtLink
+    >
+    <NuxtLink
+      :to="localePath('/schedule')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.schedule") }}</NuxtLink
+    >
+
+    <ul class="menu" style="transform: translateY(-1px)">
       <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
-        <button @click="toggleSubmenu('apply')">{{ $t('menu.apply') }}</button>
+        <button @click="toggleSubmenu('apply')">{{ $t("menu.apply") }}</button>
         <ul class="submenu">
-          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform" target="_blank" rel="noopener noreferrer">{{ $t('apply.volunteer') }}</a></li>
-          <li><span class="submenu-disabled">{{ $t('apply.vendor') }}</span></li>
-          <li><span class="submenu-disabled">{{ $t('apply.event') }}</span></li>
+          <li>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ $t("apply.volunteer") }}</a
+            >
+          </li>
+          <li>
+            <span class="submenu-disabled">{{ $t("apply.vendor") }}</span>
+          </li>
+          <li>
+            <span class="submenu-disabled">{{ $t("apply.event") }}</span>
+          </li>
         </ul>
       </li>
     </ul>
-    <NuxtLink :to="localePath('/venue')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.venue') }}</NuxtLink>
-    <NuxtLink :to="localePath('/transport')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.transport') }}</NuxtLink>
-    <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.about')
-      }}</NuxtLink>
-    <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
+    <NuxtLink
+      :to="localePath('/venue')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.venue") }}</NuxtLink
+    >
+    <NuxtLink
+      :to="localePath('/transport')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.transport") }}</NuxtLink
+    >
+    <NuxtLink
+      v-if="false"
+      :to="localePath('/about')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.about") }}</NuxtLink
+    >
+    <span v-else class="nav-coming-soon">{{ $t("tba.about") }}</span>
   </nav>
 </template>
 
@@ -70,26 +136,27 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(.5em, 1.6vw, 1.5em);
+  gap: clamp(0.5em, 1.6vw, 1.5em);
 
   min-height: clamp(2em, 3.2vw, 3em);
-  padding: .15em clamp(.7em, 2.5vw, 1.7em) clamp(0em, 2vw, .2em) clamp(1em, 2.5vw, 2em);
+  padding: 0.15em clamp(0.7em, 2.5vw, 1.7em) clamp(0em, 2vw, 0.2em)
+    clamp(1em, 2.5vw, 2em);
 
   background: var(--color-nav-bg);
   border: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
   border-top: 0;
   border-radius: 0 0 1em 1em;
 
-  backdrop-filter: blur(.6em);
-  -webkit-backdrop-filter: blur(.6em);
+  backdrop-filter: blur(0.6em);
+  -webkit-backdrop-filter: blur(0.6em);
 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .nav-coming-soon {
-  color: rgba(255,255,255,.45);
+  color: rgba(255, 255, 255, 0.45);
 
-  font-size: clamp(.86em, 1.35vw, 1.02em);
+  font-size: clamp(0.86em, 1.35vw, 1.02em);
 
   text-shadow: none;
 
@@ -100,7 +167,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 }
 
 .nav-coming-soon:hover {
-  color: rgba(255,255,255,.45);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .top-nav a,
@@ -108,16 +175,16 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   position: relative;
 
   color: #fff;
-  font-size: clamp(.86em, 1.35vw, 1.02em);
+  font-size: clamp(0.86em, 1.35vw, 1.02em);
   text-decoration: none;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, .65);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
 
   white-space: nowrap;
 }
 
 .top-nav a::after,
 .top-nav .menu-group > button::after {
-  content: '';
+  content: "";
 
   position: absolute;
   left: 50%;
@@ -129,8 +196,8 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   background: var(--color-gold);
 
   transition:
-    width .25s ease,
-    left .25s ease;
+    width 0.25s ease,
+    left 0.25s ease;
 }
 
 .top-nav > a:hover::after,
@@ -157,7 +224,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 .top-nav .menu {
   display: flex;
   align-items: center;
-  gap: clamp(.5em, 2vw, 2em);
+  gap: clamp(0.5em, 2vw, 2em);
 
   margin: 0;
   padding: 0;
@@ -183,36 +250,36 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 
   min-width: 8em;
 
-  margin-top: .5em;
-  padding: .5em 0;
+  margin-top: 0.5em;
+  padding: 0.5em 0;
 
   list-style: none;
 
   background: color-mix(in srgb, var(--color-nav-bg) 88%, #000);
   border: 1px solid color-mix(in srgb, var(--color-gold) 14%, transparent);
-  border-radius: .6em;
+  border-radius: 0.6em;
 
-  backdrop-filter: blur(.6em);
-  -webkit-backdrop-filter: blur(.6em);
+  backdrop-filter: blur(0.6em);
+  -webkit-backdrop-filter: blur(0.6em);
 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
 
-  transition: all .25s ease;
+  transition: all 0.25s ease;
 }
 
 .top-nav .submenu li a,
 .top-nav .submenu li .submenu-disabled {
   display: block;
-  padding: .6em 1em;
-  font-size: .95em;
+  padding: 0.6em 1em;
+  font-size: 0.95em;
 }
 
 .top-nav .submenu li .submenu-disabled {
-  color: rgba(255, 255, 255, .45);
+  color: rgba(255, 255, 255, 0.45);
   cursor: default;
   user-select: none;
   white-space: nowrap;
@@ -224,8 +291,6 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   transform: translateY(0);
   pointer-events: auto;
 }
-
-
 
 .nav-toggle {
   display: none;
@@ -249,7 +314,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
     border-radius: 999px;
 
-    box-shadow: 0 8px 22px rgba(0, 0, 0, .3);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
   }
 
   .nav-toggle span {
@@ -261,7 +326,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     background: #fff;
     border-radius: 999px;
 
-    transition: .25s ease;
+    transition: 0.25s ease;
   }
 
   .nav-toggle.active span:nth-child(1) {
@@ -283,11 +348,11 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
 
     width: min(280px, calc(100vw - 2rem));
 
-    padding: .9rem;
+    padding: 0.9rem;
 
     flex-direction: column;
     align-items: stretch;
-    gap: .25rem;
+    gap: 0.25rem;
 
     border-radius: 1rem;
 
@@ -310,7 +375,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   .top-nav .submenu li .submenu-disabled {
     display: block;
 
-    padding: .55rem .7rem;
+    padding: 0.55rem 0.7rem;
 
     font-size: 1rem;
   }
@@ -327,7 +392,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   .top-nav .submenu {
     position: static;
 
-    margin: .1rem 0 .3rem .75rem;
+    margin: 0.1rem 0 0.3rem 0.75rem;
 
     display: none;
 
@@ -335,7 +400,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     transform: none;
     pointer-events: auto;
 
-    background: rgba(255, 255, 255, .06);
+    background: rgba(255, 255, 255, 0.06);
 
     box-shadow: none;
   }
@@ -343,6 +408,5 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
   .top-nav .menu-group.open .submenu {
     display: block;
   }
-
 }
 </style>

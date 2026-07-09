@@ -8,7 +8,10 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxi typecheck",
+    "format:check": "prettier --check .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@nuxtjs/i18n": "^10.2.4",
@@ -18,6 +21,9 @@
     "vue-router": "^5.0.4"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.21"
+    "@types/leaflet": "^1.9.21",
+    "prettier": "^3.9.4",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.7"
   }
 }

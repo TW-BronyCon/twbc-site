@@ -24,6 +24,13 @@ This document defines guidelines and instructions for AI agents working on the T
 - **Documentation Preservation**:
   - Maintain documentation integrity. Keep all existing comments, docstrings, and context-providing code annotations intact unless they are directly replaced by new logic.
 
+## Code Formatting
+
+- **Prettier**:
+  - The project uses Prettier to enforce consistent code style.
+  - Run `npm run format` to automatically format all files in the codebase.
+  - Run `npm run format:check` to check if files conform to the style guide (used in the CI pipeline).
+
 ## Design Language & Styling
 
 - **Vanilla CSS**:

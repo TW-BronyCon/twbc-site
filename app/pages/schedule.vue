@@ -1,46 +1,53 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { columns as rawColumns, events as rawEvents, startHour, endHour, slotMinutes, EVENT_COLORS } from '~/data/scheduleData'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import {
+  columns as rawColumns,
+  events as rawEvents,
+  startHour,
+  endHour,
+  slotMinutes,
+  EVENT_COLORS,
+} from "~/data/scheduleData";
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 definePageMeta({
-  underDevelopment: true
-})
+  underDevelopment: true,
+});
 
 useHead(() => ({
-  title: t('schedule.title'),
-}))
+  title: t("schedule.title"),
+}));
 
-const gridContainer = ref<HTMLElement | null>(null)
-const activeModalIndex = ref<number | null>(null)
-const focusedIndex = ref<number>(-1)
+const gridContainer = ref<HTMLElement | null>(null);
+const activeModalIndex = ref<number | null>(null);
+const focusedIndex = ref<number>(-1);
 
 const columns = computed(() => {
-  const isEn = locale.value.startsWith('en')
-  return rawColumns.map(col => ({
+  const isEn = locale.value.startsWith("en");
+  return rawColumns.map((col) => ({
     key: col.key,
-    label: col.label ? (isEn ? col.label.en : col.label.zh) : '',
+    label: col.label ? (isEn ? col.label.en : col.label.zh) : "",
     min: col.min,
     grow: col.grow,
     color: col.color,
-  }))
-})
+  }));
+});
 
 function formatHourLabel(hour: number) {
-  const h = Math.floor(hour)
-  const m = Math.round((hour - h) * 60)
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  const h = Math.floor(hour);
+  const m = Math.round((hour - h) * 60);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
 const timeLabels = computed(() => {
-  const labels = []
-  const rightTimeColumn = rawColumns.length
+  const labels = [];
+  const rightTimeColumn = rawColumns.length;
 
   for (let h = startHour; h < endHour; h++) {
-    const hourMinutes = h * 60
-    const startMinutes = startHour * 60
-    const hourRow = 2 + Math.round((hourMinutes - startMinutes) / slotMinutes)
+    const hourMinutes = h * 60;
+    const startMinutes = startHour * 60;
+    const hourRow = 2 + Math.round((hourMinutes - startMinutes) / slotMinutes);
 
     labels.push({
       key: `hour-${h}`,
@@ -48,12 +55,13 @@ const timeLabels = computed(() => {
       col: 1,
       row: hourRow,
       isHalf: false,
-    })
+    });
 
-    const halfHour = h + 0.5
+    const halfHour = h + 0.5;
     if (halfHour < endHour) {
-      const halfMinutes = halfHour * 60
-      const halfRow = 2 + Math.round((halfMinutes - startMinutes) / slotMinutes)
+      const halfMinutes = halfHour * 60;
+      const halfRow =
+        2 + Math.round((halfMinutes - startMinutes) / slotMinutes);
 
       labels.push({
         key: `half-${h}`,
@@ -61,102 +69,116 @@ const timeLabels = computed(() => {
         col: rightTimeColumn,
         row: halfRow,
         isHalf: true,
-      })
+      });
     }
   }
-  return labels
-})
+  return labels;
+});
 
 function timeToMinutes(time: string) {
-  const [h = 0, m = 0] = String(time).split(':').map(Number)
-  return h * 60 + m
+  const [h = 0, m = 0] = String(time).split(":").map(Number);
+  return h * 60 + m;
 }
 
 function timeToSlotIndex(time: string) {
-  const startMinutes = startHour * 60
-  return Math.round((timeToMinutes(time) - startMinutes) / slotMinutes)
+  const startMinutes = startHour * 60;
+  return Math.round((timeToMinutes(time) - startMinutes) / slotMinutes);
 }
 
 function timeToGridRowStart(time: string) {
-  return 2 + timeToSlotIndex(time)
+  return 2 + timeToSlotIndex(time);
 }
 
 function timeSpanSlots(start: string, end: string) {
-  return Math.max(1, timeToSlotIndex(end) - timeToSlotIndex(start))
+  return Math.max(1, timeToSlotIndex(end) - timeToSlotIndex(start));
 }
 
 function getColumnIndex(trackKey: string) {
-  const index = rawColumns.findIndex(col => col.key === trackKey)
-  return index >= 0 ? index + 1 : 2
+  const index = rawColumns.findIndex((col) => col.key === trackKey);
+  return index >= 0 ? index + 1 : 2;
 }
 
 function normalizeHexColor(color?: string) {
-  if (!color || typeof color !== 'string') return '#235cc9'
+  if (!color || typeof color !== "string") return "#235cc9";
 
-  let hex = color.trim()
-  if (!hex.startsWith('#')) hex = `#${hex}`
+  let hex = color.trim();
+  if (!hex.startsWith("#")) hex = `#${hex}`;
 
   if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
     hex = `#${hex
       .slice(1)
-      .split('')
-      .map(char => char + char)
-      .join('')}`
+      .split("")
+      .map((char) => char + char)
+      .join("")}`;
   }
 
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return '#235cc9'
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return "#235cc9";
 
-  return hex
+  return hex;
 }
 
 function getContrastColor(hexColor: string) {
-  let hex = hexColor.trim()
-  if (hex.startsWith('#')) hex = hex.slice(1)
+  let hex = hexColor.trim();
+  if (hex.startsWith("#")) hex = hex.slice(1);
 
   if (hex.length === 3) {
-    hex = hex.split('').map(c => c + c).join('')
+    hex = hex
+      .split("")
+      .map((c) => c + c)
+      .join("");
   }
 
-  if (hex.length !== 6) return '#222'
+  if (hex.length !== 6) return "#222";
 
-  const r = parseInt(hex.substring(0, 2), 16)
-  const g = parseInt(hex.substring(2, 4), 16)
-  const b = parseInt(hex.substring(4, 6), 16)
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
 
   // Relative luminance formula (ITU-R BT.709)
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
-  return luminance > 0.55 ? '#222' : '#fff'
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.55 ? "#222" : "#fff";
 }
 
 function getDynamicFontSize(rowSpan: number) {
-  if (rowSpan <= 2) return '0.72rem'
-  if (rowSpan <= 4) return '0.84rem'
-  if (rowSpan <= 6) return '0.94rem'
-  return 'inherit'
+  if (rowSpan <= 2) return "0.72rem";
+  if (rowSpan <= 4) return "0.84rem";
+  if (rowSpan <= 6) return "0.94rem";
+  return "inherit";
 }
 
 const processedEvents = computed(() => {
-  const isEn = locale.value.startsWith('en')
+  const isEn = locale.value.startsWith("en");
   return rawEvents.map((event, index) => {
-    const columnIndex = getColumnIndex(event.track)
-    const startRow = timeToGridRowStart(event.start)
-    const rowSpan = timeSpanSlots(event.start, event.end)
-    const isCompact = rowSpan <= 5
+    const columnIndex = getColumnIndex(event.track);
+    const startRow = timeToGridRowStart(event.start);
+    const rowSpan = timeSpanSlots(event.start, event.end);
+    const isCompact = rowSpan <= 5;
 
-    const rawColor = EVENT_COLORS[event.type]
-    const eventColor = normalizeHexColor(rawColor)
-    const textColor = getContrastColor(eventColor)
-    const fontSize = getDynamicFontSize(rowSpan)
-    const titleText = isEn ? event.title.en : event.title.zh
-    const detailText = event.detail ? (isEn ? event.detail.en : event.detail.zh) : ''
-    const formattedTitle = titleText.replace(/\n/g, '<br>')
+    const rawColor = EVENT_COLORS[event.type];
+    const eventColor = normalizeHexColor(rawColor);
+    const textColor = getContrastColor(eventColor);
+    const fontSize = getDynamicFontSize(rowSpan);
+    const titleText = isEn ? event.title.en : event.title.zh;
+    const detailText = event.detail
+      ? isEn
+        ? event.detail.en
+        : event.detail.zh
+      : "";
+    const formattedTitle = titleText.replace(/\n/g, "<br>");
 
-    const duration = ((timeToMinutes(event.end) - timeToMinutes(event.start)) / 60)
+    const duration = (
+      (timeToMinutes(event.end) - timeToMinutes(event.start)) /
+      60
+    )
       .toFixed(1)
-      .replace('.0', '')
+      .replace(".0", "");
 
-    const matchingCol = rawColumns.find(col => col.key === event.track)
-    const areaLabel = matchingCol?.label ? (isEn ? matchingCol.label.en : matchingCol.label.zh) : (matchingCol?.key || '')
+    const matchingCol = rawColumns.find((col) => col.key === event.track);
+    const areaLabel = matchingCol?.label
+      ? isEn
+        ? matchingCol.label.en
+        : matchingCol.label.zh
+      : matchingCol?.key || "";
 
     return {
       ...event,
@@ -173,256 +195,262 @@ const processedEvents = computed(() => {
       fontSize,
       duration,
       area: areaLabel,
-    }
-  })
-})
+    };
+  });
+});
 
 const gridStyles = computed(() => {
-  const slotsPerHour = 60 / slotMinutes
-  const totalHours = endHour - startHour
-  const totalSlots = Math.round(totalHours * slotsPerHour)
+  const slotsPerHour = 60 / slotMinutes;
+  const totalHours = endHour - startHour;
+  const totalSlots = Math.round(totalHours * slotsPerHour);
 
   const gridColumns = rawColumns
-    .map(col => {
-      const min = col.min || '8em'
-      if (col.key === 'time-left' || col.key === 'time-right') {
-        return min
+    .map((col) => {
+      const min = col.min || "8em";
+      if (col.key === "time-left" || col.key === "time-right") {
+        return min;
       }
-      return `minmax(${min}, ${col.grow || 1}fr)`
+      return `minmax(${min}, ${col.grow || 1}fr)`;
     })
-    .join(' ')
+    .join(" ");
 
-  const contentStart = 2
-  const contentEnd = rawColumns.length
+  const contentStart = 2;
+  const contentEnd = rawColumns.length;
 
   return {
-    '--columns': gridColumns,
-    '--rows': `4em repeat(${totalSlots}, var(--slot-h))`,
-    '--content-start': String(contentStart),
-    '--content-end': String(contentEnd),
-  }
-})
+    "--columns": gridColumns,
+    "--rows": `4em repeat(${totalSlots}, var(--slot-h))`,
+    "--content-start": String(contentStart),
+    "--content-end": String(contentEnd),
+  };
+});
 
 const activeModalEvent = computed(() => {
-  if (activeModalIndex.value === null) return null
-  return processedEvents.value[activeModalIndex.value] || null
-})
+  if (activeModalIndex.value === null) return null;
+  return processedEvents.value[activeModalIndex.value] || null;
+});
 
 function getEventElement(index: number) {
-  return gridContainer.value?.querySelector<HTMLElement>(`[data-index="${index}"]`)
+  return gridContainer.value?.querySelector<HTMLElement>(
+    `[data-index="${index}"]`,
+  );
 }
 
 function scrollToFocusedEvent() {
-  if (focusedIndex.value < 0) return
-  const el = getEventElement(focusedIndex.value)
-  if (!el) return
+  if (focusedIndex.value < 0) return;
+  const el = getEventElement(focusedIndex.value);
+  if (!el) return;
   el.scrollIntoView({
-    block: 'nearest',
-    inline: 'nearest',
-    behavior: 'smooth',
-  })
+    block: "nearest",
+    inline: "nearest",
+    behavior: "smooth",
+  });
 }
 
-function moveFocus(direction: 'up' | 'down' | 'left' | 'right') {
-  const selectable = processedEvents.value.filter(e => e.PointerEvent !== false)
-  if (!selectable.length) return
+function moveFocus(direction: "up" | "down" | "left" | "right") {
+  const selectable = processedEvents.value.filter(
+    (e) => e.PointerEvent !== false,
+  );
+  if (!selectable.length) return;
 
   if (focusedIndex.value < 0) {
-    focusedIndex.value = selectable[0].index
-    scrollToFocusedEvent()
-    return
+    focusedIndex.value = selectable[0]!.index;
+    scrollToFocusedEvent();
+    return;
   }
 
-  const currentEl = getEventElement(focusedIndex.value)
-  if (!currentEl) return
+  const currentEl = getEventElement(focusedIndex.value);
+  if (!currentEl) return;
 
-  const currentRect = currentEl.getBoundingClientRect()
-  let bestIndex = focusedIndex.value
-  let bestScore = Infinity
+  const currentRect = currentEl.getBoundingClientRect();
+  let bestIndex = focusedIndex.value;
+  let bestScore = Infinity;
 
-  selectable.forEach(event => {
-    if (event.index === focusedIndex.value) return
+  selectable.forEach((event) => {
+    if (event.index === focusedIndex.value) return;
 
-    const el = getEventElement(event.index)
-    if (!el) return
+    const el = getEventElement(event.index);
+    if (!el) return;
 
-    const rect = el.getBoundingClientRect()
-    const dx = rect.left - currentRect.left
-    const dy = rect.top - currentRect.top
+    const rect = el.getBoundingClientRect();
+    const dx = rect.left - currentRect.left;
+    const dy = rect.top - currentRect.top;
 
     const overlapY =
       Math.min(currentRect.bottom, rect.bottom) -
-      Math.max(currentRect.top, rect.top)
+      Math.max(currentRect.top, rect.top);
 
     const overlapX =
       Math.min(currentRect.right, rect.right) -
-      Math.max(currentRect.left, rect.left)
+      Math.max(currentRect.left, rect.left);
 
-    let valid = false
-    let score = Infinity
+    let valid = false;
+    let score = Infinity;
 
     switch (direction) {
-      case 'right':
-        valid = dx > 5 && overlapY > 10
-        score = Math.abs(dx) - overlapY * 5
-        break
+      case "right":
+        valid = dx > 5 && overlapY > 10;
+        score = Math.abs(dx) - overlapY * 5;
+        break;
 
-      case 'left':
-        valid = dx < -5 && overlapY > 10
-        score = Math.abs(dx) - overlapY * 5
-        break
+      case "left":
+        valid = dx < -5 && overlapY > 10;
+        score = Math.abs(dx) - overlapY * 5;
+        break;
 
-      case 'down':
-        valid = dy > 5 && overlapX > 10
-        score = Math.abs(dy) - overlapX * 2
-        break
+      case "down":
+        valid = dy > 5 && overlapX > 10;
+        score = Math.abs(dy) - overlapX * 2;
+        break;
 
-      case 'up':
-        valid = dy < -5 && overlapX > 10
-        score = Math.abs(dy) - overlapX * 2
-        break
+      case "up":
+        valid = dy < -5 && overlapX > 10;
+        score = Math.abs(dy) - overlapX * 2;
+        break;
     }
 
     if (valid && score < bestScore) {
-      bestScore = score
-      bestIndex = event.index
+      bestScore = score;
+      bestIndex = event.index;
     }
-  })
+  });
 
   if (bestIndex !== focusedIndex.value) {
-    focusedIndex.value = bestIndex
-    scrollToFocusedEvent()
+    focusedIndex.value = bestIndex;
+    scrollToFocusedEvent();
   }
 }
 
 function getCurrentSelectableIndex() {
   if (focusedIndex.value >= 0) {
-    return focusedIndex.value
+    return focusedIndex.value;
   }
-  const selectable = processedEvents.value.filter(e => e.PointerEvent !== false)
-  if (!selectable.length) return -1
-  
-  focusedIndex.value = selectable[0].index
-  scrollToFocusedEvent()
-  return focusedIndex.value
+  const selectable = processedEvents.value.filter(
+    (e) => e.PointerEvent !== false,
+  );
+  if (!selectable.length) return -1;
+
+  focusedIndex.value = selectable[0]!.index;
+  scrollToFocusedEvent();
+  return focusedIndex.value;
 }
 
 function openEvent(index: number) {
-  focusedIndex.value = index
-  activeModalIndex.value = index
-  document.body.style.overflow = 'hidden'
+  focusedIndex.value = index;
+  activeModalIndex.value = index;
+  document.body.style.overflow = "hidden";
 }
 
 function closeModal() {
-  activeModalIndex.value = null
-  document.body.style.overflow = ''
+  activeModalIndex.value = null;
+  document.body.style.overflow = "";
 }
 
 function clearFocus() {
-  focusedIndex.value = -1
+  focusedIndex.value = -1;
 }
 
 function toggleEvent(index: number, clearFocusWhenClose = true) {
-  const isModalOpen = activeModalIndex.value !== null
+  const isModalOpen = activeModalIndex.value !== null;
 
   if (isModalOpen && activeModalIndex.value === index) {
-    closeModal()
+    closeModal();
     if (clearFocusWhenClose) {
-      clearFocus()
+      clearFocus();
     }
-    return
+    return;
   }
 
-  openEvent(index)
+  openEvent(index);
 }
 
 function handleKeyDown(e: KeyboardEvent) {
-  const target = e.target as HTMLElement | null
-  if (!target) return
+  const target = e.target as HTMLElement | null;
+  if (!target) return;
 
   // Skip if typing in an input, textarea, select, or contenteditable element
   if (
-    target.tagName === 'INPUT' ||
-    target.tagName === 'TEXTAREA' ||
-    target.tagName === 'SELECT' ||
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT" ||
     target.isContentEditable
   ) {
-    return
+    return;
   }
 
-  const isModalOpen = activeModalIndex.value !== null
+  const isModalOpen = activeModalIndex.value !== null;
 
   // Escape key should close the modal globally if it is open
-  if (e.key === 'Escape') {
+  if (e.key === "Escape") {
     if (isModalOpen) {
-      e.preventDefault()
-      closeModal()
-      clearFocus()
+      e.preventDefault();
+      closeModal();
+      clearFocus();
     }
-    return
+    return;
   }
 
   // Scope WASD/Arrow/Space/Enter navigation specifically to the timetable grid
-  const isFocusInGrid = gridContainer.value?.contains(target) || false
+  const isFocusInGrid = gridContainer.value?.contains(target) || false;
   if (!isFocusInGrid) {
-    return
+    return;
   }
 
   switch (e.key.toLowerCase()) {
-    case 'w':
-    case 'arrowup':
-      if (isModalOpen) return
-      e.preventDefault()
-      moveFocus('up')
-      break
+    case "w":
+    case "arrowup":
+      if (isModalOpen) return;
+      e.preventDefault();
+      moveFocus("up");
+      break;
 
-    case 's':
-    case 'arrowdown':
-      if (isModalOpen) return
-      e.preventDefault()
-      moveFocus('down')
-      break
+    case "s":
+    case "arrowdown":
+      if (isModalOpen) return;
+      e.preventDefault();
+      moveFocus("down");
+      break;
 
-    case 'a':
-    case 'arrowleft':
-      if (isModalOpen) return
-      e.preventDefault()
-      moveFocus('left')
-      break
+    case "a":
+    case "arrowleft":
+      if (isModalOpen) return;
+      e.preventDefault();
+      moveFocus("left");
+      break;
 
-    case 'd':
-    case 'arrowright':
-      if (isModalOpen) return
-      e.preventDefault()
-      moveFocus('right')
-      break
+    case "d":
+    case "arrowright":
+      if (isModalOpen) return;
+      e.preventDefault();
+      moveFocus("right");
+      break;
 
-    case ' ': {
-      e.preventDefault()
-      const targetIndex = getCurrentSelectableIndex()
-      if (targetIndex < 0) return
-      toggleEvent(targetIndex, false)
-      break
+    case " ": {
+      e.preventDefault();
+      const targetIndex = getCurrentSelectableIndex();
+      if (targetIndex < 0) return;
+      toggleEvent(targetIndex, false);
+      break;
     }
 
-    case 'enter': {
-      e.preventDefault()
-      const targetIndex = getCurrentSelectableIndex()
-      if (targetIndex < 0) return
-      openEvent(targetIndex)
-      break
+    case "enter": {
+      e.preventDefault();
+      const targetIndex = getCurrentSelectableIndex();
+      if (targetIndex < 0) return;
+      openEvent(targetIndex);
+      break;
     }
   }
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown)
-})
+  window.addEventListener("keydown", handleKeyDown);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown)
-  document.body.style.overflow = ''
-})
+  window.removeEventListener("keydown", handleKeyDown);
+  document.body.style.overflow = "";
+});
 </script>
 
 <template>
@@ -430,12 +458,12 @@ onUnmounted(() => {
     <div class="legacy-page-body">
       <section class="expo-tt">
         <div class="expo-tt-header">
-          <h2>{{ t('schedule.title') }}</h2>
-          <p>{{ t('schedule.hint') }}</p>
+          <h2>{{ t("schedule.title") }}</h2>
+          <p>{{ t("schedule.hint") }}</p>
           <p class="touch-only">
-            {{ t('schedule.mobilehint') }}
+            {{ t("schedule.mobilehint") }}
           </p>
-          <p>{{ t('schedule.note') }}</p>
+          <p>{{ t("schedule.note") }}</p>
         </div>
 
         <div class="expo-tt-shell">
@@ -449,7 +477,7 @@ onUnmounted(() => {
               :style="{
                 gridColumn: index + 1,
                 gridRow: 1,
-                color: col.color || '#3f71e6'
+                color: col.color || '#3f71e6',
               }"
             >
               {{ col.label }}
@@ -465,7 +493,7 @@ onUnmounted(() => {
                 :class="{ 'expo-time-half': timeLabel.isHalf }"
                 :style="{
                   gridColumn: timeLabel.col,
-                  gridRow: timeLabel.row
+                  gridRow: timeLabel.row,
                 }"
               >
                 {{ timeLabel.text }}
@@ -481,7 +509,7 @@ onUnmounted(() => {
                 'expo-event',
                 event.vertical ? 'vertical' : '',
                 event.isCompact ? 'compact' : '',
-                { 'keyboard-focus': focusedIndex === event.index }
+                { 'keyboard-focus': focusedIndex === event.index },
               ]"
               :style="{
                 gridColumn: event.columnIndex,
@@ -489,7 +517,7 @@ onUnmounted(() => {
                 background: event.backgroundColor,
                 color: event.textColor,
                 fontSize: event.fontSize,
-                pointerEvents: event.PointerEvent === false ? 'none' : 'auto'
+                pointerEvents: event.PointerEvent === false ? 'none' : 'auto',
               }"
               :data-index="event.index"
               @click="toggleEvent(event.index)"
@@ -509,10 +537,7 @@ onUnmounted(() => {
         :class="{ show: activeModalEvent !== null }"
         :aria-hidden="activeModalEvent === null"
       >
-        <div
-          class="expo-tt-modal-bg"
-          @click="closeModal"
-        />
+        <div class="expo-tt-modal-bg" @click="closeModal" />
 
         <div v-if="activeModalEvent !== null" class="expo-tt-modal-box">
           <button
@@ -529,14 +554,20 @@ onUnmounted(() => {
 
             <div class="expo-tt-modal-meta">
               <span>
-                🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }}
-                ▶ {{ t('schedule.duration') }}: {{ activeModalEvent.duration }}h
+                🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
+                {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
               </span>
 
-              <span>📍 {{ t('schedule.area') }}: {{ activeModalEvent.area }}</span>
+              <span
+                >📍 {{ t("schedule.area") }}: {{ activeModalEvent.area }}</span
+              >
             </div>
 
-            <p>{{ activeModalEvent.detailText || t('schedule.detailPlaceholder') }}</p>
+            <p>
+              {{
+                activeModalEvent.detailText || t("schedule.detailPlaceholder")
+              }}
+            </p>
           </div>
         </div>
       </div>
@@ -561,267 +592,269 @@ onUnmounted(() => {
 }
 
 .expo-tt {
-    width: min(97.5%, 76em);
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 2em 2.25em 2.5em;
-    border-radius: 1.25em;
-    position: relative;
-    background: linear-gradient(180deg, rgba(72, 38, 82, .75), rgba(72, 38, 82, .75));
-    box-shadow:
-        0 1em 2em rgba(0, 0, 0, .25),
-        inset 0 0 0 1px rgba(127, 100, 50, .12);
-    color: var(--color-paper-text);
+  width: min(97.5%, 76em);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2em 2.25em 2.5em;
+  border-radius: 1.25em;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(72, 38, 82, 0.75),
+    rgba(72, 38, 82, 0.75)
+  );
+  box-shadow:
+    0 1em 2em rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(127, 100, 50, 0.12);
+  color: var(--color-paper-text);
 }
 
 .expo-tt-header {
-    text-align: center;
-    margin: .5em 0 -.5em;
+  text-align: center;
+  margin: 0.5em 0 -0.5em;
 }
 
 .expo-tt-header h2 {
-    margin: 0 0 .25em;
-    font-size: clamp(2.2rem, 4vw, 3.6rem);
-    line-height: 1.1;
-    color: var(--color-font);
-    text-shadow: 0 2px 6px rgba(255, 255, 255, .6);
+  margin: 0 0 0.25em;
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  line-height: 1.1;
+  color: var(--color-font);
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
 }
 
 .expo-tt-header p {
-    margin: .15em 0;
-    font-size: clamp(1.1rem, 1.75vw, 1.4rem);
-    line-height: 1.7;
-    font-weight: 600;
-    color: var(--color-font);
+  margin: 0.15em 0;
+  font-size: clamp(1.1rem, 1.75vw, 1.4rem);
+  line-height: 1.7;
+  font-weight: 600;
+  color: var(--color-font);
 }
 
 .expo-tt-shell {
-    width: 100%;
-    margin: 0 auto;
-    overflow: visible;
-    padding-bottom: .6em;
-    display: flex;
-    justify-content: center;
-    transition: all 0.2s ease-out;
+  width: 100%;
+  margin: 0 auto;
+  overflow: visible;
+  padding-bottom: 0.6em;
+  display: flex;
+  justify-content: center;
+  transition: all 0.2s ease-out;
 }
 
 .expo-tt-grid {
-    --columns: 5em 10em 7em 6.5em 7.5em 5em;
-    --rows: 4em repeat(168, var(--slot-h));
-    --content-start: 2;
-    --content-end: 6;
+  --columns: 5em 10em 7em 6.5em 7.5em 5em;
+  --rows: 4em repeat(168, var(--slot-h));
+  --content-start: 2;
+  --content-end: 6;
 
-    --hour-h: 7em;
-    --slot-h: calc(var(--hour-h) / 12);
+  --hour-h: 7em;
+  --slot-h: calc(var(--hour-h) / 12);
 
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    display: grid;
-    grid-template-columns: var(--columns);
-    grid-template-rows: var(--rows);
-    column-gap: .45em;
-    padding: .8em 0;
-    align-items: stretch;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--columns);
+  grid-template-rows: var(--rows);
+  column-gap: 0.45em;
+  padding: 0.8em 0;
+  align-items: stretch;
 }
 
 .expo-col-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: .2em;
-    font-size: clamp(1rem, 1.75vw, 1.5rem);
-    font-weight: 700;
-    z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.2em;
+  font-size: clamp(1rem, 1.75vw, 1.5rem);
+  font-weight: 700;
+  z-index: 2;
 }
 
 .expo-slot-bg {
-    grid-column: var(--content-start) / var(--content-end);
-    grid-row: 2 / -1;
-    margin: 0 -.75em;
-    position: relative;
-    overflow: hidden;
-    border-radius: 1.1em;
-    border: 1px solid rgba(255, 255, 255, .01);
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, .1) 0,
-            rgba(255, 255, 255, .05) 1px,
-            transparent 1px,
-            transparent calc(var(--hour-h) / 2)
-        ),
-        rgba(20, 25, 35, .72);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+  grid-column: var(--content-start) / var(--content-end);
+  grid-row: 2 / -1;
+  margin: 0 -0.75em;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.1em;
+  border: 1px solid rgba(255, 255, 255, 0.01);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1) 0,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent calc(var(--hour-h) / 2)
+    ),
+    rgba(20, 25, 35, 0.72);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .expo-time {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    transform: translateY(-.5em);
-    font-weight: 700;
-    font-size: clamp(1rem, 1.75vw, 1.25rem);
-    color: var(--color-font);
-    text-shadow: 0 1px 2px rgba(255, 255, 255, .45);
-    z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transform: translateY(-0.5em);
+  font-weight: 700;
+  font-size: clamp(1rem, 1.75vw, 1.25rem);
+  color: var(--color-font);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);
+  z-index: 2;
 }
 
 .expo-event {
-    position: relative;
-    z-index: 3;
-    width: auto;
-    height: auto;
-    margin: .225em 0 0em 0;
-    align-self: stretch;
-    justify-self: stretch;
-    border: none;
-    border-radius: .6em;
-    padding: .22em .38em;
-    cursor: pointer;
-    text-align: center;
-    font: inherit;
-    line-height: 1.18;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, .22);
-    transition:
-        transform .15s ease,
-        box-shadow .15s ease;
-    overflow: hidden;
+  position: relative;
+  z-index: 3;
+  width: auto;
+  height: auto;
+  margin: 0.225em 0 0em 0;
+  align-self: stretch;
+  justify-self: stretch;
+  border: none;
+  border-radius: 0.6em;
+  padding: 0.22em 0.38em;
+  cursor: pointer;
+  text-align: center;
+  font: inherit;
+  line-height: 1.18;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  overflow: hidden;
 }
 
 .expo-event:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 26px rgba(0, 0, 0, .28);
+  transform: scale(1.05);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
 }
 
 .expo-event .title {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    overflow: hidden;
-    font-weight: 600;
-    margin-top: calc(.1rem - 0.05vw);
-    font-size: clamp(1rem, 1.25vw, 1.2rem);
-    white-space: normal;
-    word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  font-weight: 600;
+  margin-top: calc(0.1rem - 0.05vw);
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  white-space: normal;
+  word-break: break-word;
 }
 
 .expo-event .sub {
-    display: block;
-    margin-top: clamp(0rem, 1.5vw, .2rem);;
-    font-size: clamp(.88rem, 1.25vw, 1.15rem);
-    opacity: .9;
+  display: block;
+  margin-top: clamp(0rem, 1.5vw, 0.2rem);
+  font-size: clamp(0.88rem, 1.25vw, 1.15rem);
+  opacity: 0.9;
 }
 
 .expo-tt-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
 }
 
 .expo-tt-modal.show {
-    display: block;
+  display: block;
 }
 
 .expo-tt-modal-bg {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, .5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .expo-tt-modal-box {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: min(75vw, 60em);
-    max-height: 85vh;
-    overflow: auto;
-    border-radius: 1.2em;
-    background: var(--color-paper-bg);
-    color: var(--color-paper-text-muted);
-    box-shadow: 0 18px 48px rgba(0, 0, 0, .24);
-    padding:
-        clamp(1.2rem, 2vw, 2rem)
-        clamp(1rem, 2vw, 2.5rem)
-        clamp(1rem, 2vw, 2rem);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(75vw, 60em);
+  max-height: 85vh;
+  overflow: auto;
+  border-radius: 1.2em;
+  background: var(--color-paper-bg);
+  color: var(--color-paper-text-muted);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+  padding: clamp(1.2rem, 2vw, 2rem) clamp(1rem, 2vw, 2.5rem)
+    clamp(1rem, 2vw, 2rem);
 }
 
 .expo-tt-modal-close {
-    position: absolute;
-    top: .25em;
-    right: .45em;
-    border: none;
-    background: transparent;
-    font-size: clamp(2rem, 2vw, 3.5rem);
-    cursor: pointer;
-    color: var(--color-paper-text-muted);
+  position: absolute;
+  top: 0.25em;
+  right: 0.45em;
+  border: none;
+  background: transparent;
+  font-size: clamp(2rem, 2vw, 3.5rem);
+  cursor: pointer;
+  color: var(--color-paper-text-muted);
 }
 
 .expo-tt-modal-close:hover {
-    color: #ff1e1ebb;
-    transition: color .25s ;
+  color: #ff1e1ebb;
+  transition: color 0.25s;
 }
 
 .expo-tt-modal-box h3 {
-    margin: 0 0 .5em;
-    color: var(--color-paper-text-dark);
-    line-height: 1.4;
-    font-size: clamp(1.2rem, 1.5vw, 3rem);
+  margin: 0 0 0.5em;
+  color: var(--color-paper-text-dark);
+  line-height: 1.4;
+  font-size: clamp(1.2rem, 1.5vw, 3rem);
 }
 
 .expo-tt-modal-box p {
-    margin: .5em 0 0;
-    line-height: 1.85;
-    font-size: clamp(1rem, 1.4vw, 1.4rem);
+  margin: 0.5em 0 0;
+  line-height: 1.85;
+  font-size: clamp(1rem, 1.4vw, 1.4rem);
 }
 
 .expo-tt-modal-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5em 1em;
-    margin-bottom: .7em;
-    opacity: .9;
-    font-size: clamp(1rem, 1.5vw, 1.4rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 1em;
+  margin-bottom: 0.7em;
+  opacity: 0.9;
+  font-size: clamp(1rem, 1.5vw, 1.4rem);
 }
 
 @media (max-width: 850px) {
-    .expo-tt-shell {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: visible;
-        justify-content: flex-start;
-    }
-    .expo-event .title {
-        font-weight: 800;
-        transition: all .2s ease-out;
-    }    
-    .expo-tt {
-        padding: 1.5em 1.2em 2em;
-        transition: all .2s ease-out;
-    }
+  .expo-tt-shell {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    justify-content: flex-start;
+  }
+  .expo-event .title {
+    font-weight: 800;
+    transition: all 0.2s ease-out;
+  }
+  .expo-tt {
+    padding: 1.5em 1.2em 2em;
+    transition: all 0.2s ease-out;
+  }
 }
 
 .expo-event.keyboard-focus {
-    outline: .25em solid #ffddbe;
-    outline-offset: -.08em;
-    z-index: 50;
-    transform: scale(1.035);
+  outline: 0.25em solid #ffddbe;
+  outline-offset: -0.08em;
+  z-index: 50;
+  transform: scale(1.035);
 }
 
 @media (pointer: coarse) {
-    .expo-event.keyboard-focus {
-        outline: none;
-        box-shadow: none;
-        transform: none;
-    }
+  .expo-event.keyboard-focus {
+    outline: none;
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 .touch-only {

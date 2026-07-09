@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 definePageMeta({
-  underDevelopment: true
-})
+  underDevelopment: true,
+});
 
 useHead(() => ({
-  title: t('transport.title'),
-}))
+  title: t("transport.title"),
+}));
 </script>
 
 <template>
@@ -16,7 +16,7 @@ useHead(() => ({
       <!-- Title Section -->
       <section class="transport-hero">
         <div class="transport-hero-header">
-          <h2>{{ t('transport.title') }}</h2>
+          <h2>{{ t("transport.title") }}</h2>
         </div>
       </section>
 
@@ -26,9 +26,11 @@ useHead(() => ({
           <!-- Transport Info Cards -->
           <div class="transport-info-col">
             <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-train-subway"></i></div>
+              <div class="card-icon">
+                <i class="fa-solid fa-train-subway"></i>
+              </div>
               <div class="card-text">
-                <h5>{{ t('transport.mrt') }}</h5>
+                <h5>{{ t("transport.mrt") }}</h5>
                 <p v-html="t('transport.mrtDesc')"></p>
               </div>
             </div>
@@ -36,16 +38,16 @@ useHead(() => ({
             <div class="transport-card">
               <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
               <div class="card-text">
-                <h5>{{ t('transport.bus') }}</h5>
-                <p>{{ t('transport.busDesc') }}</p>
+                <h5>{{ t("transport.bus") }}</h5>
+                <p>{{ t("transport.busDesc") }}</p>
               </div>
             </div>
 
             <div class="transport-card">
               <div class="card-icon"><i class="fa-solid fa-car"></i></div>
               <div class="card-text">
-                <h5>{{ t('transport.driving') }}</h5>
-                <p>{{ t('transport.drivingDesc') }}</p>
+                <h5>{{ t("transport.driving") }}</h5>
+                <p>{{ t("transport.drivingDesc") }}</p>
               </div>
             </div>
           </div>
@@ -53,13 +55,13 @@ useHead(() => ({
           <!-- Google Maps Embed -->
           <div class="map-embed-col">
             <div class="map-frame">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.682855169476!2d121.4842186!3d25.0787593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a94562095f9d%3A0xa6428784d0812739!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A5LiJ5ZKM6Lev5Zub5q61MTEx6JmfMTDmqkw!5e0!3m2!1szh-TW!2stw!4v1720166000000!5m2!1szh-TW!2stw" 
-                width="100%" 
-                height="100%" 
-                style="border:0;" 
-                allowfullscreen="true" 
-                loading="lazy" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.682855169476!2d121.4842186!3d25.0787593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a94562095f9d%3A0xa6428784d0812739!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A5LiJ5ZKM6Lev5Zub5q61MTEx6JmfMTDmqkw!5e0!3m2!1szh-TW!2stw!4v1720166000000!5m2!1szh-TW!2stw"
+                width="100%"
+                height="100%"
+                style="border: 0"
+                allowfullscreen="true"
+                loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
                 :title="t('transport.mapTitle')"
               ></iframe>
@@ -96,11 +98,11 @@ useHead(() => ({
 }
 
 .transport-hero-header h2 {
-  margin: 0 0 .25em;
+  margin: 0 0 0.25em;
   font-size: clamp(2.2rem, 4vw, 3.6rem);
   line-height: 1.1;
   color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, .4);
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
 }
 
 .transport-main-section {
@@ -108,8 +110,14 @@ useHead(() => ({
   margin: 0 auto;
   padding: 2.5em;
   border-radius: 1.25em;
-  background: linear-gradient(180deg, rgba(72, 38, 82, 0.45), rgba(46, 21, 56, 0.45));
-  box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, .08);
+  background: linear-gradient(
+    180deg,
+    rgba(72, 38, 82, 0.45),
+    rgba(46, 21, 56, 0.45)
+  );
+  box-shadow:
+    0 1em 2em rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(127, 100, 50, 0.08);
 }
 
 .transport-grid {
@@ -187,6 +195,6 @@ useHead(() => ({
   border-radius: 1rem;
   overflow: hidden;
   border: 1px solid rgba(255, 230, 167, 0.15);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 </style>

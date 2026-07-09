@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance } from "vue";
 
 /**
  * News Page Component
@@ -7,476 +7,480 @@ import type { ComponentPublicInstance } from 'vue'
  */
 
 // Configuration for persisting the opened/unopened state of letters
-const rememberOpenedMail = true
-const openedStorageKey = 'twbc-opened-news'
+const rememberOpenedMail = true;
+const openedStorageKey = "twbc-opened-news";
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 useHead({
-  title: () => t('newsPage.title')
-})
+  title: () => t("newsPage.title"),
+});
 
 type RawNewsPost = {
-  id?: string
-  time?: string
-  locales: Record<string, LocalizedNewsPost>
-}
+  id?: string;
+  time?: string;
+  locales: Record<string, LocalizedNewsPost>;
+};
 
 type LocalizedNewsPost = {
-  title: string
-  content: string
-}
+  title: string;
+  content: string;
+};
 
 type NewsPost = {
-  id: string
-  title: string
-  time: string
-  content: string
-}
+  id: string;
+  title: string;
+  time: string;
+  content: string;
+};
 
 type ContentPart =
-  | { type: 'text'; value: string }
-  | { type: 'link'; value: string }
+  { type: "text"; value: string } | { type: "link"; value: string };
 
 type SealData = {
-  angle: number
-  topClip: string
-  bottomClip: string
-}
+  angle: number;
+  topClip: string;
+  bottomClip: string;
+};
 
 const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
-  'news-posts',
+  "news-posts",
   async () => {
     try {
-      return await $fetch<RawNewsPost[]>(
-        '/content/news/posts.json',
-        {
-          query: {
-            t: Date.now()
-          }
-        }
-      )
+      return await $fetch<RawNewsPost[]>("/content/news/posts.json", {
+        query: {
+          t: Date.now(),
+        },
+      });
     } catch (err) {
-      console.error('Failed to load news posts:', err)
-      return []
+      console.error("Failed to load news posts:", err);
+      return [];
     }
   },
   {
     server: false,
     immediate: false,
-    default: () => []
-  }
-)
+    default: () => [],
+  },
+);
 
 function randomBetween(min: number, max: number) {
-  return Math.random() * (max - min) + min
+  return Math.random() * (max - min) + min;
 }
 
 function createRandomCrack() {
-  const crack: string[] = []
-  const steps = Math.floor(randomBetween(10, 20))
-  const baseY = randomBetween(45, 55)
-  const minOffset = randomBetween(-10, -5)
-  const maxOffset = randomBetween(5, 10)
+  const crack: string[] = [];
+  const steps = Math.floor(randomBetween(10, 20));
+  const baseY = randomBetween(45, 55);
+  const minOffset = randomBetween(-10, -5);
+  const maxOffset = randomBetween(5, 10);
 
   for (let i = 0; i <= steps; i++) {
-    const x = (i / steps) * 100
-    const y = baseY + randomBetween(minOffset, maxOffset)
+    const x = (i / steps) * 100;
+    const y = baseY + randomBetween(minOffset, maxOffset);
 
-    crack.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`)
+    crack.push(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
   }
 
-  const reversed = crack.slice().reverse()
+  const reversed = crack.slice().reverse();
 
   return {
     topClip: `polygon(
       0 0,
       100% 0,
-      ${reversed.join(', ')}
+      ${reversed.join(", ")}
     )`,
 
     bottomClip: `polygon(
       0 100%,
       100% 100%,
-      ${reversed.join(', ')}
-    )`
-  }
+      ${reversed.join(", ")}
+    )`,
+  };
 }
 
 const posts = computed<NewsPost[]>(() => {
-  const list = rawPosts.value
+  const list = rawPosts.value;
 
-  if (!Array.isArray(list)) return []
+  if (!Array.isArray(list)) return [];
 
   const mapped = list.flatMap((post, index) => {
-    const id = post.id || `post_${String(index + 1).padStart(3, '0')}`
+    const id = post.id || `post_${String(index + 1).padStart(3, "0")}`;
     const localizedPost =
       post.locales?.[locale.value] ??
-      post.locales?.['zh-TW'] ??
-      post.locales?.en
+      post.locales?.["zh-TW"] ??
+      post.locales?.en;
 
-    if (!localizedPost) return []
+    if (!localizedPost) return [];
 
-    let formattedTime = post.time || ''
+    let formattedTime = post.time || "";
     if (post.time) {
       try {
-        const date = new Date(post.time)
+        const date = new Date(post.time);
         if (!Number.isNaN(date.getTime())) {
           formattedTime = date.toLocaleDateString(locale.value, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            timeZone: 'Asia/Taipei'
-          })
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            timeZone: "Asia/Taipei",
+          });
         }
       } catch (err) {
-        console.error('Failed to format date:', err)
+        console.error("Failed to format date:", err);
       }
     }
 
-    return [{
-      id,
-      title: localizedPost.title || '',
-      time: formattedTime,
-      rawTime: post.time || '',
-      content: localizedPost.content || ''
-    }]
-  })
+    return [
+      {
+        id,
+        title: localizedPost.title || "",
+        time: formattedTime,
+        rawTime: post.time || "",
+        content: localizedPost.content || "",
+      },
+    ];
+  });
 
   return mapped
     .sort((a, b) => {
-      const timeA = a.rawTime ? Date.parse(a.rawTime) : 0
-      const timeB = b.rawTime ? Date.parse(b.rawTime) : 0
-      return timeB - timeA
+      const timeA = a.rawTime ? Date.parse(a.rawTime) : 0;
+      const timeB = b.rawTime ? Date.parse(b.rawTime) : 0;
+      return timeB - timeA;
     })
-    .map(({ rawTime, ...rest }) => rest)
-})
+    .map(({ rawTime, ...rest }) => rest);
+});
 
-const selectedPost = ref<NewsPost | null>(null)
-const openedMap = ref<Record<string, boolean>>({})
-const sealMap = ref<Record<string, SealData>>({})
+const selectedPost = ref<NewsPost | null>(null);
+const openedMap = ref<Record<string, boolean>>({});
+const sealMap = ref<Record<string, SealData>>({});
 
-const defaultSealTopClip = 'polygon(0 0, 100% 0, 100% 50%, 0 50%)'
-const defaultSealBottomClip = 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)'
+const defaultSealTopClip = "polygon(0 0, 100% 0, 100% 50%, 0 50%)";
+const defaultSealBottomClip = "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)";
 
-const whyX = ref(0)
-const whyY = ref(0)
-const whyReady = ref(false)
+const whyX = ref(0);
+const whyY = ref(0);
+const whyReady = ref(false);
 
-const mailRefs = new Map<string, HTMLElement>()
+const mailRefs = new Map<string, HTMLElement>();
 
-let currentWhyPostId: string | null = null
-let whyIntroTimer: ReturnType<typeof setTimeout> | null = null
-let whyIdleTimer: ReturnType<typeof setTimeout> | null = null
+let currentWhyPostId: string | null = null;
+let whyIntroTimer: ReturnType<typeof setTimeout> | null = null;
+let whyIdleTimer: ReturnType<typeof setTimeout> | null = null;
 
 function setMailRef(
   postId: string,
-  el: Element | ComponentPublicInstance | null
+  el: Element | ComponentPublicInstance | null,
 ) {
   if (el instanceof HTMLElement) {
-    mailRefs.set(postId, el)
-    return
+    mailRefs.set(postId, el);
+    return;
   }
 
-  mailRefs.delete(postId)
+  mailRefs.delete(postId);
 }
 
 function moveWhyOffscreen() {
-  currentWhyPostId = null
-  whyX.value = document.documentElement.scrollWidth + 250
-  whyY.value = 300
+  currentWhyPostId = null;
+  whyX.value = document.documentElement.scrollWidth + 250;
+  whyY.value = 300;
 }
 
 function getDefaultWhyPostId() {
-  const unopened = posts.value.find(post => !isMailOpened(post.id))
-  return unopened?.id || posts.value[0]?.id || ''
+  const unopened = posts.value.find((post) => !isMailOpened(post.id));
+  return unopened?.id || posts.value[0]?.id || "";
 }
 
 function moveWhyToMail(postId: string) {
-  const el = mailRefs.get(postId)
+  const el = mailRefs.get(postId);
 
-  if (!el) return
+  if (!el) return;
 
-  currentWhyPostId = postId
+  currentWhyPostId = postId;
 
   if (whyIdleTimer) {
-    clearTimeout(whyIdleTimer)
-    whyIdleTimer = null
+    clearTimeout(whyIdleTimer);
+    whyIdleTimer = null;
   }
 
-  whyReady.value = true
+  whyReady.value = true;
 
-  const rect = el.getBoundingClientRect()
+  const rect = el.getBoundingClientRect();
 
-  whyX.value =
-    rect.right +
-    window.scrollX +
-    20
+  whyX.value = rect.right + window.scrollX + 20;
 
-  whyY.value =
-    rect.top +
-    window.scrollY +
-    rect.height / 2 -
-    280
+  whyY.value = rect.top + window.scrollY + rect.height / 2 - 280;
 }
 
 function moveWhyToDefaultMail() {
-  const postId = getDefaultWhyPostId()
+  const postId = getDefaultWhyPostId();
 
-  if (!postId) return
+  if (!postId) return;
 
-  moveWhyToMail(postId)
-  startWhyIdleTimer()
+  moveWhyToMail(postId);
+  startWhyIdleTimer();
 }
 
 function startWhyIdleTimer() {
-  if (whyIdleTimer) clearTimeout(whyIdleTimer)
+  if (whyIdleTimer) clearTimeout(whyIdleTimer);
 
   whyIdleTimer = setTimeout(() => {
-    moveWhyOffscreen()
-  }, 60 * 1000) // 1分鐘消失
+    moveWhyOffscreen();
+  }, 60 * 1000); // 1分鐘消失
 }
 
 function handleResize() {
-  if (!whyReady.value) return
+  if (!whyReady.value) return;
 
   if (currentWhyPostId) {
-    moveWhyToMail(currentWhyPostId)
-    return
+    moveWhyToMail(currentWhyPostId);
+    return;
   }
 
-  moveWhyOffscreen()
+  moveWhyOffscreen();
 }
 
 function getPostNumber(postId: string) {
-  const match = postId.match(/(\d+)$/)
-  return match ? Number(match[1]) : null
+  const match = postId.match(/(\d+)$/);
+  return match ? Number(match[1]) : null;
 }
 
 function angleDiff(a: number, b: number) {
-  return Math.abs(a - b)
+  return Math.abs(a - b);
 }
 
 function createSealAngle(postId: string) {
-  const currentNo = getPostNumber(postId)
+  const currentNo = getPostNumber(postId);
 
   for (let i = 0; i < 80; i++) {
-    const angle = Math.round(randomBetween(-50, 50))
+    const angle = Math.round(randomBetween(-50, 50));
 
-    if (currentNo === null) return angle
+    if (currentNo === null) return angle;
 
-    const prevId = `post_${String(currentNo - 1).padStart(3, '0')}`
-    const nextId = `post_${String(currentNo + 1).padStart(3, '0')}`
+    const prevId = `post_${String(currentNo - 1).padStart(3, "0")}`;
+    const nextId = `post_${String(currentNo + 1).padStart(3, "0")}`;
 
-    const prevAngle = sealMap.value[prevId]?.angle
-    const nextAngle = sealMap.value[nextId]?.angle
+    const prevAngle = sealMap.value[prevId]?.angle;
+    const nextAngle = sealMap.value[nextId]?.angle;
 
     if (
       (prevAngle === undefined || angleDiff(angle, prevAngle) >= 15) &&
       (nextAngle === undefined || angleDiff(angle, nextAngle) >= 15)
     ) {
-      return angle
+      return angle;
     }
   }
 
-  return Math.round(randomBetween(-50, 50))
+  return Math.round(randomBetween(-50, 50));
 }
 
 function getSealData(postId: string): SealData {
-  const existing = sealMap.value[postId]
+  const existing = sealMap.value[postId];
 
-  if (existing) return existing
+  if (existing) return existing;
 
-  const crack = createRandomCrack()
+  const crack = createRandomCrack();
 
   const data: SealData = {
     angle: createSealAngle(postId),
     topClip: crack.topClip,
-    bottomClip: crack.bottomClip
-  }
+    bottomClip: crack.bottomClip,
+  };
 
-  sealMap.value[postId] = data
+  sealMap.value[postId] = data;
 
-  return data
+  return data;
 }
 
 watch(
   posts,
   (list) => {
     for (const post of list) {
-      getSealData(post.id)
+      getSealData(post.id);
     }
 
     if (selectedPost.value) {
-      const found = list.find(post => post.id === selectedPost.value?.id)
+      const found = list.find((post) => post.id === selectedPost.value?.id);
       if (found) {
-        selectedPost.value = found
+        selectedPost.value = found;
       } else {
-        closeMail()
+        closeMail();
       }
     }
   },
-  { immediate: true }
-)
+  { immediate: true },
+);
 
 function isMailOpened(postId: string) {
-  return openedMap.value[postId] === true
+  return openedMap.value[postId] === true;
 }
 
 const contentParts = computed<ContentPart[]>(() => {
-  const text = selectedPost.value?.content ?? ''
-  const urlRegex = /(https?:\/\/[^\s]+)/g
+  const text = selectedPost.value?.content ?? "";
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-  const parts: ContentPart[] = []
-  let lastIndex = 0
-  let match: RegExpExecArray | null
+  const parts: ContentPart[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
 
   while ((match = urlRegex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push({
-        type: 'text',
-        value: text.slice(lastIndex, match.index)
-      })
+        type: "text",
+        value: text.slice(lastIndex, match.index),
+      });
     }
 
     parts.push({
-      type: 'link',
-      value: match[0]
-    })
+      type: "link",
+      value: match[0],
+    });
 
-    lastIndex = match.index + match[0].length
+    lastIndex = match.index + match[0].length;
   }
 
   if (lastIndex < text.length) {
     parts.push({
-      type: 'text',
-      value: text.slice(lastIndex)
-    })
+      type: "text",
+      value: text.slice(lastIndex),
+    });
   }
 
-  return parts
-})
+  return parts;
+});
 
-function trimText(text = '', max = 90) {
-  const clean = text
-    .replace(/\n+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+function trimText(text = "", max = 90) {
+  const clean = text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
 
-  return clean.length > max
-    ? `${clean.slice(0, max)}...`
-    : clean
+  return clean.length > max ? `${clean.slice(0, max)}...` : clean;
 }
 
 function saveOpenedMap() {
-  if (!rememberOpenedMail) return
+  if (!rememberOpenedMail) return;
 
-  localStorage.setItem(
-    openedStorageKey,
-    JSON.stringify(openedMap.value)
-  )
+  localStorage.setItem(openedStorageKey, JSON.stringify(openedMap.value));
 }
 
 function loadOpenedMap() {
   if (!rememberOpenedMail) {
-    localStorage.removeItem(openedStorageKey)
-    openedMap.value = {}
-    return
+    localStorage.removeItem(openedStorageKey);
+    openedMap.value = {};
+    return;
   }
 
-  const saved = localStorage.getItem(openedStorageKey)
+  const saved = localStorage.getItem(openedStorageKey);
 
   if (!saved) {
-    openedMap.value = {}
-    return
+    openedMap.value = {};
+    return;
   }
 
   try {
-    const parsed = JSON.parse(saved)
+    const parsed = JSON.parse(saved);
 
     openedMap.value =
-      parsed &&
-        typeof parsed === 'object' &&
-        !Array.isArray(parsed)
+      parsed && typeof parsed === "object" && !Array.isArray(parsed)
         ? parsed
-        : {}
+        : {};
   } catch {
-    openedMap.value = {}
+    openedMap.value = {};
   }
 }
 
 function openMail(post: NewsPost) {
-  openedMap.value[post.id] = true
-  saveOpenedMap()
+  openedMap.value[post.id] = true;
+  saveOpenedMap();
 
-  selectedPost.value = post
-  document.body.style.overflow = 'hidden'
+  selectedPost.value = post;
+  document.body.style.overflow = "hidden";
 }
 
 function closeMail() {
-  selectedPost.value = null
-  document.body.style.overflow = ''
+  selectedPost.value = null;
+  document.body.style.overflow = "";
 }
 
 function handleEsc(e: KeyboardEvent) {
-  if (e.key === 'Escape') {
-    closeMail()
+  if (e.key === "Escape") {
+    closeMail();
   }
 }
 
 onMounted(async () => {
-  loadOpenedMap()
-  await refreshPosts()
+  loadOpenedMap();
+  await refreshPosts();
 
-  window.addEventListener('keydown', handleEsc)
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("keydown", handleEsc);
+  window.addEventListener("resize", handleResize);
 
-  await nextTick()
+  await nextTick();
 
-  moveWhyOffscreen()
+  moveWhyOffscreen();
 
   whyIntroTimer = setTimeout(() => {
-    moveWhyToDefaultMail()
-  }, 1000) //1秒載入
-})
+    moveWhyToDefaultMail();
+  }, 1000); //1秒載入
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleEsc)
-  window.removeEventListener('resize', handleResize)
+  window.removeEventListener("keydown", handleEsc);
+  window.removeEventListener("resize", handleResize);
 
-  document.body.style.overflow = ''
+  document.body.style.overflow = "";
 
-  if (whyIntroTimer) clearTimeout(whyIntroTimer)
-  if (whyIdleTimer) clearTimeout(whyIdleTimer)
-})
+  if (whyIntroTimer) clearTimeout(whyIntroTimer);
+  if (whyIdleTimer) clearTimeout(whyIdleTimer);
+});
 </script>
 
 <template>
   <div class="legacy-page-root">
-    <img src="/img/Why.avif" alt="" aria-hidden="true" class="why" :class="{ 'why-ready': whyReady }" :style="{
-      '--why-x': `${whyX}px`,
-      '--why-y': `${whyY}px`
-    }">
+    <img
+      src="/img/Why.avif"
+      alt=""
+      aria-hidden="true"
+      class="why"
+      :class="{ 'why-ready': whyReady }"
+      :style="{
+        '--why-x': `${whyX}px`,
+        '--why-y': `${whyY}px`,
+      }"
+    />
 
     <div class="legacy-page-body">
       <section class="news-wrap">
         <div class="news-head">
-          <h1>{{ t('newsPage.heading') }}</h1>
-          <p>{{ t('newsPage.description') }}</p>
+          <h1>{{ t("newsPage.heading") }}</h1>
+          <p>{{ t("newsPage.description") }}</p>
         </div>
 
         <div class="mail-list">
-          <article v-for="post in posts" :key="post.id" :ref="el => setMailRef(post.id, el)" class="mail"
-            :class="{ opened: openedMap[post.id] }" @mouseenter="moveWhyToMail(post.id)" @mouseleave="startWhyIdleTimer"
-            @click="openMail(post)">
+          <article
+            v-for="post in posts"
+            :key="post.id"
+            :ref="(el) => setMailRef(post.id, el)"
+            class="mail"
+            :class="{ opened: openedMap[post.id] }"
+            @mouseenter="moveWhyToMail(post.id)"
+            @mouseleave="startWhyIdleTimer"
+            @click="openMail(post)"
+          >
             <div class="stamp"></div>
 
-            <div class="wax-seal" :style="{
-              '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
-              '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
-              '--crack-bottom': sealMap[post.id]?.bottomClip ?? defaultSealBottomClip
-            }">
-              <img v-if="!isMailOpened(post.id)" src="/img/WaxSeal.avif" class="wax-closed" alt="">
+            <div
+              class="wax-seal"
+              :style="{
+                '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
+                '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
+                '--crack-bottom':
+                  sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
+              }"
+            >
+              <img
+                v-if="!isMailOpened(post.id)"
+                src="/img/WaxSeal.avif"
+                class="wax-closed"
+                alt=""
+              />
 
               <template v-else>
                 <div class="wax-top">
@@ -497,7 +501,7 @@ onBeforeUnmount(() => {
 
             <div class="mail-meta">
               <div class="time">{{ post.time }}</div>
-              <div class="author">{{ t('news.author') }}</div>
+              <div class="author">{{ t("news.author") }}</div>
             </div>
           </article>
         </div>
@@ -515,17 +519,22 @@ onBeforeUnmount(() => {
                 <h2>{{ selectedPost.title }}</h2>
 
                 <div class="paper-meta">
-                  {{ t('news.labels.time') }}：{{ selectedPost.time }}
+                  {{ t("news.labels.time") }}：{{ selectedPost.time }}
 
-                  <span style="float: right;">
-                    {{ t('news.labels.author') }}：{{ t('news.author') }}
+                  <span style="float: right">
+                    {{ t("news.labels.author") }}：{{ t("news.author") }}
                   </span>
                 </div>
 
                 <div class="paper-content">
                   <template v-for="(part, index) in contentParts" :key="index">
-                    <a v-if="part.type === 'link'" :href="part.value" target="_blank" rel="noopener noreferrer"
-                      @click.stop>
+                    <a
+                      v-if="part.type === 'link'"
+                      :href="part.value"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      @click.stop
+                    >
                       {{ part.value }}
                     </a>
 
@@ -567,7 +576,7 @@ onBeforeUnmount(() => {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* 主容器 */
@@ -586,13 +595,13 @@ onBeforeUnmount(() => {
 .news-head h1 {
   margin: 0;
   font-size: clamp(2rem, 5vw, 4rem);
-  letter-spacing: .05em;
-  text-shadow: 0 0 15px rgba(255, 255, 255, .25);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
 }
 
 .news-head p {
-  margin-top: .7rem;
-  color: rgba(255, 255, 255, .75);
+  margin-top: 0.7rem;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 1rem;
 }
 
@@ -617,7 +626,7 @@ onBeforeUnmount(() => {
     "blank blank"
     "title preview"
     "meta meta";
-  gap: .75rem;
+  gap: 0.75rem;
 
   min-height: clamp(230px, 22vw, 300px);
   background: var(--color-paper-bg-gradient);
@@ -625,18 +634,18 @@ onBeforeUnmount(() => {
   padding: 1.2rem 1.35rem 1rem;
   color: var(--color-paper-text);
   cursor: pointer;
-  box-shadow: 0 18px 35px rgba(0, 0, 0, .35);
-  transition: .25s ease;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+  transition: 0.25s ease;
   overflow: hidden;
 }
 
 .mail:hover {
-  transform: translateY(-8px) rotate(-.5deg);
+  transform: translateY(-8px) rotate(-0.5deg);
   box-shadow:
     0 0 10px rgba(255, 255, 255, 0.45),
-    0 0 20px rgba(255, 120, 220, .4),
-    0 0 55px rgba(255, 120, 220, .25),
-    0 0 110px rgba(255, 120, 220, .15);
+    0 0 20px rgba(255, 120, 220, 0.4),
+    0 0 55px rgba(255, 120, 220, 0.25),
+    0 0 110px rgba(255, 120, 220, 0.15);
 
   animation: magicPulse 1.2s ease-in-out infinite;
 }
@@ -648,12 +657,12 @@ onBeforeUnmount(() => {
   border-radius: 1.4rem;
   pointer-events: none;
   z-index: 6;
-  border: 2px solid rgba(255, 130, 225, .65);
+  border: 2px solid rgba(255, 130, 225, 0.65);
   box-shadow:
     0 0 15px rgba(255, 231, 249, 0.9),
     0 0 30px rgba(201, 125, 183, 0.55),
     0 0 60px rgba(201, 125, 183, 0.3),
-    0 0 90px rgba(201, 125, 183, .12);
+    0 0 90px rgba(201, 125, 183, 0.12);
   animation: magicOutline 1.2s ease-in-out infinite;
 }
 
@@ -665,12 +674,14 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   height: 80px;
-  background: linear-gradient(135deg,
-      rgba(250, 250, 250, .25) 0%,
-      rgba(250, 250, 250, .25) 45%,
-      rgba(250, 250, 250, .5) 50%,
-      rgba(250, 250, 250, .25) 55%,
-      rgba(250, 250, 250, .25) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(250, 250, 250, 0.25) 0%,
+    rgba(250, 250, 250, 0.25) 45%,
+    rgba(250, 250, 250, 0.5) 50%,
+    rgba(250, 250, 250, 0.25) 55%,
+    rgba(250, 250, 250, 0.25) 100%
+  );
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   pointer-events: none;
   z-index: 0;
@@ -684,14 +695,14 @@ onBeforeUnmount(() => {
 /* 郵票 */
 .stamp {
   position: absolute;
-  top: .85rem;
+  top: 0.85rem;
   right: 1rem;
   width: 52px;
   height: 52px;
-  border: 2px dashed rgba(255, 255, 255, .8);
-  border-radius: .5rem;
+  border: 2px dashed rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
   background: var(--color-purple-light);
-  opacity: .95;
+  opacity: 0.95;
   z-index: 2;
 }
 
@@ -701,7 +712,7 @@ onBeforeUnmount(() => {
   align-self: start;
   font-size: 1.25rem;
   line-height: 1.45;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   position: relative;
   z-index: 1;
   display: -webkit-box;
@@ -715,7 +726,7 @@ onBeforeUnmount(() => {
   grid-area: preview;
   margin: 0;
   align-self: center;
-  font-size: .95rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--color-paper-text-muted);
   position: relative;
@@ -731,13 +742,13 @@ onBeforeUnmount(() => {
 
 .mail-meta {
   grid-area: meta;
-  margin-top: .15rem;
+  margin-top: 0.15rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 1rem;
-  font-size: .82rem;
-  opacity: .72;
+  font-size: 0.82rem;
+  opacity: 0.72;
   position: relative;
   z-index: 1;
 }
@@ -745,7 +756,7 @@ onBeforeUnmount(() => {
 .mail-meta .time {
   margin: 0;
   font-size: 1rem;
-  opacity: .9;
+  opacity: 0.9;
   color: var(--color-paper-text-dark);
 }
 
@@ -753,7 +764,7 @@ onBeforeUnmount(() => {
   text-align: right;
   font-weight: 600;
   margin-left: auto;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 /* 圓形封蠟 */
@@ -767,8 +778,9 @@ onBeforeUnmount(() => {
   transform-origin: center;
   z-index: 5;
   pointer-events: none;
-  filter:
-    drop-shadow(0 1px 2px rgba(0, 0, 0, .1)) drop-shadow(0 2px 4px rgba(0, 0, 0, .055)) drop-shadow(0 5px 10px rgba(0, 0, 0, .01));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.055))
+    drop-shadow(0 5px 10px rgba(0, 0, 0, 0.01));
 }
 
 .wax-closed {
@@ -788,21 +800,22 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   transition:
-    transform .6s cubic-bezier(.22, .8, .2, 1),
-    opacity .35s ease;
+    transform 0.6s cubic-bezier(0.22, 0.8, 0.2, 1),
+    opacity 0.35s ease;
 }
 
 .wax-piece-img {
   position: absolute;
   inset: 0;
-  background-image: url('/img/WaxSeal.avif');
+  background-image: url("/img/WaxSeal.avif");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   transform: rotate(var(--seal-angle, 0deg));
   transform-origin: center;
-  filter:
-    drop-shadow(0 1px 2px rgba(0, 0, 0, .2)) drop-shadow(0 2px 4px rgba(0, 0, 0, .105)) drop-shadow(0 5px 10px rgba(0, 0, 0, .01));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.105))
+    drop-shadow(0 5px 10px rgba(0, 0, 0, 0.01));
 }
 
 .wax-top {
@@ -814,13 +827,11 @@ onBeforeUnmount(() => {
 }
 
 .mail.opened .wax-top {
-  transform:
-    translateY(-20px) rotate(-5deg);
+  transform: translateY(-20px) rotate(-5deg);
 }
 
 .mail.opened .wax-bottom {
-  transform:
-    translateY(0px) rotate(10deg);
+  transform: translateY(0px) rotate(10deg);
 }
 
 .why {
@@ -835,8 +846,8 @@ onBeforeUnmount(() => {
   pointer-events: none;
   transform: translate3d(var(--why-x, 120vw), var(--why-y, 40vh), 0);
   transition:
-    transform .5s cubic-bezier(.22, .8, .2, 1),
-    opacity .5s ease;
+    transform 0.5s cubic-bezier(0.22, 0.8, 0.2, 1),
+    opacity 0.5s ease;
   animation: why-float 5s ease-in-out infinite;
 }
 
@@ -858,7 +869,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width:1000px) {
+@media (max-width: 1000px) {
   .why {
     display: none;
   }
@@ -866,10 +877,9 @@ onBeforeUnmount(() => {
 
 /* Vivid Hover Magic Animations for Envelopes */
 @keyframes magicPulse {
-
   0%,
   100% {
-    transform: translateY(-8px) rotate(-.5deg) scale(1.02);
+    transform: translateY(-8px) rotate(-0.5deg) scale(1.02);
     box-shadow:
       0 0 12px rgba(255, 255, 255, 0.55),
       0 0 25px rgba(255, 120, 220, 0.5),
@@ -878,7 +888,7 @@ onBeforeUnmount(() => {
   }
 
   50% {
-    transform: translateY(-8px) rotate(-.5deg) scale(1);
+    transform: translateY(-8px) rotate(-0.5deg) scale(1);
     box-shadow:
       0 0 8px rgba(255, 255, 255, 0.35),
       0 0 15px rgba(255, 120, 220, 0.3),
@@ -888,29 +898,28 @@ onBeforeUnmount(() => {
 }
 
 @keyframes magicOutline {
-
   0%,
   100% {
-    border-color: rgba(255, 130, 225, .85);
+    border-color: rgba(255, 130, 225, 0.85);
     box-shadow:
       0 0 18px rgba(255, 231, 249, 1),
       0 0 35px rgba(201, 125, 183, 0.65),
       0 0 70px rgba(201, 125, 183, 0.4),
-      0 0 100px rgba(201, 125, 183, .2);
+      0 0 100px rgba(201, 125, 183, 0.2);
   }
 
   50% {
-    border-color: rgba(255, 130, 225, .45);
+    border-color: rgba(255, 130, 225, 0.45);
     box-shadow:
       0 0 12px rgba(255, 231, 249, 0.7),
       0 0 25px rgba(201, 125, 183, 0.45),
       0 0 50px rgba(201, 125, 183, 0.2),
-      0 0 80px rgba(201, 125, 183, .08);
+      0 0 80px rgba(201, 125, 183, 0.08);
   }
 }
 
 /* 手機 */
-@media (max-width:700px) {
+@media (max-width: 700px) {
   .news-wrap {
     padding-top: 0;
   }
@@ -927,9 +936,9 @@ onBeforeUnmount(() => {
       "title"
       "preview"
       "meta";
-    gap: .7rem;
+    gap: 0.7rem;
     min-height: auto;
-    padding: 1.1rem 1.1rem .95rem;
+    padding: 1.1rem 1.1rem 0.95rem;
   }
 
   .mail::before {
@@ -949,14 +958,14 @@ onBeforeUnmount(() => {
   }
 
   .preview {
-    font-size: .93rem;
+    font-size: 0.93rem;
     line-height: 1.65;
     line-clamp: 3;
     -webkit-line-clamp: 3;
   }
 
   .mail-meta {
-    font-size: .78rem;
+    font-size: 0.78rem;
   }
 }
 </style>
@@ -973,7 +982,7 @@ onBeforeUnmount(() => {
   padding: 1rem;
   opacity: 0;
   pointer-events: none;
-  transition: .25s;
+  transition: 0.25s;
   z-index: 99;
 }
 
@@ -987,26 +996,27 @@ onBeforeUnmount(() => {
   width: min(760px, 100%);
   max-height: 88vh;
   overflow-y: auto;
-  background:
-    repeating-linear-gradient(to bottom,
-      #fffdf8 0px,
-      #fffdf8 34px,
-      #f2efe6 35px);
+  background: repeating-linear-gradient(
+    to bottom,
+    #fffdf8 0px,
+    #fffdf8 34px,
+    #f2efe6 35px
+  );
   color: var(--color-paper-text-dark);
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, .45);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
   position: relative;
 }
 
 .paper h2 {
-  margin: 0 0 .5rem;
+  margin: 0 0 0.5rem;
   padding-right: 1.25rem;
   font-size: 2rem;
 }
 
 .paper-meta {
-  font-size: .9rem;
+  font-size: 0.9rem;
   color: var(--color-paper-text-muted);
   margin-bottom: 1rem;
   line-height: 1.7;
@@ -1026,7 +1036,7 @@ onBeforeUnmount(() => {
 }
 
 .paper-content a:hover {
-  opacity: .75;
+  opacity: 0.75;
 }
 
 /* Modal Entry/Exit Animations */
@@ -1061,7 +1071,7 @@ onBeforeUnmount(() => {
   color: #111;
 }
 
-@media (max-width:700px) {
+@media (max-width: 700px) {
   .paper {
     padding: 1.2rem;
   }
