@@ -19,9 +19,6 @@ const selectedBooth = ref<Booth | null>(null)
 const hoveredZoneId = ref<string | null>(null)
 const hoveredBoothId = ref<string | null>(null)
 
-// Computed active states
-const activeModalType = ref<'zone' | 'booth' | null>(null)
-
 // Helper for locale checking
 const isEn = computed(() => locale.value.startsWith('en'))
 
@@ -54,6 +51,12 @@ const isDragging = ref(false)
 const startX = ref(0)
 const startY = ref(0)
 const dragDistance = ref(0)
+
+// Touch-specific zoom states
+const startTouchDistance = ref(0)
+const startZoom = ref(1)
+const touchMidX = ref(0)
+const touchMidY = ref(0)
 
 const cursorStyle = computed(() => {
   if (zoom.value <= 1) return 'default'
@@ -111,29 +114,74 @@ const handleWheel = (e: WheelEvent) => {
   adjustZoom(nextZoom, e.clientX, e.clientY, true)
 }
 
+// Touch event handlers (improved touch-friendliness)
 const startTouchPan = (e: TouchEvent) => {
   if (e.touches.length === 1) {
     isDragging.value = true
     startX.value = e.touches[0].clientX - panX.value
     startY.value = e.touches[0].clientY - panY.value
     dragDistance.value = 0
+  } else if (e.touches.length === 2) {
+    isDragging.value = false
+    startTouchDistance.value = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    )
+    startZoom.value = zoom.value
+    
+    const svg = document.getElementById('venue-svg')
+    if (svg) {
+      const rect = svg.getBoundingClientRect()
+      touchMidX.value = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left
+      touchMidY.value = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top
+    }
   }
 }
 
 const onTouchPan = (e: TouchEvent) => {
-  if (!isDragging.value || e.touches.length !== 1) return
-  e.preventDefault()
-  const dx = e.touches[0].clientX - (startX.value + panX.value)
-  const dy = e.touches[0].clientY - (startY.value + panY.value)
-  dragDistance.value += Math.sqrt(dx*dx + dy*dy)
+  if (e.touches.length === 1 && isDragging.value) {
+    if (zoom.value > 1) {
+      e.preventDefault()
+      const dx = e.touches[0].clientX - (startX.value + panX.value)
+      const dy = e.touches[0].clientY - (startY.value + panY.value)
+      dragDistance.value += Math.sqrt(dx*dx + dy*dy)
 
-  panX.value = e.touches[0].clientX - startX.value
-  panY.value = e.touches[0].clientY - startY.value
-  clampPan()
+      panX.value = e.touches[0].clientX - startX.value
+      panY.value = e.touches[0].clientY - startY.value
+      clampPan()
+    } else {
+      // If not zoomed, only prevent horizontal pans to allow scrolling the page vertically on mobile
+      const dx = e.touches[0].clientX - (startX.value + panX.value)
+      const dy = e.touches[0].clientY - (startY.value + panY.value)
+      if (Math.abs(dx) > Math.abs(dy)) {
+        e.preventDefault()
+      }
+    }
+  } else if (e.touches.length === 2) {
+    e.preventDefault()
+    const currentDistance = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    )
+    if (startTouchDistance.value > 0) {
+      const scale = currentDistance / startTouchDistance.value
+      const targetZoom = startZoom.value * scale
+      adjustZoom(targetZoom, touchMidX.value, touchMidY.value, false)
+    }
+  }
 }
 
-const endTouchPan = () => {
-  isDragging.value = false
+const endTouchPan = (e: TouchEvent) => {
+  if (e.touches.length === 0) {
+    isDragging.value = false
+    startTouchDistance.value = 0
+  } else if (e.touches.length === 1) {
+    isDragging.value = true
+    startX.value = e.touches[0].clientX - panX.value
+    startY.value = e.touches[0].clientY - panY.value
+    dragDistance.value = 0
+    startTouchDistance.value = 0
+  }
 }
 
 // Adjust Zoom centered at a screen point
@@ -185,33 +233,81 @@ const resetZoom = () => {
   panY.value = 0
 }
 
+// Convert SVG coordinates to screen coordinates and zoom/pan to center
+const zoomToCoords = (svgX: number, svgY: number, targetZoom = 2) => {
+  const svg = document.getElementById('venue-svg')
+  if (!svg) return
+  
+  const rect = svg.getBoundingClientRect()
+  const W = rect.width
+  const H = rect.height
+  
+  zoom.value = targetZoom
+  
+  const scaleX = W / 598.22
+  const scaleY = H / 598.22
+  const targetX = svgX * scaleX
+  const targetY = svgY * scaleY
+  
+  panX.value = W / 2 - targetX * targetZoom
+  panY.value = H / 2 - targetY * targetZoom
+  clampPan()
+}
+
 // Handlers
 const openZone = (zoneId: string) => {
   if (dragDistance.value > 6) return // Skip click if panned
   selectedZoneId.value = zoneId
   selectedBooth.value = null
-  activeModalType.value = 'zone'
-  document.body.style.overflow = 'hidden'
+  
+  const zoneCenters: Record<string, { x: number; y: number }> = {
+    stage: { x: 347.9, y: 185.7 },
+    vendors: { x: 175, y: 315 },
+    workshop: { x: 466.7, y: 192.0 },
+    game: { x: 347.9, y: 306.7 },
+    exhibition: { x: 456.4, y: 375.0 },
+    bar: { x: 74.6, y: 154.3 },
+    checkin: { x: 420.4, y: 474.0 }
+  }
+  
+  const coords = zoneCenters[zoneId]
+  if (coords) {
+    zoomToCoords(coords.x, coords.y, 1.8)
+  }
 }
 
 const openBooth = (booth: Booth) => {
   if (dragDistance.value > 6) return // Skip click if panned
   selectedBooth.value = booth
   selectedZoneId.value = null
-  activeModalType.value = 'booth'
-  document.body.style.overflow = 'hidden'
+  
+  const boothCenters: Record<string, { x: number; y: number }> = {
+    '1': { x: 107.56, y: 260.74 },
+    '2': { x: 125.97, y: 285.52 },
+    '3': { x: 152.03, y: 320.59 },
+    '4': { x: 170.44, y: 345.37 }
+  }
+  const coords = boothCenters[booth.id]
+  if (coords) {
+    zoomToCoords(coords.x, coords.y, 2.5)
+  }
 }
 
-const closeModal = () => {
-  activeModalType.value = null
+const openBoothById = (id: string) => {
+  const booth = booths.find(b => b.id === id)
+  if (booth) {
+    openBooth(booth)
+  }
+}
+
+const clearSelection = () => {
   selectedZoneId.value = null
   selectedBooth.value = null
-  document.body.style.overflow = ''
 }
 
 const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') {
-    closeModal()
+    clearSelection()
   }
 }
 
@@ -221,7 +317,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
-  document.body.style.overflow = ''
 })
 </script>
 
@@ -254,7 +349,7 @@ onUnmounted(() => {
               </defs>
 
               <!-- Scalable Viewport Group -->
-              <g :style="{ transform: `translate(${panX}px, ${panY}px) scale(${zoom})`, transformOrigin: '0 0' }">
+              <g :class="{ 'smooth-pan': !isDragging }" :style="{ transform: `translate(${panX}px, ${panY}px) scale(${zoom})`, transformOrigin: '0 0' }">
                 <!-- Wood Floor Background -->
                 <path class="wood-floor" d="M497.88,107.34v188.78l-39.08,53.09h-249.9l-91.28-122.84-25.7,19.1-22.53-30.43,3.13-2.34c-1.49-.05-2.96-.16-4.42-.32l.14-1.14c-10.19-1.3-19.84-5.36-27.9-11.73l11.46-14.52c16.49,13.05,40.43,10.26,53.48-6.23,13.04-16.47,10.27-40.39-6.18-53.45l-.47-.39,10.14-13.23.67-4.35h388.44Z"/>
                 
@@ -270,63 +365,74 @@ onUnmounted(() => {
                 <line class="map-line" x1="304.55" y1="423.31" x2="487" y2="423.31"/>
 
                 <!-- Interactive Zone: Main Stage -->
-                <g class="zone-group stage-group" :class="{ active: hoveredZoneId === 'stage' }" @mouseover="hoveredZoneId = 'stage'" @mouseleave="hoveredZoneId = null" @click="openZone('stage')">
+                <g class="zone-group stage-group" :class="{ active: hoveredZoneId === 'stage' || selectedZoneId === 'stage' }" @mouseover="hoveredZoneId = 'stage'" @mouseleave="hoveredZoneId = null" @click="openZone('stage')">
                   <rect class="zone-shape shape-stage" x="260.35" y="107.34" width="175.11" height="156.75"/>
-                  <text class="zone-label-text" transform="translate(327.1 142.22)">{{ isEn ? 'Stage' : '主舞台' }}</text>
+                  <text class="zone-label-text" x="347.9" y="185.7">{{ isEn ? 'Stage' : '主舞台' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Vendor Alley -->
-                <!-- Interactive Zone: Vendor Alley -->
-                <g class="zone-group vendors-group" :class="{ active: hoveredZoneId === 'vendors' }" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="openZone('vendors')">
+                <g class="zone-group vendors-group" :class="{ active: hoveredZoneId === 'vendors' || selectedZoneId === 'vendors' }" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="openZone('vendors')">
                   <polygon class="zone-shape shape-vendors" points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"/>
-                  <text class="zone-label-text" transform="translate(170.13 310.92)">{{ isEn ? 'Vendors' : '攤位區' }}</text>
+                  <text class="zone-label-text" x="170.0" y="315.0">{{ isEn ? 'Vendors' : '攤位區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Workshop Area -->
-                <g class="zone-group workshop-group" :class="{ active: hoveredZoneId === 'workshop' }" @mouseover="hoveredZoneId = 'workshop'" @mouseleave="hoveredZoneId = null" @click="openZone('workshop')">
+                <g class="zone-group workshop-group" :class="{ active: hoveredZoneId === 'workshop' || selectedZoneId === 'workshop' }" @mouseover="hoveredZoneId = 'workshop'" @mouseleave="hoveredZoneId = null" @click="openZone('workshop')">
                   <rect class="zone-shape shape-workshop" x="435.46" y="107.35" width="62.42" height="169.22"/>
-                  <text class="zone-label-text" transform="translate(447.23 202.93)">{{ isEn ? 'Workshop' : '工坊區' }}</text>
+                  <text class="zone-label-text" x="466.7" y="192.0">{{ isEn ? 'Workshop' : '工坊區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Game Area -->
-                <g class="zone-group game-group" :class="{ active: hoveredZoneId === 'game' }" @mouseover="hoveredZoneId = 'game'" @mouseleave="hoveredZoneId = null" @click="openZone('game')">
+                <g class="zone-group game-group" :class="{ active: hoveredZoneId === 'game' || selectedZoneId === 'game' }" @mouseover="hoveredZoneId = 'game'" @mouseleave="hoveredZoneId = null" @click="openZone('game')">
                   <rect class="zone-shape shape-game" x="260.35" y="264.09" width="175.11" height="85.13"/>
-                  <text class="zone-label-text" transform="translate(323.76 309.31)">{{ isEn ? 'Games' : '遊戲區' }}</text>
+                  <text class="zone-label-text" x="347.9" y="306.7">{{ isEn ? 'Games' : '遊戲區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Exhibition -->
-                <g class="zone-group exhibition-group" :class="{ active: hoveredZoneId === 'exhibition' }" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="openZone('exhibition')">
+                <g class="zone-group exhibition-group" :class="{ active: hoveredZoneId === 'exhibition' || selectedZoneId === 'exhibition' }" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="openZone('exhibition')">
                   <polygon class="zone-shape shape-exhibition" points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"/>
-                  <text class="zone-label-text" transform="translate(436.1 384.09)">{{ isEn ? 'Exhibition' : '展示區' }}</text>
+                  <text class="zone-label-text" x="456.4" y="375.0">{{ isEn ? 'Exhibition' : '展示區' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Bar -->
-                <g class="zone-group bar-group" :class="{ active: hoveredZoneId === 'bar' }" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="openZone('bar')">
+                <g class="zone-group bar-group" :class="{ active: hoveredZoneId === 'bar' || selectedZoneId === 'bar' }" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="openZone('bar')">
                   <polygon class="zone-shape shape-bar" points="22.3 180.48 25.12 185.48 28.41 190.17 32.15 194.52 36.3 198.49 40.82 202.03 45.66 205.11 50.78 207.69 56.13 209.77 61.66 211.31 67.31 212.3 73.03 212.73 78.77 212.6 84.47 211.91 90.07 210.66 95.52 208.87 100.77 206.55 105.77 203.74 110.46 200.44 114.82 196.7 118.78 192.55 122.32 188.03 125.4 183.19 127.99 178.07 130.06 172.72 131.6 167.19 132.59 161.54 133.02 155.82 132.89 150.08 132.2 144.38 130.95 138.78 129.16 133.33 126.85 128.08 124.03 123.08 120.73 118.39 116.99 114.03 112.84 110.07 108.32 106.53 103.48 103.45 98.36 100.86 93.01 98.79 87.48 97.25 81.83 96.26 76.11 95.83 70.37 95.96 64.68 96.65 59.07 97.9 53.62 99.69 48.37 102 43.37 104.82 38.68 108.12 34.33 111.86 30.36 116.01 26.82 120.53 23.74 125.37 21.16 130.49 19.08 135.84 17.54 141.37 16.55 147.02 16.12 152.74 16.25 158.48 16.94 164.17 18.19 169.78 19.98 175.23 22.3 180.48"/>
-                  <text class="zone-label-text" transform="translate(75.89 169.96)">{{ isEn ? 'Bar' : '吧台' }}</text>
+                  <text class="zone-label-text" x="74.6" y="154.3">{{ isEn ? 'Bar' : '吧台' }}</text>
                 </g>
 
                 <!-- Interactive Zone: Check-in -->
-                <g class="zone-group checkin-group" :class="{ active: hoveredZoneId === 'checkin' }" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
+                <g class="zone-group checkin-group" :class="{ active: hoveredZoneId === 'checkin' || selectedZoneId === 'checkin' }" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="openZone('checkin')">
                   <rect class="zone-shape shape-checkin" x="390.34" y="465.47" width="60.18" height="17.06"/>
-                  <text class="zone-label-text" transform="translate(402.55 475.15)">{{ isEn ? 'Check-in' : '報到處' }}</text>
+                  <text class="zone-label-text" x="420.4" y="474.0">{{ isEn ? 'Check-in' : '報到處' }}</text>
                 </g>
 
-                <!-- Interactive Zone: Entrance -->
-                <g class="zone-group entrance-group" :class="{ active: hoveredZoneId === 'entrance' }" @mouseover="hoveredZoneId = 'entrance'" @mouseleave="hoveredZoneId = null" @click="openZone('entrance')">
-                  <polygon class="zone-shape shape-entrance" points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"/>
-                  <text class="zone-label-text" transform="translate(556.28 449.8)">{{ isEn ? 'Entrance' : '入口' }}</text>
+                <!-- Non-interactive Zone: Entrance (Only for visual reference) -->
+                <g class="entrance-group">
+                  <polygon class="shape-entrance" points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"/>
+                  <text class="zone-label-text-static" x="556.3" y="445.5">{{ isEn ? 'Entrance' : '入口' }}</text>
                 </g>
 
-                <!-- Interactive Booths Layer -->
+                <!-- Interactive Booths Layer (Fulfill spec 6 by baking locations into SVG) -->
                 <g id="booths-layer">
-                  <g v-for="booth in booths" :key="booth.id" class="booth-group" :class="{ active: hoveredBoothId === booth.id }" :transform="`translate(${booth.x}, ${booth.y}) rotate(${booth.rotate})`" @mouseover="hoveredBoothId = booth.id" @mouseleave="hoveredBoothId = null" @click.stop="openBooth(booth)">
-                    <!-- Table / slot rectangle -->
-                    <rect class="booth-rect" :x="-(booth.w || 22) / 2" :y="-(booth.h || 15) / 2" :width="booth.w || 22" :height="booth.h || 15" rx="2" ry="2" />
-                    <!-- Label inside booth -->
-                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">
-                      {{ booth.id }}
-                    </text>
+                  <!-- Booth 1 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '1' || selectedBooth?.id === '1' }" transform="translate(107.56, 260.74) rotate(-36.62)" @mouseover="hoveredBoothId = '1'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('1')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">1</text>
+                  </g>
+                  <!-- Booth 2 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '2' || selectedBooth?.id === '2' }" transform="translate(125.97, 285.52) rotate(-36.62)" @mouseover="hoveredBoothId = '2'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('2')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">2</text>
+                  </g>
+                  <!-- Booth 3 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '3' || selectedBooth?.id === '3' }" transform="translate(152.03, 320.59) rotate(-36.62)" @mouseover="hoveredBoothId = '3'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('3')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">3</text>
+                  </g>
+                  <!-- Booth 4 -->
+                  <g class="booth-group" :class="{ active: hoveredBoothId === '4' || selectedBooth?.id === '4' }" transform="translate(170.44, 345.37) rotate(-36.62)" @mouseover="hoveredBoothId = '4'" @mouseleave="hoveredBoothId = null" @click.stop="openBoothById('4')">
+                    <rect class="booth-rect" x="-9.34" y="-7.72" width="18.68" height="15.44" rx="2" ry="2" />
+                    <text class="booth-label" x="0" y="0.5" dominant-baseline="central" text-anchor="middle">4</text>
                   </g>
                 </g>
               </g>
@@ -347,23 +453,89 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- Sidebar / Interactive Info Deck -->
-        <div class="info-sidebar-card">
+        <!-- Sidebar / Interactive Info Deck (Fulfill spec 2 by showing detail info directly in sidebar) -->
+        <div class="info-sidebar-card" :class="{ 'has-selection': selectedZoneId || selectedBooth }">
+          <!-- Clear Selection Close Button -->
+          <button v-if="selectedZoneId || selectedBooth" class="clear-selection-btn" type="button" @click="clearSelection" :title="t('common.close')">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+
           <!-- Hover/Selection Context Info -->
           <div class="sidebar-content-wrapper">
-            <template v-if="hoveredBoothId">
+            <!-- 1. Selection State: Booth -->
+            <template v-if="selectedBooth">
+              <div class="sidebar-item-detail">
+                <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: selectedBooth.id }) }}</span>
+                <h3>{{ selectedBooth.name[isEn ? 'en' : 'zh'] }}</h3>
+                <div class="sidebar-section-title">{{ t('venue.modal.description') }}</div>
+                <p class="detail-desc">{{ selectedBooth.description[isEn ? 'en' : 'zh'] }}</p>
+
+                <!-- Links -->
+                <div v-if="selectedBooth.links && selectedBooth.links.length > 0" class="sidebar-links-section">
+                  <div class="sidebar-section-title">{{ t('venue.modal.links') }}</div>
+                  <div class="links-grid">
+                    <a v-for="(link, idx) in selectedBooth.links" :key="idx" :href="link.url" target="_blank" rel="noopener noreferrer" class="booth-social-link">
+                      <i :class="link.icon || 'fa-solid fa-link'"></i>
+                      <span>{{ link.label }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- 2. Selection State: Zone -->
+            <template v-else-if="selectedZoneId">
+              <div class="sidebar-item-detail">
+                <span class="preview-badge" :class="`zone-badge-${selectedZoneId}`">
+                  {{ t(`venue.legend.${selectedZoneId}`) }}
+                </span>
+                <h3>{{ t(`venue.legend.${selectedZoneId}`) }}</h3>
+                <div class="sidebar-section-title">{{ t('venue.modal.details') }}</div>
+                <p class="detail-desc">{{ t(`venue.zones.${selectedZoneId}`) }}</p>
+
+                <!-- Linked Events Schedule -->
+                <div v-if="['stage', 'vendors', 'workshop', 'game'].includes(selectedZoneId)" class="sidebar-events-section">
+                  <div class="sidebar-section-title">{{ t('venue.modal.events') }}</div>
+                  
+                  <div v-if="zoneEvents.length > 0" class="events-list">
+                    <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item">
+                      <div class="event-time">🕒 {{ event.start }} - {{ event.end }}</div>
+                      <div class="event-title">{{ event.title }}</div>
+                      <div v-if="event.detail" class="event-desc">{{ event.detail }}</div>
+                    </div>
+                  </div>
+                  <p v-else class="no-events-text">{{ t('venue.modal.noEvents') }}</p>
+                </div>
+              </div>
+            </template>
+
+            <!-- 3. Hover State: Booth -->
+            <template v-else-if="hoveredBoothId">
               <div class="sidebar-item-preview">
-                <span class="preview-badge booth-badge">{{ hoveredBoothId }}</span>
+                <span class="preview-badge booth-badge">{{ t('venue.modal.boothTitle', { id: hoveredBoothId }) }}</span>
                 <h3>{{ booths.find(b => b.id === hoveredBoothId)?.name[isEn ? 'en' : 'zh'] }}</h3>
                 <p class="preview-desc">{{ booths.find(b => b.id === hoveredBoothId)?.description[isEn ? 'en' : 'zh'] }}</p>
+                <div class="tap-hint">
+                  <i class="fa-solid fa-hand-pointer"></i>
+                  <span>{{ isEn ? 'Click to show links & details' : '點擊以顯示詳情與連結' }}</span>
+                </div>
               </div>
             </template>
-            <template v-else-if="hoveredZoneId">
+
+            <!-- 4. Hover State: Zone -->
+            <template v-else-if="hoveredZoneId && hoveredZoneId !== 'entrance'">
               <div class="sidebar-item-preview">
                 <span class="preview-badge" :class="`zone-badge-${hoveredZoneId}`">{{ t(`venue.legend.${hoveredZoneId}`) }}</span>
+                <h3>{{ t(`venue.legend.${hoveredZoneId}`) }}</h3>
                 <p class="preview-desc">{{ t(`venue.zones.${hoveredZoneId}`) }}</p>
+                <div class="tap-hint" v-if="['stage', 'vendors', 'workshop', 'game'].includes(hoveredZoneId)">
+                  <i class="fa-solid fa-hand-pointer"></i>
+                  <span>{{ isEn ? 'Click to view event timetable' : '點擊以查看活動時程' }}</span>
+                </div>
               </div>
             </template>
+
+            <!-- 5. Default State -->
             <template v-else>
               <div class="sidebar-placeholder">
                 <i class="fa-solid fa-map-location-dot placeholder-icon"></i>
@@ -371,159 +543,8 @@ onUnmounted(() => {
               </div>
             </template>
           </div>
-
-          <!-- Legend Table -->
-          <div class="legend-container">
-            <h4>{{ t('venue.legend.title') }}</h4>
-            <div class="legend-grid">
-              <div class="legend-item" @mouseover="hoveredZoneId = 'stage'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('stage')">
-                <span class="legend-dot dot-stage"></span>
-                <span>{{ t('venue.legend.stage') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'vendors'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('vendors')">
-                <span class="legend-dot dot-vendors"></span>
-                <span>{{ t('venue.legend.vendors') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'workshop'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('workshop')">
-                <span class="legend-dot dot-workshop"></span>
-                <span>{{ t('venue.legend.workshop') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'game'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('game')">
-                <span class="legend-dot dot-game"></span>
-                <span>{{ t('venue.legend.game') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'bar'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('bar')">
-                <span class="legend-dot dot-bar"></span>
-                <span>{{ t('venue.legend.bar') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'exhibition'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('exhibition')">
-                <span class="legend-dot dot-exhibition"></span>
-                <span>{{ t('venue.legend.exhibition') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'checkin'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('checkin')">
-                <span class="legend-dot dot-checkin"></span>
-                <span>{{ t('venue.legend.checkin') }}</span>
-              </div>
-              <div class="legend-item" @mouseover="hoveredZoneId = 'entrance'" @mouseleave="hoveredZoneId = null" @click="dragDistance = 0; openZone('entrance')">
-                <span class="legend-dot dot-entrance"></span>
-                <span>{{ t('venue.legend.entrance') }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot dot-booth"></span>
-                <span>{{ t('venue.legend.booth') }} (1-10)</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
-
-      <!-- Transport Guide & Google Map Embed -->
-      <section class="venue-transport-section">
-        <h3>{{ t('venue.transport.title') }}</h3>
-        
-        <div class="transport-grid">
-          <!-- Transport Info Cards -->
-          <div class="transport-info-col">
-            <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-train-subway"></i></div>
-              <div class="card-text">
-                <h5>{{ t('venue.transport.mrt') }}</h5>
-                <p v-html="t('venue.transport.mrtDesc')"></p>
-              </div>
-            </div>
-
-            <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
-              <div class="card-text">
-                <h5>{{ t('venue.transport.bus') }}</h5>
-                <p>{{ t('venue.transport.busDesc') }}</p>
-              </div>
-            </div>
-
-            <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-car"></i></div>
-              <div class="card-text">
-                <h5>{{ t('venue.transport.driving') }}</h5>
-                <p>{{ t('venue.transport.drivingDesc') }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Google Maps Embed -->
-          <div class="map-embed-col">
-            <div class="map-frame">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.682855169476!2d121.4842186!3d25.0787593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a94562095f9d%3A0xa6428784d0812739!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A5LiJ5ZKM6Lev5Zub5q61MTEx6JmfMTDmqkw!5e0!3m2!1szh-TW!2stw!4v1720166000000!5m2!1szh-TW!2stw" 
-                width="100%" 
-                height="100%" 
-                style="border:0;" 
-                allowfullscreen="true" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade"
-                title="AS Life Space Map"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Modal Overlay -->
-      <div class="venue-modal" :class="{ show: activeModalType !== null }" :aria-hidden="activeModalType === null">
-        <div class="venue-modal-bg" @click="closeModal" />
-
-        <!-- Zone Information Modal -->
-        <div v-if="activeModalType === 'zone' && selectedZoneId !== null" class="venue-modal-box">
-          <button class="venue-modal-close" type="button" :aria-label="t('common.close')" @click="closeModal">×</button>
-          
-          <div class="modal-body-content">
-            <span class="modal-badge" :class="`zone-badge-${selectedZoneId}`">
-              {{ t(`venue.legend.${selectedZoneId}`) }}
-            </span>
-            <h3>{{ t(`venue.legend.${selectedZoneId}`) }}</h3>
-            <div class="modal-section-title">{{ t('venue.modal.details') }}</div>
-            <p class="modal-desc">{{ t(`venue.zones.${selectedZoneId}`) }}</p>
-
-            <!-- Linked Events Schedule -->
-            <div v-if="['stage', 'vendors', 'workshop', 'game'].includes(selectedZoneId)" class="modal-events-section">
-              <div class="modal-section-title">{{ t('venue.modal.events') }}</div>
-              
-              <div v-if="zoneEvents.length > 0" class="events-list">
-                <div v-for="(event, idx) in zoneEvents" :key="idx" class="event-item">
-                  <div class="event-time">🕒 {{ event.start }} - {{ event.end }}</div>
-                  <div class="event-title">{{ event.title }}</div>
-                  <div v-if="event.detail" class="event-desc">{{ event.detail }}</div>
-                </div>
-              </div>
-              <p v-else class="no-events-text">{{ t('venue.modal.noEvents') }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Booth Information Modal -->
-        <div v-if="activeModalType === 'booth' && selectedBooth !== null" class="venue-modal-box">
-          <button class="venue-modal-close" type="button" :aria-label="t('common.close')" @click="closeModal">×</button>
-          
-          <div class="modal-body-content">
-            <span class="modal-badge booth-badge">{{ t('venue.modal.boothTitle', { id: selectedBooth.id }) }}</span>
-            <h3>{{ selectedBooth.name[isEn ? 'en' : 'zh'] }}</h3>
-            
-            <div class="modal-section-title">{{ t('venue.modal.description') }}</div>
-            <p class="modal-desc">{{ selectedBooth.description[isEn ? 'en' : 'zh'] }}</p>
-
-            <!-- Links -->
-            <div v-if="selectedBooth.links && selectedBooth.links.length > 0" class="modal-links-section">
-              <div class="modal-section-title">{{ t('venue.modal.links') }}</div>
-              <div class="links-grid">
-                <a v-for="(link, idx) in selectedBooth.links" :key="idx" :href="link.url" target="_blank" rel="noopener noreferrer" class="booth-social-link">
-                  <i :class="link.icon || 'fa-solid fa-link'"></i>
-                  <span>{{ link.label }}</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
@@ -606,15 +627,46 @@ onUnmounted(() => {
 }
 
 .info-sidebar-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.5em;
-  padding: 1.5em;
+  padding: 1.8em;
   border-radius: 1.25em;
-  background: linear-gradient(180deg, rgba(46, 21, 56, 0.82), rgba(29, 13, 36, 0.9));
+  background: linear-gradient(180deg, rgba(46, 21, 56, 0.85), rgba(29, 13, 36, 0.95));
   box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, 0.15);
-  min-height: 250px;
+  min-height: 380px;
+  max-height: 600px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.info-sidebar-card.has-selection {
+  border: 1px solid rgba(255, 230, 167, 0.25);
+  box-shadow: 0 1em 2.5em rgba(0, 0, 0, .35), 0 0 15px rgba(255, 230, 167, 0.05);
+}
+
+.clear-selection-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.clear-selection-btn:hover {
+  color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.1);
 }
 
 /* SVG styling */
@@ -629,6 +681,10 @@ onUnmounted(() => {
 
 #venue-svg g {
   transition: transform 0.05s ease-out; /* Smooth dragging experience */
+}
+
+#venue-svg g.smooth-pan {
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Map Controls */
@@ -713,6 +769,20 @@ onUnmounted(() => {
   pointer-events: none;
   transition: all 0.25s ease;
   user-select: none;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.zone-label-text-static {
+  font-family: NotoSansTC-Regular, 'Noto Sans TC', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: #ffffff;
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+  text-anchor: start;
+  dominant-baseline: central;
 }
 
 .zone-group:hover .zone-label-text,
@@ -840,23 +910,12 @@ onUnmounted(() => {
   fill: #ffffff;
 }
 
-/* Entrance Color System */
+/* Entrance Color System (Static reference only) */
 .shape-entrance {
   fill: #ff3366;
   stroke: #ff3366;
-}
-.font-entrance path {
-  fill: #ff3366;
-}
-.entrance-group:hover .shape-entrance,
-.entrance-group.active .shape-entrance {
-  fill-opacity: 0.45;
-  stroke: #ffffff;
-  filter: url(#neon-glow);
-}
-.entrance-group:hover .font-entrance path,
-.entrance-group.active .font-entrance path {
-  fill: #ffffff;
+  fill-opacity: 0.15;
+  stroke-width: 2.2px;
 }
 
 /* Booth design inside Vendor Alley */
@@ -901,20 +960,22 @@ onUnmounted(() => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .sidebar-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   color: rgba(255, 255, 255, 0.45);
-  gap: 0.8rem;
+  gap: 1.2rem;
+  margin: auto 0;
+  padding: 2rem 0;
 }
 
 .placeholder-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: rgba(255, 230, 167, 0.25);
   animation: float-slow 4s ease-in-out infinite;
 }
@@ -924,22 +985,24 @@ onUnmounted(() => {
   50% { transform: translateY(-6px); }
 }
 
-.sidebar-item-preview {
+.sidebar-item-preview,
+.sidebar-item-detail {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
-  animation: fadeIn 0.25s ease-out;
+  gap: 0.6rem;
+  animation: fadeIn 0.3s ease-out;
+  width: 100%;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .preview-badge {
   display: inline-block;
-  padding: 0.2rem 0.6rem;
+  padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 99px;
@@ -958,274 +1021,53 @@ onUnmounted(() => {
 .zone-badge-entrance { background-color: rgba(255, 51, 102, 0.75); }
 .booth-badge { background-color: var(--color-gold); color: #120b18; }
 
-.sidebar-item-preview h3 {
-  margin: 0;
-  font-size: 1.4rem;
+.sidebar-item-preview h3,
+.sidebar-item-detail h3 {
+  margin: 0.2rem 0;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
   color: #ffffff;
   text-shadow: 0 0 8px rgba(255, 230, 167, 0.35);
+  line-height: 1.25;
 }
 
-.preview-desc {
+.preview-desc,
+.detail-desc {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
 }
 
-.legend-container {
-  border-top: 1px solid rgba(255, 230, 167, 0.1);
-  padding-top: 0.8rem;
-}
-
-.legend-container h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(255, 230, 167, 0.65);
-}
-
-.legend-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.4rem;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0.1rem;
-  border-radius: 4px;
-}
-
-.legend-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-}
-
-.legend-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.dot-stage { background-color: #ba55d3; box-shadow: 0 0 4px #ba55d3; }
-.dot-vendors { background-color: #fffb1a; box-shadow: 0 0 4px #fffb1a; }
-.dot-workshop { background-color: #1a98ff; box-shadow: 0 0 4px #1a98ff; }
-.dot-game { background-color: #1affec; box-shadow: 0 0 4px #1affec; }
-.dot-bar { background-color: #ffbdde; box-shadow: 0 0 4px #ffbdde; }
-.dot-exhibition { background-color: #a3a1a0; box-shadow: 0 0 4px #a3a1a0; }
-.dot-checkin { background-color: #ff5e62; box-shadow: 0 0 4px #ff5e62; }
-.dot-entrance { background-color: #ff3366; box-shadow: 0 0 4px #ff3366; }
-.dot-booth { background-color: var(--color-gold); box-shadow: 0 0 4px var(--color-gold); }
-
-/* Transport Section */
-.venue-transport-section {
-  width: min(97.5%, 76em);
-  margin: 2.5rem auto 0 auto;
-  padding: 2em;
-  border-radius: 1.25em;
-  background: linear-gradient(180deg, rgba(72, 38, 82, 0.45), rgba(46, 21, 56, 0.45));
-  box-shadow: 0 1em 2em rgba(0, 0, 0, .25), inset 0 0 0 1px rgba(127, 100, 50, .08);
-}
-
-.venue-transport-section h3 {
-  margin: 0 0 1.25rem 0;
-  font-size: 1.8rem;
-  color: var(--color-font);
-  text-shadow: 0 1px 4px rgba(255, 255, 255, .3);
-  text-align: center;
-}
-
-.transport-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 2rem;
-  align-items: stretch;
-}
-
-@media (max-width: 850px) {
-  .transport-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.transport-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.transport-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 0.8rem;
-  background: rgba(20, 10, 25, 0.55);
-  border: 1px solid rgba(255, 230, 167, 0.08);
-  transition: border-color 0.25s;
-}
-
-.transport-card:hover {
-  border-color: rgba(255, 230, 167, 0.25);
-}
-
-.card-icon {
-  font-size: 1.5rem;
-  color: var(--color-gold);
-  background: rgba(255, 230, 167, 0.1);
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.card-text h5 {
-  margin: 0 0 0.35rem 0;
-  font-size: 1.15rem;
-  color: #ffffff;
-}
-
-.card-text p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.map-embed-col {
-  width: 100%;
-  min-height: 300px;
-}
-
-.map-frame {
-  width: 100%;
-  height: 100%;
-  min-height: 300px;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(255, 230, 167, 0.15);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
-}
-
-/* Modals styling */
-.venue-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-}
-
-.venue-modal.show {
-  display: block;
-}
-
-.venue-modal-bg {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, .5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
-
-.venue-modal-box {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(75vw, 42em);
-  max-width: 95%;
-  max-height: 85vh;
-  overflow-y: auto;
-  border-radius: 1.2rem;
-  background: var(--color-paper-bg);
-  color: var(--color-paper-text-muted);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .28);
-  padding: clamp(1.2rem, 2vw, 2.2rem) clamp(1.2rem, 2vw, 2.5rem);
-  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalPop {
-  from { opacity: 0; transform: translate(-50%, -46%) scale(0.96); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
-.venue-modal-close {
-  position: absolute;
-  top: .2em;
-  right: .4em;
-  border: none;
-  background: transparent;
-  font-size: clamp(2rem, 2vw, 3.5rem);
-  cursor: pointer;
-  color: var(--color-paper-text-muted);
-  line-height: 1;
-}
-
-.venue-modal-close:hover {
-  color: #ff1e1ebb;
-  transition: color .25s;
-}
-
-.modal-body-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.modal-badge {
-  align-self: flex-start;
-  padding: 0.25rem 0.75rem;
+.sidebar-section-title {
   font-size: 0.8rem;
-  font-weight: 700;
-  border-radius: 99px;
-  color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.modal-body-content h3 {
-  margin: 0.25rem 0 0.5rem 0;
-  color: var(--color-paper-text-dark);
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  line-height: 1.2;
-}
-
-.modal-section-title {
-  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: var(--color-paper-text);
-  border-bottom: 2px solid rgba(74, 53, 34, 0.1);
-  padding-bottom: 0.2rem;
-  margin-top: 0.5rem;
+  color: var(--color-gold);
+  border-bottom: 1px solid rgba(255, 230, 167, 0.15);
+  width: 100%;
+  padding-bottom: 0.25rem;
+  margin-top: 0.8rem;
+  opacity: 0.85;
 }
 
-.modal-desc {
-  margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--color-paper-text);
-  white-space: pre-wrap;
+.tap-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--color-gold);
+  opacity: 0.75;
+  margin-top: 0.6rem;
 }
 
-/* Event schedules in modal */
-.modal-events-section,
-.modal-links-section {
+/* Event schedules in sidebar */
+.sidebar-events-section,
+.sidebar-links-section {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  width: 100%;
 }
 
 .events-list {
@@ -1233,47 +1075,52 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.8rem;
   margin-top: 0.2rem;
+  width: 100%;
 }
 
 .event-item {
-  background: rgba(74, 53, 34, 0.04);
-  border-left: 3px solid var(--color-nav-bg);
-  padding: 0.5rem 0.8rem;
-  border-radius: 0 4px 4px 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--color-gold);
+  padding: 0.6rem 0.8rem;
+  border-radius: 0 6px 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .event-time {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--color-paper-text-muted);
-  margin-bottom: 0.15rem;
+  color: var(--color-gold);
+  margin-bottom: 0.2rem;
+  opacity: 0.9;
 }
 
 .event-title {
-  font-size: 1.02rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--color-paper-text-dark);
+  color: #ffffff;
   margin-bottom: 0.15rem;
 }
 
 .event-desc {
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: var(--color-paper-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .no-events-text {
   margin: 0;
-  font-size: 0.95rem;
-  color: var(--color-paper-text-muted);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
   font-style: italic;
 }
 
-/* Booth links */
+/* Booth links in sidebar */
 .links-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.5rem;
   margin-top: 0.2rem;
 }
 
@@ -1281,20 +1128,21 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.45rem 0.9rem;
+  padding: 0.45rem 0.8rem;
   border-radius: 6px;
-  background: rgba(74, 53, 34, 0.06);
-  color: var(--color-paper-text-dark);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   transition: all 0.2s;
-  border: 1px solid rgba(74, 53, 34, 0.06);
+  border: 1px solid rgba(255, 230, 167, 0.1);
 }
 
 .booth-social-link:hover {
-  background: var(--color-nav-bg);
-  color: #ffffff;
-  border-color: var(--color-nav-bg);
+  background: var(--color-gold);
+  color: #120b18;
+  border-color: var(--color-gold);
+  transform: translateY(-1px);
 }
 </style>

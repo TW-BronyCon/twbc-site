@@ -116,7 +116,8 @@
     "timetable": "Timetable",
     "location": "Location",
     "schedule": "Schedule",
-    "venue": "Venue"
+    "venue": "Venue",
+    "transport": "Transport"
   },
   "tba": {
     "about": "About Us(TBA)",
@@ -163,7 +164,7 @@
   },
   "venue": {
     "title": "Venue Map",
-    "hint": "Hover over different zones or booths on the map to see details. Click on them for more information.",
+    "hint": "Tap a zone or booth on the map to view detailed schedule, description, and links.",
     "legend": {
       "title": "Map Legend",
       "stage": "Main Stage",

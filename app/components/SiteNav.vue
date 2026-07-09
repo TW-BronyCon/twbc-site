@@ -55,6 +55,7 @@ onUnmounted(() => document.removeEventListener('click', closeMenus))
     <NuxtLink v-if="false" :to="localePath('/about')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.about') }}</NuxtLink>
     <span v-else class="nav-coming-soon">{{ $t('tba.about') }}</span>
     <NuxtLink :to="localePath('/venue')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.venue') }}</NuxtLink>
+    <NuxtLink :to="localePath('/transport')" @click="isNavOpen = false; openSubmenu = null">{{ $t('menu.transport') }}</NuxtLink>
   </nav>
 </template>
 
