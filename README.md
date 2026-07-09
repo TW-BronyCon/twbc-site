@@ -21,9 +21,10 @@
 
 ## What is this?
 
-This is the official website for **Taiwan BronyCon (TWBC)**, a fan-organized convention for *My Little Pony: Friendship is Magic* fans in Taiwan.
+This is the official website for **Taiwan BronyCon (TWBC)**, a fan-organized convention for _My Little Pony: Friendship is Magic_ fans in Taiwan.
 
 The site features:
+
 - Event information and countdown
 - Ticket information and purchase links
 - Multi-language support (Traditional Chinese and English)

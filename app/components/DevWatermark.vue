@@ -1,34 +1,40 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const route = useRoute()
-const { t } = useI18n()
+const route = useRoute();
+const { t } = useI18n();
 
 const isPreview = computed(() => {
   if (import.meta.client) {
-    const hostname = window.location.hostname
+    const hostname = window.location.hostname;
     // Show watermark if we are not on the primary production domain (e.g. localhost, staging, preview, etc.)
-    return hostname !== 'twbronycon.org' && hostname !== 'www.twbronycon.org'
+    return hostname !== "twbronycon.org" && hostname !== "www.twbronycon.org";
   }
-  return false
-})
+  return false;
+});
 
 // Check if page/route metadata has 'underDevelopment' set to true (checking both direct meta and matched records)
 const isDev = computed(() => {
-  const routeMetaDev = route.meta.underDevelopment || route.matched.some(r => r.meta.underDevelopment)
-  if (routeMetaDev) return true
-  return false
-})
+  const routeMetaDev =
+    route.meta.underDevelopment ||
+    route.matched.some((r) => r.meta.underDevelopment);
+  if (routeMetaDev) return true;
+  return false;
+});
 
 // Get localized text for watermark and ribbon
-const watermarkText = computed(() => t('development.watermark'))
-const ribbonText = computed(() => t('development.ribbon'))
-const previewBuildText = computed(() => t('development.preview'))
+const watermarkText = computed(() => t("development.watermark"));
+const ribbonText = computed(() => t("development.ribbon"));
+const previewBuildText = computed(() => t("development.preview"));
 </script>
 
 <template>
   <ClientOnly>
-    <div v-if="isDev || isPreview" class="dev-watermark-container" aria-hidden="true">
+    <div
+      v-if="isDev || isPreview"
+      class="dev-watermark-container"
+      aria-hidden="true"
+    >
       <!-- Grid of glassmorphic watermark cards with backdrop filter -->
       <div class="dev-watermark-grid">
         <div v-for="i in 80" :key="i" class="dev-watermark-item">
@@ -106,7 +112,11 @@ const previewBuildText = computed(() => t('development.preview'))
   right: -42px;
   width: 220px;
   padding: 8px 0;
-  background: linear-gradient(135deg, rgba(255, 189, 222, 0.95), rgba(255, 230, 167, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 189, 222, 0.95),
+    rgba(255, 230, 167, 0.95)
+  );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1.5px solid rgba(255, 255, 255, 0.4);
@@ -126,7 +136,11 @@ const previewBuildText = computed(() => t('development.preview'))
 }
 
 .dev-ribbon:hover {
-  background: linear-gradient(135deg, rgba(255, 189, 222, 1), rgba(255, 230, 167, 1));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 189, 222, 1),
+    rgba(255, 230, 167, 1)
+  );
   box-shadow: 0 4px 25px rgba(255, 189, 222, 0.5);
   letter-spacing: 0.18em;
 }
