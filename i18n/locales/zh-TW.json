@@ -137,6 +137,7 @@
     "description": "來自麒麟村的公告與消息，都會寄到這裡。"
   },
   "news": {
+    "author": "TWBC台灣馬聚",
     "labels": {
       "time": "時間",
       "author": "寄件人"
