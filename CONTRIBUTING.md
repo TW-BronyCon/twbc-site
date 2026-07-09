@@ -33,6 +33,9 @@ Use kebab-case: `add-countdown-component`, `fix-mobile-layout`
 - **Nuxt 4 / Vue 3 Composition API:** Use `<script setup lang="ts">` for components.
 - **TypeScript:** Ensure proper typing for props, emits, and composables.
 - **Vanilla CSS:** This project prefers Vanilla CSS. Scope styles within components where appropriate, or use global CSS in `app/assets/css/`.
+- **Code Formatting:** The project uses Prettier to enforce consistent code style.
+  - Run `npm run format` to automatically format all files in the codebase.
+  - Run `npm run format:check` to verify that files are properly formatted (this check runs automatically in the CI pipeline).
 
 ## Typography & i18n
 
