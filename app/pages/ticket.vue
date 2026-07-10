@@ -204,6 +204,7 @@ const onMouseLeave = () => {
             :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
             class="block-link"
             :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
+            :aria-disabled="isTierClosed(tier.closeTime)"
           >
             <div
               class="block"
@@ -258,10 +259,11 @@ const onMouseLeave = () => {
             >
               <thead>
                 <tr>
-                  <th class="feature-head"></th>
+                  <th scope="col" class="feature-head"></th>
                   <th
                     v-for="(tier, index) in tiers"
                     :key="tier.id"
+                    scope="col"
                     class="tier-head"
                     :class="{
                       'active-col': activeColIndex === index,
@@ -283,6 +285,7 @@ const onMouseLeave = () => {
                   :class="{ 'active-row': activeRowIndex === rIndex }"
                 >
                   <th
+                    scope="row"
                     class="feature-name"
                     @mouseenter="onRowMouseEnter(rIndex)"
                   >
