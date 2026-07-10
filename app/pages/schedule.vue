@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import {
   columns as rawColumns,
   events as rawEvents,
@@ -429,6 +430,13 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handleKeyDown);
   document.body.style.overflow = "";
 });
+
+// Deselect active activity when leaving the page
+onBeforeRouteLeave(() => {
+  activeModalIndex.value = null;
+  focusedIndex.value = -1;
+  document.body.style.overflow = "";
+});
 </script>
 
 <template>
@@ -509,49 +517,54 @@ onUnmounted(() => {
     </template>
 
     <!-- Modal -->
-    <div
-      class="expo-tt-modal"
-      :class="{ show: activeModalEvent !== null }"
-      :aria-hidden="activeModalEvent === null"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="schedule-modal-title"
-    >
-      <div class="expo-tt-modal-bg" @click="closeModal" />
-
-      <div v-if="activeModalEvent !== null" class="expo-tt-modal-box">
-        <button
-          class="expo-tt-modal-close"
-          type="button"
-          :aria-label="t('common.close')"
-          @click="closeModal"
+    <Teleport to="body">
+      <Transition name="schedule-modal">
+        <div
+          v-if="activeModalEvent !== null"
+          class="expo-tt-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="schedule-modal-title"
+          @click.self="closeModal"
         >
-          ×
-        </button>
-
-        <div>
-          <h3
-            id="schedule-modal-title"
-            v-html="activeModalEvent.formattedTitle"
-          ></h3>
-
-          <div class="expo-tt-modal-meta">
-            <span>
-              🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
-              {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
-            </span>
-
-            <span
-              >📍 {{ t("schedule.area") }}: {{ activeModalEvent.area }}</span
+          <div class="expo-tt-modal-box">
+            <button
+              class="expo-tt-modal-close"
+              type="button"
+              :aria-label="t('common.close')"
+              @click="closeModal"
             >
-          </div>
+              ×
+            </button>
 
-          <p>
-            {{ activeModalEvent.detailText || t("schedule.detailPlaceholder") }}
-          </p>
+            <div>
+              <h3
+                id="schedule-modal-title"
+                v-html="activeModalEvent.formattedTitle"
+              ></h3>
+
+              <div class="expo-tt-modal-meta">
+                <span>
+                  🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
+                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
+                </span>
+
+                <span
+                  >📍 {{ t("schedule.area") }}:
+                  {{ activeModalEvent.area }}</span
+                >
+              </div>
+
+              <p>
+                {{
+                  activeModalEvent.detailText || t("schedule.detailPlaceholder")
+                }}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Transition>
+    </Teleport>
   </PageLayout>
 </template>
 
@@ -680,29 +693,19 @@ onUnmounted(() => {
 }
 
 .expo-tt-modal {
-  display: none;
   position: fixed;
   inset: 0;
   z-index: 9999;
-}
-
-.expo-tt-modal.show {
-  display: block;
-}
-
-.expo-tt-modal-bg {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
 .expo-tt-modal-box {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: min(75vw, 60em);
   max-height: 85vh;
   overflow: auto;
@@ -712,6 +715,7 @@ onUnmounted(() => {
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
   padding: clamp(1.2rem, 2vw, 2rem) clamp(1rem, 2vw, 2.5rem)
     clamp(1rem, 2vw, 2rem);
+  position: relative;
 }
 
 .expo-tt-modal-close {
@@ -788,5 +792,33 @@ onUnmounted(() => {
   .touch-only {
     display: block;
   }
+}
+</style>
+
+<style>
+/* Unscoped — modal is teleported to body */
+
+/* Schedule Modal Entry/Exit Animations */
+.schedule-modal-enter-active,
+.schedule-modal-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.schedule-modal-enter-active .expo-tt-modal-box,
+.schedule-modal-leave-active .expo-tt-modal-box {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.schedule-modal-enter-from,
+.schedule-modal-leave-to {
+  opacity: 0;
+}
+
+.schedule-modal-enter-from .expo-tt-modal-box {
+  transform: scale(0.9) translateY(20px);
+}
+
+.schedule-modal-leave-to .expo-tt-modal-box {
+  transform: scale(0.95) translateY(10px);
 }
 </style>
