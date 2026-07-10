@@ -483,13 +483,9 @@ onUnmounted(() => {
                     active:
                       hoveredZoneId === 'stage' || selectedZoneId === 'stage',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.stage'))"
                   @mouseover="hoveredZoneId = 'stage'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('stage')"
-                  @keydown.enter.space.prevent="openZone('stage')"
                 >
                   <rect
                     class="zone-shape shape-stage"
@@ -524,13 +520,9 @@ onUnmounted(() => {
                       hoveredZoneId === 'vendors' ||
                       selectedZoneId === 'vendors',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.vendors'))"
                   @mouseover="hoveredZoneId = 'vendors'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('vendors')"
-                  @keydown.enter.space.prevent="openZone('vendors')"
                 >
                   <polygon
                     class="zone-shape shape-vendors"
@@ -562,13 +554,9 @@ onUnmounted(() => {
                       hoveredZoneId === 'workshop' ||
                       selectedZoneId === 'workshop',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.workshop'))"
                   @mouseover="hoveredZoneId = 'workshop'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('workshop')"
-                  @keydown.enter.space.prevent="openZone('workshop')"
                 >
                   <rect
                     class="zone-shape shape-workshop"
@@ -604,13 +592,9 @@ onUnmounted(() => {
                     active:
                       hoveredZoneId === 'social' || selectedZoneId === 'social',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.social'))"
                   @mouseover="hoveredZoneId = 'social'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('social')"
-                  @keydown.enter.space.prevent="openZone('social')"
                 >
                   <rect
                     class="zone-shape shape-social"
@@ -645,13 +629,9 @@ onUnmounted(() => {
                       hoveredZoneId === 'exhibition' ||
                       selectedZoneId === 'exhibition',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.exhibition'))"
                   @mouseover="hoveredZoneId = 'exhibition'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('exhibition')"
-                  @keydown.enter.space.prevent="openZone('exhibition')"
                 >
                   <polygon
                     class="zone-shape shape-exhibition"
@@ -683,13 +663,9 @@ onUnmounted(() => {
                   :class="{
                     active: hoveredZoneId === 'bar' || selectedZoneId === 'bar',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.bar'))"
                   @mouseover="hoveredZoneId = 'bar'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('bar')"
-                  @keydown.enter.space.prevent="openZone('bar')"
                 >
                   <polygon
                     class="zone-shape shape-bar"
@@ -721,13 +697,9 @@ onUnmounted(() => {
                       hoveredZoneId === 'checkin' ||
                       selectedZoneId === 'checkin',
                   }"
-                  tabindex="0"
-                  role="button"
-                  :aria-label="cleanLabel(t('venue.legend.checkin'))"
                   @mouseover="hoveredZoneId = 'checkin'"
                   @mouseleave="hoveredZoneId = null"
                   @click="openZone('checkin')"
-                  @keydown.enter.space.prevent="openZone('checkin')"
                 >
                   <rect
                     class="zone-shape shape-checkin"
@@ -791,13 +763,9 @@ onUnmounted(() => {
                         hoveredBoothId === '1' || selectedBooth?.id === '1',
                     }"
                     transform="translate(107.56, 260.74) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '1' })"
                     @mouseover="hoveredBoothId = '1'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('1')"
-                    @keydown.enter.space.prevent="openBoothById('1')"
                   >
                     <rect
                       class="booth-rect"
@@ -827,13 +795,9 @@ onUnmounted(() => {
                         hoveredBoothId === '2' || selectedBooth?.id === '2',
                     }"
                     transform="translate(125.97, 285.52) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '2' })"
                     @mouseover="hoveredBoothId = '2'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('2')"
-                    @keydown.enter.space.prevent="openBoothById('2')"
                   >
                     <rect
                       class="booth-rect"
@@ -863,13 +827,9 @@ onUnmounted(() => {
                         hoveredBoothId === '3' || selectedBooth?.id === '3',
                     }"
                     transform="translate(152.03, 320.59) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '3' })"
                     @mouseover="hoveredBoothId = '3'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('3')"
-                    @keydown.enter.space.prevent="openBoothById('3')"
                   >
                     <rect
                       class="booth-rect"
@@ -899,13 +859,9 @@ onUnmounted(() => {
                         hoveredBoothId === '4' || selectedBooth?.id === '4',
                     }"
                     transform="translate(170.44, 345.37) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '4' })"
                     @mouseover="hoveredBoothId = '4'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('4')"
-                    @keydown.enter.space.prevent="openBoothById('4')"
                   >
                     <rect
                       class="booth-rect"
@@ -935,13 +891,9 @@ onUnmounted(() => {
                         hoveredBoothId === '5' || selectedBooth?.id === '5',
                     }"
                     transform="translate(196.5, 380.44) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '5' })"
                     @mouseover="hoveredBoothId = '5'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('5')"
-                    @keydown.enter.space.prevent="openBoothById('5')"
                   >
                     <rect
                       class="booth-rect"
@@ -971,13 +923,9 @@ onUnmounted(() => {
                         hoveredBoothId === '6' || selectedBooth?.id === '6',
                     }"
                     transform="translate(165.16, 233.38) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '6' })"
                     @mouseover="hoveredBoothId = '6'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('6')"
-                    @keydown.enter.space.prevent="openBoothById('6')"
                   >
                     <rect
                       class="booth-rect"
@@ -1007,13 +955,9 @@ onUnmounted(() => {
                         hoveredBoothId === '7' || selectedBooth?.id === '7',
                     }"
                     transform="translate(183.57, 258.17) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '7' })"
                     @mouseover="hoveredBoothId = '7'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('7')"
-                    @keydown.enter.space.prevent="openBoothById('7')"
                   >
                     <rect
                       class="booth-rect"
@@ -1043,13 +987,9 @@ onUnmounted(() => {
                         hoveredBoothId === '8' || selectedBooth?.id === '8',
                     }"
                     transform="translate(196.95, 209.75) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '8' })"
                     @mouseover="hoveredBoothId = '8'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('8')"
-                    @keydown.enter.space.prevent="openBoothById('8')"
                   >
                     <rect
                       class="booth-rect"
@@ -1079,13 +1019,9 @@ onUnmounted(() => {
                         hoveredBoothId === '9' || selectedBooth?.id === '9',
                     }"
                     transform="translate(215.37, 234.53) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '9' })"
                     @mouseover="hoveredBoothId = '9'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('9')"
-                    @keydown.enter.space.prevent="openBoothById('9')"
                   >
                     <rect
                       class="booth-rect"
@@ -1115,13 +1051,9 @@ onUnmounted(() => {
                         hoveredBoothId === '10' || selectedBooth?.id === '10',
                     }"
                     transform="translate(212.86, 264.25) rotate(-36.62)"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="t('venue.modal.boothTitle', { id: '10' })"
                     @mouseover="hoveredBoothId = '10'"
                     @mouseleave="hoveredBoothId = null"
                     @click.stop="openBoothById('10')"
-                    @keydown.enter.space.prevent="openBoothById('10')"
                   >
                     <rect
                       class="booth-rect"
@@ -1610,22 +1542,9 @@ onUnmounted(() => {
 }
 
 .zone-group:hover .zone-label-text,
-.zone-group:focus-visible .zone-label-text,
 .zone-group.active .zone-label-text {
   opacity: 1;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-}
-
-.zone-group:focus-visible {
-  outline: none;
-}
-
-.zone-group:focus-visible .zone-shape {
-  fill-opacity: 0.38;
-  stroke: #ffffff;
-  stroke-width: 2.5px;
-  stroke-dasharray: 4 2;
-  filter: url(#neon-glow);
 }
 
 /* Main Stage Color System */
@@ -1780,7 +1699,6 @@ onUnmounted(() => {
 }
 
 .booth-group:hover .booth-rect,
-.booth-group:focus-visible .booth-rect,
 .booth-group.active .booth-rect {
   fill: var(--color-gold);
   stroke: #ffffff;
@@ -1788,16 +1706,7 @@ onUnmounted(() => {
   transform: scale(1.18);
 }
 
-.booth-group:focus-visible {
-  outline: none;
-}
-
-.booth-group:focus-visible .booth-rect {
-  stroke-width: 1.5px;
-}
-
 .booth-group:hover .booth-label,
-.booth-group:focus-visible .booth-label,
 .booth-group.active .booth-label {
   fill: #120b18;
 }
