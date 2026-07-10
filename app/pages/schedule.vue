@@ -305,7 +305,9 @@ function openEvent(index: number) {
   document.body.style.overflow = "hidden";
 
   nextTick(() => {
-    const closeBtn = document.querySelector(".expo-tt-modal-close") as HTMLElement | null;
+    const closeBtn = document.querySelector(
+      ".expo-tt-modal-close",
+    ) as HTMLElement | null;
     if (closeBtn) closeBtn.focus();
   });
 }
@@ -528,7 +530,10 @@ onUnmounted(() => {
         </button>
 
         <div>
-          <h3 id="schedule-modal-title" v-html="activeModalEvent.formattedTitle"></h3>
+          <h3
+            id="schedule-modal-title"
+            v-html="activeModalEvent.formattedTitle"
+          ></h3>
 
           <div class="expo-tt-modal-meta">
             <span>

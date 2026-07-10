@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import type { ComponentPublicInstance } from "vue";
 import { rawNewsPosts } from "~/data/newsData";
 
@@ -369,7 +376,9 @@ function openMail(post: NewsPost) {
   document.body.style.overflow = "hidden";
 
   nextTick(() => {
-    const closeBtn = document.querySelector(".news-close-btn") as HTMLElement | null;
+    const closeBtn = document.querySelector(
+      ".news-close-btn",
+    ) as HTMLElement | null;
     if (closeBtn) closeBtn.focus();
   });
 }
@@ -447,7 +456,9 @@ onBeforeUnmount(() => {
           :class="{ opened: openedMap[post.id] }"
           tabindex="0"
           role="button"
-          :aria-label="t('newsPage.readPost', { title: post.title }) || post.title"
+          :aria-label="
+            t('newsPage.readPost', { title: post.title }) || post.title
+          "
           @mouseenter="moveWhyToMail(post.id)"
           @mouseleave="startWhyIdleTimer"
           @click="openMail(post)"

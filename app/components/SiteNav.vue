@@ -41,7 +41,11 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
     <span></span>
   </button>
 
-  <nav class="top-nav" :class="{ open: isNavOpen }" aria-label="Primary Navigation">
+  <nav
+    class="top-nav"
+    :class="{ open: isNavOpen }"
+    aria-label="Primary Navigation"
+  >
     <NuxtLink
       :to="localePath('/')"
       @click="
