@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
 import type { ComponentPublicInstance } from "vue";
+import { rawNewsPosts } from "~/data/newsData";
 
 /**
  * News Page Component
@@ -16,17 +18,6 @@ useHead({
   title: () => t("newsPage.title"),
 });
 
-type RawNewsPost = {
-  id?: string;
-  time?: string;
-  locales: Record<string, LocalizedNewsPost>;
-};
-
-type LocalizedNewsPost = {
-  title: string;
-  content: string;
-};
-
 type NewsPost = {
   id: string;
   title: string;
@@ -42,27 +33,6 @@ type SealData = {
   topClip: string;
   bottomClip: string;
 };
-
-const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
-  "news-posts",
-  async () => {
-    try {
-      return await $fetch<RawNewsPost[]>("/content/news/posts.json", {
-        query: {
-          t: Date.now(),
-        },
-      });
-    } catch (err) {
-      console.error("Failed to load news posts:", err);
-      return [];
-    }
-  },
-  {
-    server: false,
-    immediate: false,
-    default: () => [],
-  },
-);
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -100,7 +70,7 @@ function createRandomCrack() {
 }
 
 const posts = computed<NewsPost[]>(() => {
-  const list = rawPosts.value;
+  const list = rawNewsPosts;
 
   if (!Array.isArray(list)) return [];
 
@@ -386,17 +356,34 @@ function loadOpenedMap() {
   }
 }
 
+const triggerElement = ref<HTMLElement | null>(null);
+
 function openMail(post: NewsPost) {
+  if (import.meta.client) {
+    triggerElement.value = document.activeElement as HTMLElement | null;
+  }
   openedMap.value[post.id] = true;
   saveOpenedMap();
 
   selectedPost.value = post;
   document.body.style.overflow = "hidden";
+
+  nextTick(() => {
+    const closeBtn = document.querySelector(".news-close-btn") as HTMLElement | null;
+    if (closeBtn) closeBtn.focus();
+  });
 }
 
 function closeMail() {
   selectedPost.value = null;
   document.body.style.overflow = "";
+
+  nextTick(() => {
+    if (triggerElement.value) {
+      triggerElement.value.focus();
+      triggerElement.value = null;
+    }
+  });
 }
 
 function handleEsc(e: KeyboardEvent) {
@@ -405,20 +392,19 @@ function handleEsc(e: KeyboardEvent) {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   loadOpenedMap();
-  await refreshPosts();
 
   window.addEventListener("keydown", handleEsc);
   window.addEventListener("resize", handleResize);
 
-  await nextTick();
+  nextTick(() => {
+    moveWhyOffscreen();
 
-  moveWhyOffscreen();
-
-  whyIntroTimer = setTimeout(() => {
-    moveWhyToDefaultMail();
-  }, 1000); //1秒載入
+    whyIntroTimer = setTimeout(() => {
+      moveWhyToDefaultMail();
+    }, 1000); //1秒載入
+  });
 });
 
 onBeforeUnmount(() => {
@@ -459,9 +445,13 @@ onBeforeUnmount(() => {
           :ref="(el) => setMailRef(post.id, el)"
           class="mail"
           :class="{ opened: openedMap[post.id] }"
+          tabindex="0"
+          role="button"
+          :aria-label="t('newsPage.readPost', { title: post.title }) || post.title"
           @mouseenter="moveWhyToMail(post.id)"
           @mouseleave="startWhyIdleTimer"
           @click="openMail(post)"
+          @keydown.enter.space.prevent="openMail(post)"
         >
           <div class="stamp"></div>
 
@@ -508,24 +498,36 @@ onBeforeUnmount(() => {
 
     <Teleport to="body">
       <Transition name="modal">
-        <div v-if="selectedPost" class="modal show" @click.self="closeMail">
-          <div class="paper">
-            <button class="close-btn" type="button" @click="closeMail">
+        <div
+          v-if="selectedPost"
+          class="news-modal show"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="news-modal-title"
+          @click.self="closeMail"
+        >
+          <div class="news-paper">
+            <button
+              class="news-close-btn"
+              type="button"
+              aria-label="Close modal"
+              @click="closeMail"
+            >
               ✕
             </button>
 
             <div id="paperBody">
-              <h2>{{ selectedPost.title }}</h2>
+              <h2 id="news-modal-title">{{ selectedPost.title }}</h2>
 
-              <div class="paper-meta">
+              <div class="news-paper-meta">
                 {{ t("news.labels.time") }}：{{ selectedPost.time }}
 
-                <span style="float: right">
+                <span class="news-paper-author">
                   {{ t("news.labels.author") }}：{{ t("news.author") }}
                 </span>
               </div>
 
-              <div class="paper-content">
+              <div class="news-paper-content">
                 <template v-for="(part, index) in contentParts" :key="index">
                   <a
                     v-if="part.type === 'link'"
@@ -611,7 +613,8 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-.mail:hover {
+.mail:hover,
+.mail:focus-visible {
   transform: translateY(-8px) rotate(-0.5deg);
   box-shadow:
     0 0 10px rgba(255, 255, 255, 0.45),
@@ -622,7 +625,13 @@ onBeforeUnmount(() => {
   animation: magicPulse 1.2s ease-in-out infinite;
 }
 
-.mail:hover::after {
+.mail:focus-visible {
+  outline: 3px solid rgba(255, 130, 225, 0.85);
+  outline-offset: 4px;
+}
+
+.mail:hover::after,
+.mail:focus-visible::after {
   content: "";
   position: absolute;
   inset: -12px;
@@ -944,7 +953,7 @@ onBeforeUnmount(() => {
 
 <style>
 /* Unscoped Styles for Teleported Modal */
-.modal {
+.news-modal {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
@@ -958,13 +967,13 @@ onBeforeUnmount(() => {
   z-index: 99;
 }
 
-.modal.show {
+.news-modal.show {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* 信紙 */
-.paper {
+.news-paper {
   width: min(760px, 100%);
   max-height: 88vh;
   overflow-y: auto;
@@ -981,33 +990,37 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.paper h2 {
+.news-paper h2 {
   margin: 0 0 0.5rem;
   padding-right: 1.25rem;
   font-size: 2rem;
 }
 
-.paper-meta {
+.news-paper-meta {
   font-size: 0.9rem;
   color: var(--color-paper-text-muted);
   margin-bottom: 1rem;
   line-height: 1.7;
 }
 
-.paper-content {
+.news-paper-author {
+  float: right;
+}
+
+.news-paper-content {
   line-height: 1.5;
   white-space: pre-line;
   text-align: justify;
 }
 
-.paper-content a {
+.news-paper-content a {
   color: var(--color-purple-accent);
   font-weight: 700;
   text-decoration: underline;
   word-break: break-all;
 }
 
-.paper-content a:hover {
+.news-paper-content a:hover {
   opacity: 0.75;
 }
 
@@ -1017,8 +1030,8 @@ onBeforeUnmount(() => {
   transition: opacity 0.3s ease;
 }
 
-.modal-enter-active .paper,
-.modal-leave-active .paper {
+.modal-enter-active .news-paper,
+.modal-leave-active .news-paper {
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1027,28 +1040,37 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-.modal-enter-from .paper {
+.modal-enter-from .news-paper {
   transform: scale(0.9) translateY(20px);
 }
 
-.modal-leave-to .paper {
+.modal-leave-to .news-paper {
   transform: scale(0.95) translateY(10px);
 }
 
-.close-btn {
+.news-close-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
   background: #ddd;
   color: #111;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.news-close-btn:focus-visible {
+  outline: 2px solid var(--color-purple-accent);
+  outline-offset: 2px;
 }
 
 @media (max-width: 700px) {
-  .paper {
+  .news-paper {
     padding: 1.2rem;
   }
 
-  .paper h2 {
+  .news-paper h2 {
     font-size: 1.4rem;
   }
 }
