@@ -41,7 +41,7 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
     <span></span>
   </button>
 
-  <nav class="top-nav" :class="{ open: isNavOpen }">
+  <nav class="top-nav" :class="{ open: isNavOpen }" aria-label="Primary Navigation">
     <NuxtLink
       :to="localePath('/')"
       @click="
@@ -75,9 +75,16 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
       >{{ $t("menu.schedule") }}</NuxtLink
     >
 
-    <ul class="menu" style="transform: translateY(-1px)">
+    <ul class="menu">
       <li class="menu-group" :class="{ open: openSubmenu === 'apply' }">
-        <button @click="toggleSubmenu('apply')">{{ $t("menu.apply") }}</button>
+        <button
+          type="button"
+          aria-haspopup="true"
+          :aria-expanded="openSubmenu === 'apply'"
+          @click="toggleSubmenu('apply')"
+        >
+          {{ $t("menu.apply") }}
+        </button>
         <ul class="submenu">
           <li>
             <a
@@ -230,6 +237,7 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
   padding: 0;
 
   list-style: none;
+  transform: translateY(-1px);
 }
 
 .top-nav .menu-group {
