@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import {
   columns as rawColumns,
   events as rawEvents,
@@ -294,15 +294,32 @@ function getCurrentSelectableIndex() {
   return focusedIndex.value;
 }
 
+const triggerElement = ref<HTMLElement | null>(null);
+
 function openEvent(index: number) {
+  if (import.meta.client) {
+    triggerElement.value = document.activeElement as HTMLElement | null;
+  }
   focusedIndex.value = index;
   activeModalIndex.value = index;
   document.body.style.overflow = "hidden";
+
+  nextTick(() => {
+    const closeBtn = document.querySelector(".expo-tt-modal-close") as HTMLElement | null;
+    if (closeBtn) closeBtn.focus();
+  });
 }
 
 function closeModal() {
   activeModalIndex.value = null;
   document.body.style.overflow = "";
+
+  nextTick(() => {
+    if (triggerElement.value) {
+      triggerElement.value.focus();
+      triggerElement.value = null;
+    }
+  });
 }
 
 function clearFocus() {
@@ -494,6 +511,9 @@ onUnmounted(() => {
       class="expo-tt-modal"
       :class="{ show: activeModalEvent !== null }"
       :aria-hidden="activeModalEvent === null"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="schedule-modal-title"
     >
       <div class="expo-tt-modal-bg" @click="closeModal" />
 
@@ -508,7 +528,7 @@ onUnmounted(() => {
         </button>
 
         <div>
-          <h3 v-html="activeModalEvent.formattedTitle"></h3>
+          <h3 id="schedule-modal-title" v-html="activeModalEvent.formattedTitle"></h3>
 
           <div class="expo-tt-modal-meta">
             <span>
