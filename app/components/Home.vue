@@ -54,12 +54,14 @@ const translatedCountdownMsg = computed(() => {
 
       <section class="info-card">
         <h2>{{ $t("home.location.title") }}</h2>
-        <h4 style="text-align: center">
+        <h4 class="location-details">
           {{ $t("home.location.name") }}<br />
           {{ $t("home.location.address") }}
         </h4>
         <iframe
           class="map"
+          title="Google Map showing TW BronyCon venue location"
+          loading="lazy"
           src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d903.4343855604266!2d121.4858447!3d25.0768833!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8d751f69539%3A0x3363e968c8ea913!2zQXNpIFNwYWNlIFJlbnRhbCDpmL_mlq_nlJ_mtLvnqbrplpPloLTlnLDlh7rnp58!5e0!3m2!1szh-TW!2stw!4v1777220130926!5m2!1szh-TW!2stw"
           referrerpolicy="no-referrer-when-downgrade"
         >
@@ -236,6 +238,10 @@ const translatedCountdownMsg = computed(() => {
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
   margin-bottom: 0;
   font-weight: 400;
+}
+
+.info-card h4.location-details {
+  text-align: center;
 }
 
 .info-card p {
