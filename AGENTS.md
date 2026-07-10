@@ -37,7 +37,9 @@ This document defines guidelines and instructions for AI agents working on the T
   - This project prefers Vanilla CSS. Avoid using utility-first frameworks like TailwindCSS unless explicitly instructed.
   - Scope component styles using `<style scoped>` to prevent leakage and style pollution.
 - **Design Tokens**:
-  - Utilize and adhere to the CSS variables declared in the global stylesheet: [global.css](./app/assets/css/global.css).
+  - Utilize and adhere to the CSS variables declared in the variables stylesheet: [variables.css](./app/assets/css/variables.css) (imported by [global.css](./app/assets/css/global.css)).
+- **Page Wrapper Component**:
+  - Content pages (except index) should wrap their template in [PageLayout.vue](./app/components/PageLayout.vue) to maintain consistent page padding, hero headers, and surface container styling across the site.
 - **Responsive Layouts**:
   - Build responsive layouts using modern CSS Flexbox and Grid.
   - Always design with a mobile-first or highly responsive approach.

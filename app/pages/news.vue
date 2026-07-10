@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="legacy-page-root">
+  <PageLayout>
     <img
       src="/img/Why.avif"
       alt=""
@@ -446,129 +446,120 @@ onBeforeUnmount(() => {
       }"
     />
 
-    <div class="legacy-page-body">
-      <section class="news-wrap">
-        <div class="news-head">
-          <h1>{{ t("newsPage.heading") }}</h1>
-          <p>{{ t("newsPage.description") }}</p>
-        </div>
+    <template #title>
+      <h1>{{ t("newsPage.heading") }}</h1>
+      <p>{{ t("newsPage.description") }}</p>
+    </template>
 
-        <div class="mail-list">
-          <article
-            v-for="post in posts"
-            :key="post.id"
-            :ref="(el) => setMailRef(post.id, el)"
-            class="mail"
-            :class="{ opened: openedMap[post.id] }"
-            @mouseenter="moveWhyToMail(post.id)"
-            @mouseleave="startWhyIdleTimer"
-            @click="openMail(post)"
+    <section class="news-wrap">
+      <div class="mail-list">
+        <article
+          v-for="post in posts"
+          :key="post.id"
+          :ref="(el) => setMailRef(post.id, el)"
+          class="mail"
+          :class="{ opened: openedMap[post.id] }"
+          @mouseenter="moveWhyToMail(post.id)"
+          @mouseleave="startWhyIdleTimer"
+          @click="openMail(post)"
+        >
+          <div class="stamp"></div>
+
+          <div
+            class="wax-seal"
+            :style="{
+              '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
+              '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
+              '--crack-bottom':
+                sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
+            }"
           >
-            <div class="stamp"></div>
+            <img
+              v-if="!isMailOpened(post.id)"
+              src="/img/WaxSeal.avif"
+              class="wax-closed"
+              alt=""
+            />
 
-            <div
-              class="wax-seal"
-              :style="{
-                '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
-                '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
-                '--crack-bottom':
-                  sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
-              }"
-            >
-              <img
-                v-if="!isMailOpened(post.id)"
-                src="/img/WaxSeal.avif"
-                class="wax-closed"
-                alt=""
-              />
+            <template v-else>
+              <div class="wax-top">
+                <div class="wax-piece-img"></div>
+              </div>
 
-              <template v-else>
-                <div class="wax-top">
-                  <div class="wax-piece-img"></div>
-                </div>
+              <div class="wax-bottom">
+                <div class="wax-piece-img"></div>
+              </div>
+            </template>
+          </div>
 
-                <div class="wax-bottom">
-                  <div class="wax-piece-img"></div>
-                </div>
-              </template>
-            </div>
+          <h3>{{ post.title }}</h3>
 
-            <h3>{{ post.title }}</h3>
+          <div class="preview">
+            {{ trimText(post.content, 90) }}
+          </div>
 
-            <div class="preview">
-              {{ trimText(post.content, 90) }}
-            </div>
+          <div class="mail-meta">
+            <div class="time">{{ post.time }}</div>
+            <div class="author">{{ t("news.author") }}</div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-            <div class="mail-meta">
-              <div class="time">{{ post.time }}</div>
-              <div class="author">{{ t("news.author") }}</div>
-            </div>
-          </article>
-        </div>
-      </section>
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="selectedPost" class="modal show" @click.self="closeMail">
+          <div class="paper">
+            <button class="close-btn" type="button" @click="closeMail">
+              ✕
+            </button>
 
-      <Teleport to="body">
-        <Transition name="modal">
-          <div v-if="selectedPost" class="modal show" @click.self="closeMail">
-            <div class="paper">
-              <button class="close-btn" type="button" @click="closeMail">
-                ✕
-              </button>
+            <div id="paperBody">
+              <h2>{{ selectedPost.title }}</h2>
 
-              <div id="paperBody">
-                <h2>{{ selectedPost.title }}</h2>
+              <div class="paper-meta">
+                {{ t("news.labels.time") }}：{{ selectedPost.time }}
 
-                <div class="paper-meta">
-                  {{ t("news.labels.time") }}：{{ selectedPost.time }}
+                <span style="float: right">
+                  {{ t("news.labels.author") }}：{{ t("news.author") }}
+                </span>
+              </div>
 
-                  <span style="float: right">
-                    {{ t("news.labels.author") }}：{{ t("news.author") }}
+              <div class="paper-content">
+                <template v-for="(part, index) in contentParts" :key="index">
+                  <a
+                    v-if="part.type === 'link'"
+                    :href="part.value"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    @click.stop
+                  >
+                    {{ part.value }}
+                  </a>
+
+                  <span v-else>
+                    {{ part.value }}
                   </span>
-                </div>
-
-                <div class="paper-content">
-                  <template v-for="(part, index) in contentParts" :key="index">
-                    <a
-                      v-if="part.type === 'link'"
-                      :href="part.value"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      @click.stop
-                    >
-                      {{ part.value }}
-                    </a>
-
-                    <span v-else>
-                      {{ part.value }}
-                    </span>
-                  </template>
-                </div>
+                </template>
               </div>
             </div>
           </div>
-        </Transition>
-      </Teleport>
-    </div>
-  </div>
+        </div>
+      </Transition>
+    </Teleport>
+  </PageLayout>
 </template>
 
 <style scoped>
 /* Scoped styles for News Page */
-.legacy-page-root {
-  position: relative;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
+:deep(.page-layout) {
   overflow-x: clip;
 }
 
 @supports not (overflow: clip) {
-  .legacy-page-root {
+  :deep(.page-layout) {
     overflow-x: hidden;
   }
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
 }
 
 /* 暗遮罩 */
@@ -584,25 +575,6 @@ onBeforeUnmount(() => {
   width: min(900px, 92%);
   margin: 0 auto -1rem;
   padding: 0;
-}
-
-/* 標題 */
-.news-head {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.news-head h1 {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 4rem);
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-}
-
-.news-head p {
-  margin-top: 0.7rem;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 1rem;
 }
 
 /* 信件列表 */

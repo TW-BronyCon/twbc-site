@@ -454,181 +454,125 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="legacy-page-root">
-    <div class="legacy-page-body">
-      <section class="expo-tt">
-        <div class="expo-tt-header">
-          <h2>{{ t("schedule.title") }}</h2>
-          <p>{{ t("schedule.hint") }}</p>
-          <p class="touch-only">
-            {{ t("schedule.mobilehint") }}
-          </p>
-          <p>{{ t("schedule.note") }}</p>
-        </div>
+  <PageLayout>
+    <template #title>
+      <h2>{{ t("schedule.title") }}</h2>
+      <p>{{ t("schedule.hint") }}</p>
+      <p class="touch-only">
+        {{ t("schedule.mobilehint") }}
+      </p>
+      <p>{{ t("schedule.note") }}</p>
+    </template>
 
-        <div class="expo-tt-shell">
-          <div ref="gridContainer" class="expo-tt-grid" :style="gridStyles">
-            <!-- Render column titles -->
-            <div
-              v-for="(col, index) in columns"
-              :key="col.key"
-              v-show="col.label"
-              class="expo-col-title"
-              :style="{
-                gridColumn: index + 1,
-                gridRow: 1,
-                color: col.color || '#3f71e6',
-              }"
-            >
-              {{ col.label }}
-            </div>
-
-            <!-- Background slot -->
-            <div class="expo-slot-bg" />
-
-            <!-- Time labels -->
-            <template v-for="timeLabel in timeLabels" :key="timeLabel.key">
-              <div
-                class="expo-time"
-                :class="{ 'expo-time-half': timeLabel.isHalf }"
-                :style="{
-                  gridColumn: timeLabel.col,
-                  gridRow: timeLabel.row,
-                }"
-              >
-                {{ timeLabel.text }}
-              </div>
-            </template>
-
-            <!-- Events -->
-            <button
-              v-for="event in processedEvents"
-              :key="event.index"
-              type="button"
-              :class="[
-                'expo-event',
-                event.vertical ? 'vertical' : '',
-                event.isCompact ? 'compact' : '',
-                { 'keyboard-focus': focusedIndex === event.index },
-              ]"
-              :style="{
-                gridColumn: event.columnIndex,
-                gridRow: `${event.startRow} / span ${event.rowSpan}`,
-                background: event.backgroundColor,
-                color: event.textColor,
-                fontSize: event.fontSize,
-                pointerEvents: event.PointerEvent === false ? 'none' : 'auto',
-              }"
-              :data-index="event.index"
-              @click="toggleEvent(event.index)"
-            >
-              <span class="title" v-html="event.formattedTitle"></span>
-              <span v-if="!event.vertical && !event.isCompact" class="sub">
-                {{ event.start }} - {{ event.end }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Modal -->
-      <div
-        class="expo-tt-modal"
-        :class="{ show: activeModalEvent !== null }"
-        :aria-hidden="activeModalEvent === null"
-      >
-        <div class="expo-tt-modal-bg" @click="closeModal" />
-
-        <div v-if="activeModalEvent !== null" class="expo-tt-modal-box">
-          <button
-            class="expo-tt-modal-close"
-            type="button"
-            :aria-label="t('common.close')"
-            @click="closeModal"
+    <template #surface>
+      <div class="expo-tt-shell">
+        <div ref="gridContainer" class="expo-tt-grid" :style="gridStyles">
+          <!-- Render column titles -->
+          <div
+            v-for="(col, index) in columns"
+            :key="col.key"
+            v-show="col.label"
+            class="expo-col-title"
+            :style="{
+              gridColumn: index + 1,
+              gridRow: 1,
+              color: col.color || '#3f71e6',
+            }"
           >
-            ×
-          </button>
-
-          <div>
-            <h3 v-html="activeModalEvent.formattedTitle"></h3>
-
-            <div class="expo-tt-modal-meta">
-              <span>
-                🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
-                {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
-              </span>
-
-              <span
-                >📍 {{ t("schedule.area") }}: {{ activeModalEvent.area }}</span
-              >
-            </div>
-
-            <p>
-              {{
-                activeModalEvent.detailText || t("schedule.detailPlaceholder")
-              }}
-            </p>
+            {{ col.label }}
           </div>
+
+          <!-- Background slot -->
+          <div class="expo-slot-bg" />
+
+          <!-- Time labels -->
+          <template v-for="timeLabel in timeLabels" :key="timeLabel.key">
+            <div
+              class="expo-time"
+              :class="{ 'expo-time-half': timeLabel.isHalf }"
+              :style="{
+                gridColumn: timeLabel.col,
+                gridRow: timeLabel.row,
+              }"
+            >
+              {{ timeLabel.text }}
+            </div>
+          </template>
+
+          <!-- Events -->
+          <button
+            v-for="event in processedEvents"
+            :key="event.index"
+            type="button"
+            :class="[
+              'expo-event',
+              event.vertical ? 'vertical' : '',
+              event.isCompact ? 'compact' : '',
+              { 'keyboard-focus': focusedIndex === event.index },
+            ]"
+            :style="{
+              gridColumn: event.columnIndex,
+              gridRow: `${event.startRow} / span ${event.rowSpan}`,
+              background: event.backgroundColor,
+              color: event.textColor,
+              fontSize: event.fontSize,
+              pointerEvents: event.PointerEvent === false ? 'none' : 'auto',
+            }"
+            :data-index="event.index"
+            @click="toggleEvent(event.index)"
+          >
+            <span class="title" v-html="event.formattedTitle"></span>
+            <span v-if="!event.vertical && !event.isCompact" class="sub">
+              {{ event.start }} - {{ event.end }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Modal -->
+    <div
+      class="expo-tt-modal"
+      :class="{ show: activeModalEvent !== null }"
+      :aria-hidden="activeModalEvent === null"
+    >
+      <div class="expo-tt-modal-bg" @click="closeModal" />
+
+      <div v-if="activeModalEvent !== null" class="expo-tt-modal-box">
+        <button
+          class="expo-tt-modal-close"
+          type="button"
+          :aria-label="t('common.close')"
+          @click="closeModal"
+        >
+          ×
+        </button>
+
+        <div>
+          <h3 v-html="activeModalEvent.formattedTitle"></h3>
+
+          <div class="expo-tt-modal-meta">
+            <span>
+              🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
+              {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
+            </span>
+
+            <span
+              >📍 {{ t("schedule.area") }}: {{ activeModalEvent.area }}</span
+            >
+          </div>
+
+          <p>
+            {{ activeModalEvent.detailText || t("schedule.detailPlaceholder") }}
+          </p>
         </div>
       </div>
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <style scoped>
 /* Scoped styles for Schedule Page */
-.legacy-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.expo-tt {
-  width: min(97.5%, 76em);
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 2em 2.25em 2.5em;
-  border-radius: 1.25em;
-  position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(72, 38, 82, 0.75),
-    rgba(72, 38, 82, 0.75)
-  );
-  box-shadow:
-    0 1em 2em rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(127, 100, 50, 0.12);
-  color: var(--color-paper-text);
-}
-
-.expo-tt-header {
-  text-align: center;
-  margin: 0.5em 0 -0.5em;
-}
-
-.expo-tt-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
-}
-
-.expo-tt-header p {
-  margin: 0.15em 0;
-  font-size: clamp(1.1rem, 1.75vw, 1.4rem);
-  line-height: 1.7;
-  font-weight: 600;
-  color: var(--color-font);
-}
-
 .expo-tt-shell {
   width: 100%;
   margin: 0 auto;
@@ -699,7 +643,7 @@ onUnmounted(() => {
   transform: translateY(-0.5em);
   font-weight: 700;
   font-size: clamp(1rem, 1.75vw, 1.25rem);
-  color: var(--color-font);
+  color: var(--page-title-color);
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);
   z-index: 2;
 }
@@ -833,10 +777,6 @@ onUnmounted(() => {
   }
   .expo-event .title {
     font-weight: 800;
-    transition: all 0.2s ease-out;
-  }
-  .expo-tt {
-    padding: 1.5em 1.2em 2em;
     transition: all 0.2s ease-out;
   }
 }

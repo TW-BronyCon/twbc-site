@@ -11,115 +11,63 @@ useHead(() => ({
 </script>
 
 <template>
-  <div class="transport-page-root">
-    <div class="transport-page-body">
-      <!-- Title Section -->
-      <section class="transport-hero">
-        <div class="transport-hero-header">
-          <h2>{{ t("transport.title") }}</h2>
-        </div>
-      </section>
+  <PageLayout>
+    <template #title>
+      <h2>{{ t("transport.title") }}</h2>
+    </template>
 
-      <!-- Transport Guide & Google Map Embed -->
-      <section class="transport-main-section">
-        <div class="transport-grid">
-          <!-- Transport Info Cards -->
-          <div class="transport-info-col">
-            <div class="transport-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-train-subway"></i>
-              </div>
-              <div class="card-text">
-                <h5>{{ t("transport.mrt") }}</h5>
-                <p v-html="t('transport.mrtDesc')"></p>
-              </div>
+    <template #surface>
+      <div class="transport-grid">
+        <!-- Transport Info Cards -->
+        <div class="transport-info-col">
+          <div class="transport-card">
+            <div class="card-icon">
+              <i class="fa-solid fa-train-subway"></i>
             </div>
-
-            <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
-              <div class="card-text">
-                <h5>{{ t("transport.bus") }}</h5>
-                <p>{{ t("transport.busDesc") }}</p>
-              </div>
-            </div>
-
-            <div class="transport-card">
-              <div class="card-icon"><i class="fa-solid fa-car"></i></div>
-              <div class="card-text">
-                <h5>{{ t("transport.driving") }}</h5>
-                <p>{{ t("transport.drivingDesc") }}</p>
-              </div>
+            <div class="card-text">
+              <h5>{{ t("transport.mrt") }}</h5>
+              <p v-html="t('transport.mrtDesc')"></p>
             </div>
           </div>
 
-          <!-- Google Maps Embed -->
-          <div class="map-embed-col">
-            <div class="map-frame">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.682855169476!2d121.4842186!3d25.0787593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a94562095f9d%3A0xa6428784d0812739!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A5LiJ5ZKM6Lev5Zub5q61MTEx6JmfMTDmqkw!5e0!3m2!1szh-TW!2stw!4v1720166000000!5m2!1szh-TW!2stw"
-                width="100%"
-                height="100%"
-                style="border: 0"
-                allowfullscreen="true"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                :title="t('transport.mapTitle')"
-              ></iframe>
+          <div class="transport-card">
+            <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
+            <div class="card-text">
+              <h5>{{ t("transport.bus") }}</h5>
+              <p>{{ t("transport.busDesc") }}</p>
+            </div>
+          </div>
+
+          <div class="transport-card">
+            <div class="card-icon"><i class="fa-solid fa-car"></i></div>
+            <div class="card-text">
+              <h5>{{ t("transport.driving") }}</h5>
+              <p>{{ t("transport.drivingDesc") }}</p>
             </div>
           </div>
         </div>
-      </section>
-    </div>
-  </div>
+
+        <!-- Google Maps Embed -->
+        <div class="map-embed-col">
+          <div class="map-frame">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.682855169476!2d121.4842186!3d25.0787593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a94562095f9d%3A0xa6428784d0812739!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A5LiJ5ZKM6Lev5Zub5q61MTEx6JmfMTDmqkw!5e0!3m2!1szh-TW!2stw!4v1720166000000!5m2!1szh-TW!2stw"
+              width="100%"
+              height="100%"
+              style="border: 0"
+              allowfullscreen="true"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              :title="t('transport.mapTitle')"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </template>
+  </PageLayout>
 </template>
 
 <style scoped>
-/* Page Layout */
-.transport-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.transport-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.transport-hero {
-  width: min(97.5%, 76em);
-  margin: 0 auto 2.5rem auto;
-}
-
-.transport-hero-header {
-  text-align: center;
-}
-
-.transport-hero-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
-}
-
-.transport-main-section {
-  width: min(97.5%, 76em);
-  margin: 0 auto;
-  padding: 2.5em;
-  border-radius: 1.25em;
-  background: linear-gradient(
-    180deg,
-    rgba(72, 38, 82, 0.45),
-    rgba(46, 21, 56, 0.45)
-  );
-  box-shadow:
-    0 1em 2em rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(127, 100, 50, 0.08);
-}
-
 .transport-grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
