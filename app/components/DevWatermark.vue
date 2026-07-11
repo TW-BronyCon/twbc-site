@@ -98,7 +98,7 @@ const previewBuildText = computed(() => t("development.preview"));
 .dev-ribbon-wrapper {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   width: 160px;
   height: 160px;
   overflow: hidden;
@@ -108,12 +108,12 @@ const previewBuildText = computed(() => t("development.preview"));
 
 .dev-ribbon {
   position: absolute;
-  top: 30px;
-  right: -42px;
+  top: 45px;
+  left: -45px;
   width: 220px;
   padding: 8px 0;
   background: linear-gradient(
-    135deg,
+    45deg,
     rgba(255, 189, 222, 0.95),
     rgba(255, 230, 167, 0.95)
   );
@@ -124,11 +124,11 @@ const previewBuildText = computed(() => t("development.preview"));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   color: #120b18;
   text-align: center;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  transform: rotate(45deg);
+  transform: rotate(-45deg);
   transform-origin: center;
   pointer-events: auto;
   user-select: none;
@@ -137,7 +137,7 @@ const previewBuildText = computed(() => t("development.preview"));
 
 .dev-ribbon:hover {
   background: linear-gradient(
-    135deg,
+    45deg,
     rgba(255, 189, 222, 1),
     rgba(255, 230, 167, 1)
   );
