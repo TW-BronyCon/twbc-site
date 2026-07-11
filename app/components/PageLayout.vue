@@ -66,11 +66,15 @@ const hasSurfaceSlot = computed(() => !!slots.surface);
   min-height: auto;
   padding-top: var(--page-padding-top);
   padding-bottom: var(--page-padding-bottom);
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 }
 
 .page-layout__body {
   position: relative;
   z-index: 1;
+  margin: auto 0;
 }
 
 /* ── Hero ─────────────────────────────────────────────── */

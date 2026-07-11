@@ -116,6 +116,14 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
       >{{ $t("menu.venue") }}</NuxtLink
     >
     <NuxtLink
+      :to="localePath('/booths')"
+      @click="
+        isNavOpen = false;
+        openSubmenu = null;
+      "
+      >{{ $t("menu.booths") }}</NuxtLink
+    >
+    <NuxtLink
       :to="localePath('/transport')"
       @click="
         isNavOpen = false;

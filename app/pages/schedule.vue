@@ -13,10 +13,6 @@ import {
 
 const { t, locale } = useI18n();
 
-definePageMeta({
-  underDevelopment: true,
-});
-
 useHead(() => ({
   title: t("schedule.title"),
   meta: [

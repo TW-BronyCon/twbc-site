@@ -5,7 +5,9 @@
 
     <div class="site-content">
       <SiteNav />
-      <slot />
+      <main class="main-content">
+        <slot />
+      </main>
       <Footer />
     </div>
   </div>
@@ -20,5 +22,14 @@
 .site-content {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 </style>

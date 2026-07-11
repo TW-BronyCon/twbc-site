@@ -24,9 +24,9 @@
       "comingSoon": "規劃中"
     },
     "footer": {
+      "logoAlt": "TWBC台灣馬聚官方網站",
       "copyright": "版權所有",
-      "copyrightNotice": "© 2026 TWBC",
-      "logoAlt": "TWBC 台灣馬聚文字標誌"
+      "copyrightNotice": "© 2026 TWBC"
     },
     "about": {
       "title": "關於我們",
@@ -124,7 +124,8 @@
     "location": "場地資訊",
     "schedule": "時程表",
     "venue": "場地資訊",
-    "transport": "交通指南"
+    "transport": "交通指南",
+    "booths": "攤位"
   },
   "tba": {
     "about": "關於我們(即將公佈)",
@@ -163,7 +164,8 @@
     "close": "關閉",
     "zoomIn": "放大",
     "zoomOut": "縮小",
-    "resetZoom": "重設縮放"
+    "resetZoom": "重設縮放",
+    "zoomImage": "放大圖片"
   },
   "schedule": {
     "title": "時程表",
@@ -197,7 +199,8 @@
       "details": "區域詳情",
       "boothTitle": "攤位{id}",
       "description": "攤位介紹",
-      "links": "相關連結"
+      "links": "相關連結",
+      "viewBoothDetail": "查看攤位詳情"
     },
     "zones": {
       "stage": "大會活動核心。開幕介紹、專題分享、趣味遊戲、DJ表演、大合唱與大合照等精彩活動都將在此舉辦。",
@@ -224,5 +227,18 @@
     "watermark": "開發中",
     "ribbon": "開發中",
     "preview": "預覽版"
+  },
+  "booth": {
+    "notFound": {
+      "title": "找不到攤位",
+      "message": "很抱歉，找不到該攤位的詳細資訊。"
+    },
+    "backToMap": "返回會場地圖",
+    "backToList": "返回攤位列表",
+    "links": "相關連結與聯絡方式",
+    "list": {
+      "title": "攤位",
+      "subtitle": "馬圈創作者們精心設計的小馬周邊、同人畫作、手工藝品與同人本。"
+    }
   }
 }
