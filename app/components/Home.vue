@@ -42,8 +42,6 @@ const translatedCountdownMsg = computed(() => {
         }}</NuxtLink>
       </section>
 
-      <!-- <div class="spacer"></div> -->
-
       <section class="info-card">
         <h2>{{ $t("home.about.title") }}</h2>
         <h4>{{ $t("home.about.content") }}</h4>
@@ -87,11 +85,6 @@ const translatedCountdownMsg = computed(() => {
   display: flex;
   flex-direction: column;
   position: relative;
-}
-
-/* spacer */
-.spacer {
-  height: clamp(20em, 30cqw, 10em);
 }
 
 /* Main Container */
