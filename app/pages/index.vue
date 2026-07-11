@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Home from "~/pages/home.vue";
 const { t } = useI18n();
 
 useHead({
