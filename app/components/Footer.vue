@@ -24,11 +24,11 @@ const partners = [
 // Quote Logic
 const quotes = computed(() => {
   // Method 1: Try tm (translated message)
-  const raw = tm("home.quotes") as any;
-  let list: any[] = [];
+  const raw = tm("home.quotes") as unknown;
+  let list: unknown[] = [];
 
   if (raw && typeof raw !== "string") {
-    list = Array.isArray(raw) ? raw : Object.values(raw);
+    list = (Array.isArray(raw) ? raw : Object.values(raw)) as unknown[];
   }
 
   // Method 2: Fallback to t-loop if Method 1 returned nothing
@@ -49,16 +49,7 @@ const quotes = computed(() => {
       // If it's already a string, return it
       if (typeof q === "string") return q;
       // If it's a function (some i18n setups return message functions), call it
-      if (typeof q === "function") return q();
-      // If it's an object, try to extract the message
-      if (q && typeof q === "object") {
-        // Handle compiled message objects (body.static)
-        if (q.body && typeof q.body.static === "string") return q.body.static;
-        // Handle cases where static is at the top level
-        if (typeof q.static === "string") return q.static;
-        // Common properties in other i18n message formats
-        return (q as any).value || (q as any).b || (q as any).v || String(q);
-      }
+      if (typeof q === "function") return (q as () => string)();
       return String(q || "");
     })
     .filter((q) => !!q && q.trim() !== "");
@@ -82,13 +73,22 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
                   :src="partner.logo"
                   :alt="partner.altKey ? $t(partner.altKey) : partner.name"
                   class="footer-logo"
+                  width="2362"
+                  height="1816"
                 />
               </NuxtLink>
-              <a v-else :href="partner.url" target="_blank">
+              <a
+                v-else
+                :href="partner.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img
                   :src="partner.logo"
                   :alt="partner.name"
                   class="footer-logo"
+                  width="2362"
+                  height="1816"
                 />
               </a>
             </template>
@@ -111,6 +111,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
           <a
             href="https://www.youtube.com/@TWBronyCon2"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="YouTube"
             class="social-icon youtube"
             ><i class="fa-brands fa-youtube"></i
@@ -118,6 +119,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
           <a
             href="https://discord.gg/k83NMPUKxG"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="Discord"
             class="social-icon discord"
             ><i class="fa-brands fa-discord"></i
@@ -125,6 +127,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
           <a
             href="https://www.facebook.com/profile.php?id=61583292256078"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="Facebook"
             class="social-icon facebook"
             ><i class="fa-brands fa-facebook"></i
@@ -132,6 +135,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
           <a
             href="https://x.com/TWBronycon2"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="X (Twitter)"
             class="social-icon twitter"
             ><i class="fa-brands fa-x-twitter"></i
@@ -139,6 +143,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
           <a
             href="https://www.instagram.com/taiwanbronycon2"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="Instagram"
             class="social-icon instagram"
             ><i class="fa-brands fa-instagram"></i
