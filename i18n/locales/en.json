@@ -197,7 +197,7 @@
     "bus": "Bus",
     "busDesc": "Get off at MRT Sanhe Junior High School Station. Available routes: 225, 232, 306, 508, 704, 857, 925, etc.",
     "driving": "Driving & Parking",
-    "drivingDesc": "Take Highway 1 to Sanchong Interchange, go toward Sanchong/Luzhou, and turn onto Sanhe Rd. Parking is available at the Sanchong District High School Underground Parking Lot nearby.",
+    "drivingDesc": "Take Highway 1 to Sanchong Interchange, go toward Sanchong/Luzhou, and turn onto Sanhe Rd.",
     "mapTitle": "AS Life Space Map"
   },
   "development": {
