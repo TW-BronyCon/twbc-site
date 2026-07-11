@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
+import { handleModalTab } from "~/utils/focus";
 import {
   columns as rawColumns,
   events as rawEvents,
@@ -28,6 +29,19 @@ useHead(() => ({
 
 const gridContainer = ref<HTMLElement | null>(null);
 const activeModalIndex = ref<number | null>(null);
+
+watch(activeModalIndex, (newVal) => {
+  if (import.meta.client) {
+    const root = document.getElementById("__nuxt");
+    if (root) {
+      if (newVal !== null) {
+        root.setAttribute("inert", "");
+      } else {
+        root.removeAttribute("inert");
+      }
+    }
+  }
+});
 const focusedIndex = ref<number>(-1);
 
 const columns = computed(() => {
@@ -365,14 +379,23 @@ function handleKeyDown(e: KeyboardEvent) {
 
   const isModalOpen = activeModalIndex.value !== null;
 
-  // Escape key should close the modal globally if it is open
-  if (e.key === "Escape") {
-    if (isModalOpen) {
+  // Modal interactions override general navigation
+  if (isModalOpen) {
+    if (e.key === "Escape") {
       e.preventDefault();
       closeModal();
       clearFocus();
+      return;
     }
-    return;
+    if (e.key === "Tab") {
+      const modalEl = document.querySelector(
+        ".expo-tt-modal",
+      ) as HTMLElement | null;
+      if (modalEl) {
+        handleModalTab(e, modalEl);
+      }
+      return;
+    }
   }
 
   // Scope WASD/Arrow/Space/Enter navigation specifically to the timetable grid

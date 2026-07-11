@@ -9,6 +9,7 @@ import {
 } from "vue";
 import type { ComponentPublicInstance } from "vue";
 import { rawNewsPosts } from "~/data/newsData";
+import { handleModalTab } from "~/utils/focus";
 
 /**
  * News Page Component
@@ -134,6 +135,20 @@ const posts = computed<NewsPost[]>(() => {
 });
 
 const selectedPost = ref<NewsPost | null>(null);
+
+watch(selectedPost, (newVal) => {
+  if (import.meta.client) {
+    const root = document.getElementById("__nuxt");
+    if (root) {
+      if (newVal) {
+        root.setAttribute("inert", "");
+      } else {
+        root.removeAttribute("inert");
+      }
+    }
+  }
+});
+
 const openedMap = ref<Record<string, boolean>>({});
 const sealMap = ref<Record<string, SealData>>({});
 
@@ -401,16 +416,23 @@ function closeMail() {
   });
 }
 
-function handleEsc(e: KeyboardEvent) {
+function handleKeyDown(e: KeyboardEvent) {
+  if (!selectedPost.value) return;
+
   if (e.key === "Escape") {
     closeMail();
+  } else if (e.key === "Tab") {
+    const modalEl = document.querySelector(".news-modal") as HTMLElement | null;
+    if (modalEl) {
+      handleModalTab(e, modalEl);
+    }
   }
 }
 
 onMounted(() => {
   loadOpenedMap();
 
-  window.addEventListener("keydown", handleEsc);
+  window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("resize", handleResize);
 
   nextTick(() => {
@@ -423,7 +445,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleEsc);
+  window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("resize", handleResize);
 
   document.body.style.overflow = "";
@@ -527,7 +549,7 @@ onBeforeUnmount(() => {
             <button
               class="news-close-btn"
               type="button"
-              aria-label="Close modal"
+              :aria-label="t('common.close')"
               @click="closeMail"
             >
               ✕
@@ -1075,6 +1097,19 @@ onBeforeUnmount(() => {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    color 0.2s ease;
+}
+
+.news-close-btn:hover {
+  background: #ccc;
+}
+
+.news-close-btn:active {
+  background: #bbb;
+  transform: scale(0.95);
 }
 
 .news-close-btn:focus-visible {
