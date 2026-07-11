@@ -7,9 +7,14 @@ const __dirname = path.dirname(__filename);
 
 const localesDir = path.resolve(__dirname, "../i18n/locales");
 
+interface LocaleData {
+  keys: Set<string>;
+  file: string;
+}
+
 // Helper to recursively get all keys from an object
-function getKeys(obj, prefix = "") {
-  let keys = [];
+function getKeys(obj: any, prefix = ""): string[] {
+  let keys: string[] = [];
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const fullKey = prefix ? `${prefix}.${key}` : key;
@@ -25,7 +30,7 @@ function getKeys(obj, prefix = "") {
 }
 
 // Read all JSON files in the locales directory
-function checkTranslations() {
+function checkTranslations(): void {
   if (!fs.existsSync(localesDir)) {
     console.error(`Locales directory not found: ${localesDir}`);
     process.exit(1);
@@ -40,7 +45,7 @@ function checkTranslations() {
     process.exit(0);
   }
 
-  const locales = {};
+  const locales: Record<string, LocaleData> = {};
   for (const file of files) {
     const localeCode = path.basename(file, ".json");
     const filePath = path.join(localesDir, file);
@@ -68,7 +73,7 @@ function checkTranslations() {
       const localeA = locales[codeA];
       const localeB = locales[codeB];
 
-      const missingKeys = [];
+      const missingKeys: string[] = [];
       for (const key of localeA.keys) {
         if (!localeB.keys.has(key)) {
           missingKeys.push(key);

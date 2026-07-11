@@ -10,7 +10,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxi typecheck",
-    "i18n:check": "node scripts/check-i18n.js",
+    "i18n:check": "node --experimental-strip-types scripts/check-i18n.ts",
     "format:check": "prettier --check .",
     "format": "prettier --write ."
   },
