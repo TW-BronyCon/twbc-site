@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import type { ComponentPublicInstance } from "vue";
+import { rawNewsPosts } from "~/data/newsData";
+import { handleModalTab } from "~/utils/focus";
 
 /**
  * News Page Component
@@ -14,18 +24,13 @@ const { t, locale } = useI18n();
 
 useHead({
   title: () => t("newsPage.title"),
+  meta: [
+    {
+      name: "description",
+      content: () => t("newsPage.description"),
+    },
+  ],
 });
-
-type RawNewsPost = {
-  id?: string;
-  time?: string;
-  locales: Record<string, LocalizedNewsPost>;
-};
-
-type LocalizedNewsPost = {
-  title: string;
-  content: string;
-};
 
 type NewsPost = {
   id: string;
@@ -42,27 +47,6 @@ type SealData = {
   topClip: string;
   bottomClip: string;
 };
-
-const { data: rawPosts, refresh: refreshPosts } = useAsyncData(
-  "news-posts",
-  async () => {
-    try {
-      return await $fetch<RawNewsPost[]>("/content/news/posts.json", {
-        query: {
-          t: Date.now(),
-        },
-      });
-    } catch (err) {
-      console.error("Failed to load news posts:", err);
-      return [];
-    }
-  },
-  {
-    server: false,
-    immediate: false,
-    default: () => [],
-  },
-);
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -100,7 +84,7 @@ function createRandomCrack() {
 }
 
 const posts = computed<NewsPost[]>(() => {
-  const list = rawPosts.value;
+  const list = rawNewsPosts;
 
   if (!Array.isArray(list)) return [];
 
@@ -151,6 +135,20 @@ const posts = computed<NewsPost[]>(() => {
 });
 
 const selectedPost = ref<NewsPost | null>(null);
+
+watch(selectedPost, (newVal) => {
+  if (import.meta.client) {
+    const root = document.getElementById("__nuxt");
+    if (root) {
+      if (newVal) {
+        root.setAttribute("inert", "");
+      } else {
+        root.removeAttribute("inert");
+      }
+    }
+  }
+});
+
 const openedMap = ref<Record<string, boolean>>({});
 const sealMap = ref<Record<string, SealData>>({});
 
@@ -386,43 +384,68 @@ function loadOpenedMap() {
   }
 }
 
+const triggerElement = ref<HTMLElement | null>(null);
+
 function openMail(post: NewsPost) {
+  if (import.meta.client) {
+    triggerElement.value = document.activeElement as HTMLElement | null;
+  }
   openedMap.value[post.id] = true;
   saveOpenedMap();
 
   selectedPost.value = post;
   document.body.style.overflow = "hidden";
+
+  nextTick(() => {
+    const closeBtn = document.querySelector(
+      ".news-close-btn",
+    ) as HTMLElement | null;
+    if (closeBtn) closeBtn.focus();
+  });
 }
 
 function closeMail() {
   selectedPost.value = null;
   document.body.style.overflow = "";
+
+  nextTick(() => {
+    if (triggerElement.value) {
+      triggerElement.value.focus();
+      triggerElement.value = null;
+    }
+  });
 }
 
-function handleEsc(e: KeyboardEvent) {
+function handleKeyDown(e: KeyboardEvent) {
+  if (!selectedPost.value) return;
+
   if (e.key === "Escape") {
     closeMail();
+  } else if (e.key === "Tab") {
+    const modalEl = document.querySelector(".news-modal") as HTMLElement | null;
+    if (modalEl) {
+      handleModalTab(e, modalEl);
+    }
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   loadOpenedMap();
-  await refreshPosts();
 
-  window.addEventListener("keydown", handleEsc);
+  window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("resize", handleResize);
 
-  await nextTick();
+  nextTick(() => {
+    moveWhyOffscreen();
 
-  moveWhyOffscreen();
-
-  whyIntroTimer = setTimeout(() => {
-    moveWhyToDefaultMail();
-  }, 1000); //1秒載入
+    whyIntroTimer = setTimeout(() => {
+      moveWhyToDefaultMail();
+    }, 1000); //1秒載入
+  });
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleEsc);
+  window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("resize", handleResize);
 
   document.body.style.overflow = "";
@@ -433,7 +456,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="legacy-page-root">
+  <PageLayout>
     <img
       src="/img/Why.avif"
       alt=""
@@ -446,129 +469,138 @@ onBeforeUnmount(() => {
       }"
     />
 
-    <div class="legacy-page-body">
-      <section class="news-wrap">
-        <div class="news-head">
-          <h1>{{ t("newsPage.heading") }}</h1>
-          <p>{{ t("newsPage.description") }}</p>
-        </div>
+    <template #title>
+      <h1>{{ t("newsPage.heading") }}</h1>
+      <p>{{ t("newsPage.description") }}</p>
+    </template>
 
-        <div class="mail-list">
-          <article
-            v-for="post in posts"
-            :key="post.id"
-            :ref="(el) => setMailRef(post.id, el)"
-            class="mail"
-            :class="{ opened: openedMap[post.id] }"
-            @mouseenter="moveWhyToMail(post.id)"
-            @mouseleave="startWhyIdleTimer"
-            @click="openMail(post)"
+    <section class="news-wrap">
+      <div class="mail-list">
+        <article
+          v-for="post in posts"
+          :key="post.id"
+          :ref="(el) => setMailRef(post.id, el)"
+          class="mail"
+          :class="{ opened: openedMap[post.id] }"
+          tabindex="0"
+          role="button"
+          :aria-label="
+            t('newsPage.readPost', { title: post.title }) || post.title
+          "
+          @mouseenter="moveWhyToMail(post.id)"
+          @mouseleave="startWhyIdleTimer"
+          @click="openMail(post)"
+          @keydown.enter.space.prevent="openMail(post)"
+        >
+          <div class="stamp"></div>
+
+          <div
+            class="wax-seal"
+            :style="{
+              '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
+              '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
+              '--crack-bottom':
+                sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
+            }"
           >
-            <div class="stamp"></div>
+            <img
+              v-if="!isMailOpened(post.id)"
+              src="/img/WaxSeal.avif"
+              class="wax-closed"
+              alt=""
+            />
 
-            <div
-              class="wax-seal"
-              :style="{
-                '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
-                '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
-                '--crack-bottom':
-                  sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
-              }"
+            <template v-else>
+              <div class="wax-top">
+                <div class="wax-piece-img"></div>
+              </div>
+
+              <div class="wax-bottom">
+                <div class="wax-piece-img"></div>
+              </div>
+            </template>
+          </div>
+
+          <h3>{{ post.title }}</h3>
+
+          <div class="preview">
+            {{ trimText(post.content, 90) }}
+          </div>
+
+          <div class="mail-meta">
+            <div class="time">{{ post.time }}</div>
+            <div class="author">{{ t("news.author") }}</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <Teleport to="body">
+      <Transition name="modal">
+        <div
+          v-if="selectedPost"
+          class="news-modal show"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="news-modal-title"
+          @click.self="closeMail"
+        >
+          <div class="news-paper">
+            <button
+              class="news-close-btn"
+              type="button"
+              :aria-label="t('common.close')"
+              @click="closeMail"
             >
-              <img
-                v-if="!isMailOpened(post.id)"
-                src="/img/WaxSeal.avif"
-                class="wax-closed"
-                alt=""
-              />
+              ✕
+            </button>
 
-              <template v-else>
-                <div class="wax-top">
-                  <div class="wax-piece-img"></div>
-                </div>
+            <div id="paperBody">
+              <h2 id="news-modal-title">{{ selectedPost.title }}</h2>
 
-                <div class="wax-bottom">
-                  <div class="wax-piece-img"></div>
-                </div>
-              </template>
-            </div>
+              <div class="news-paper-meta">
+                {{ t("news.labels.time") }}：{{ selectedPost.time }}
 
-            <h3>{{ post.title }}</h3>
+                <span class="news-paper-author">
+                  {{ t("news.labels.author") }}：{{ t("news.author") }}
+                </span>
+              </div>
 
-            <div class="preview">
-              {{ trimText(post.content, 90) }}
-            </div>
+              <div class="news-paper-content">
+                <template v-for="(part, index) in contentParts" :key="index">
+                  <a
+                    v-if="part.type === 'link'"
+                    :href="part.value"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    @click.stop
+                  >
+                    {{ part.value }}
+                  </a>
 
-            <div class="mail-meta">
-              <div class="time">{{ post.time }}</div>
-              <div class="author">{{ t("news.author") }}</div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <Teleport to="body">
-        <Transition name="modal">
-          <div v-if="selectedPost" class="modal show" @click.self="closeMail">
-            <div class="paper">
-              <button class="close-btn" type="button" @click="closeMail">
-                ✕
-              </button>
-
-              <div id="paperBody">
-                <h2>{{ selectedPost.title }}</h2>
-
-                <div class="paper-meta">
-                  {{ t("news.labels.time") }}：{{ selectedPost.time }}
-
-                  <span style="float: right">
-                    {{ t("news.labels.author") }}：{{ t("news.author") }}
+                  <span v-else>
+                    {{ part.value }}
                   </span>
-                </div>
-
-                <div class="paper-content">
-                  <template v-for="(part, index) in contentParts" :key="index">
-                    <a
-                      v-if="part.type === 'link'"
-                      :href="part.value"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      @click.stop
-                    >
-                      {{ part.value }}
-                    </a>
-
-                    <span v-else>
-                      {{ part.value }}
-                    </span>
-                  </template>
-                </div>
+                </template>
               </div>
             </div>
           </div>
-        </Transition>
-      </Teleport>
-    </div>
-  </div>
+        </div>
+      </Transition>
+    </Teleport>
+  </PageLayout>
 </template>
 
 <style scoped>
 /* Scoped styles for News Page */
-.legacy-page-root {
-  position: relative;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
+:deep(.page-layout) {
   overflow-x: clip;
 }
 
 @supports not (overflow: clip) {
-  .legacy-page-root {
+  :deep(.page-layout) {
     overflow-x: hidden;
   }
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
 }
 
 /* 暗遮罩 */
@@ -584,25 +616,6 @@ onBeforeUnmount(() => {
   width: min(900px, 92%);
   margin: 0 auto -1rem;
   padding: 0;
-}
-
-/* 標題 */
-.news-head {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.news-head h1 {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 4rem);
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-}
-
-.news-head p {
-  margin-top: 0.7rem;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 1rem;
 }
 
 /* 信件列表 */
@@ -639,7 +652,8 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-.mail:hover {
+.mail:hover,
+.mail:focus-visible {
   transform: translateY(-8px) rotate(-0.5deg);
   box-shadow:
     0 0 10px rgba(255, 255, 255, 0.45),
@@ -650,7 +664,13 @@ onBeforeUnmount(() => {
   animation: magicPulse 1.2s ease-in-out infinite;
 }
 
-.mail:hover::after {
+.mail:focus-visible {
+  outline: 3px solid rgba(255, 130, 225, 0.85);
+  outline-offset: 4px;
+}
+
+.mail:hover::after,
+.mail:focus-visible::after {
   content: "";
   position: absolute;
   inset: -12px;
@@ -972,7 +992,7 @@ onBeforeUnmount(() => {
 
 <style>
 /* Unscoped Styles for Teleported Modal */
-.modal {
+.news-modal {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
@@ -986,13 +1006,13 @@ onBeforeUnmount(() => {
   z-index: 99;
 }
 
-.modal.show {
+.news-modal.show {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* 信紙 */
-.paper {
+.news-paper {
   width: min(760px, 100%);
   max-height: 88vh;
   overflow-y: auto;
@@ -1009,33 +1029,37 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.paper h2 {
+.news-paper h2 {
   margin: 0 0 0.5rem;
   padding-right: 1.25rem;
   font-size: 2rem;
 }
 
-.paper-meta {
+.news-paper-meta {
   font-size: 0.9rem;
   color: var(--color-paper-text-muted);
   margin-bottom: 1rem;
   line-height: 1.7;
 }
 
-.paper-content {
+.news-paper-author {
+  float: right;
+}
+
+.news-paper-content {
   line-height: 1.5;
   white-space: pre-line;
   text-align: justify;
 }
 
-.paper-content a {
+.news-paper-content a {
   color: var(--color-purple-accent);
   font-weight: 700;
   text-decoration: underline;
   word-break: break-all;
 }
 
-.paper-content a:hover {
+.news-paper-content a:hover {
   opacity: 0.75;
 }
 
@@ -1045,8 +1069,8 @@ onBeforeUnmount(() => {
   transition: opacity 0.3s ease;
 }
 
-.modal-enter-active .paper,
-.modal-leave-active .paper {
+.modal-enter-active .news-paper,
+.modal-leave-active .news-paper {
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1055,28 +1079,50 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-.modal-enter-from .paper {
+.modal-enter-from .news-paper {
   transform: scale(0.9) translateY(20px);
 }
 
-.modal-leave-to .paper {
+.modal-leave-to .news-paper {
   transform: scale(0.95) translateY(10px);
 }
 
-.close-btn {
+.news-close-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
   background: #ddd;
   color: #111;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    color 0.2s ease;
+}
+
+.news-close-btn:hover {
+  background: #ccc;
+}
+
+.news-close-btn:active {
+  background: #bbb;
+  transform: scale(0.95);
+}
+
+.news-close-btn:focus-visible {
+  outline: 2px solid var(--color-purple-accent);
+  outline-offset: 2px;
 }
 
 @media (max-width: 700px) {
-  .paper {
+  .news-paper {
     padding: 1.2rem;
   }
 
-  .paper h2 {
+  .news-paper h2 {
     font-size: 1.4rem;
   }
 }

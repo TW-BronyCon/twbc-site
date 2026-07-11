@@ -7,7 +7,7 @@
         :class="['bg-layer', `bg${index + 1}`]"
         :ref="
           (el) => {
-            if (el) layerRefs[index] = el;
+            if (el) layerRefs[index] = el as HTMLElement;
           }
         "
       >
@@ -18,17 +18,36 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
-const props = defineProps({
-  variant: {
-    type: String,
-    default: "village", // 'village' or 'homepage'
-  },
-  config: {
-    type: Array,
-    default: () => [
+interface BackgroundLayerConfig {
+  src: string;
+  start: number;
+  end: number;
+  mobileStart: number;
+  mobileEnd: number;
+  scale: number;
+  mobileScale: number;
+  x: string;
+  mobileX: string;
+  alt?: string;
+}
+
+interface ParallaxImage extends HTMLImageElement {
+  _movable?: number;
+}
+
+type BackgroundVariant = "village" | "homepage";
+
+const props = withDefaults(
+  defineProps<{
+    variant?: BackgroundVariant;
+    config?: BackgroundLayerConfig[];
+  }>(),
+  {
+    variant: "village", // 'village' or 'homepage'
+    config: () => [
       {
         src: "/img/bg1-2560.avif",
         start: 0,
@@ -64,9 +83,9 @@ const props = defineProps({
       },
     ],
   },
-});
+);
 
-const layerRefs = ref([]);
+const layerRefs = ref<HTMLElement[]>([]);
 const layers = computed(() => props.config);
 
 const isMobile = () =>
@@ -81,7 +100,7 @@ const setupSizes = () => {
   layers.value.forEach((layer, index) => {
     const el = layerRefs.value[index];
     if (!el) return;
-    const img = el.querySelector("img");
+    const img = el.querySelector("img") as ParallaxImage | null;
     if (!img) return;
 
     const scale = mobile ? layer.mobileScale : layer.scale;
@@ -95,7 +114,6 @@ const setupSizes = () => {
       w = h / ratio;
     }
 
-    // @ts-ignore - custom property for parallax
     img._movable = Math.max(0, h - vh);
     img.style.width = `${w}px`;
     img.style.height = `${h}px`;
@@ -112,8 +130,7 @@ const updateParallax = () => {
   layers.value.forEach((layer, index) => {
     const el = layerRefs.value[index];
     if (!el) return;
-    const img = el.querySelector("img");
-    // @ts-ignore - custom property for parallax
+    const img = el.querySelector("img") as ParallaxImage | null;
     if (!img || img._movable === undefined) return;
 
     const start = mobile ? layer.mobileStart : layer.start;
@@ -121,7 +138,6 @@ const updateParallax = () => {
     const x = mobile ? layer.mobileX : layer.x;
 
     const percent = start + (end - start) * progress;
-    // @ts-ignore
     const y = -img._movable * (percent / 100);
 
     img.style.transform = `translate3d(${x}, ${y}px, 0)`;
@@ -138,9 +154,9 @@ const requestUpdate = () => {
   });
 };
 
-let resizeTimer = null;
+let resizeTimer: ReturnType<typeof setTimeout> | null = null;
 const requestResizeUpdate = () => {
-  clearTimeout(resizeTimer);
+  if (resizeTimer) clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     setupSizes();
     updateParallax();
@@ -168,7 +184,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("scroll", requestUpdate);
   window.removeEventListener("resize", requestResizeUpdate);
-  clearTimeout(resizeTimer);
+  if (resizeTimer) clearTimeout(resizeTimer);
 });
 </script>
 

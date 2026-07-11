@@ -27,40 +27,6 @@ function cleanLabel(text: string): string {
   return text.replace(/\n/g, " ");
 }
 
-// Hex color normalization helper
-function normalizeHexColor(color?: string) {
-  if (!color || typeof color !== "string") return "#235cc9";
-  let hex = color.trim();
-  if (!hex.startsWith("#")) hex = `#${hex}`;
-  if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
-    hex = `#${hex
-      .slice(1)
-      .split("")
-      .map((char) => char + char)
-      .join("")}`;
-  }
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return "#235cc9";
-  return hex;
-}
-
-// Contrast color checker helper
-function getContrastColor(hexColor: string) {
-  let hex = hexColor.trim();
-  if (hex.startsWith("#")) hex = hex.slice(1);
-  if (hex.length === 3) {
-    hex = hex
-      .split("")
-      .map((c) => c + c)
-      .join("");
-  }
-  if (hex.length !== 6) return "#222";
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  return luminance > 0.55 ? "#222" : "#fff";
-}
-
 // Event mapping for zones
 const zoneEvents = computed(() => {
   if (!selectedZoneId.value) return [];
@@ -416,18 +382,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="venue-page-root">
-    <div class="venue-page-body">
-      <!-- Title Section -->
-      <section class="venue-hero">
-        <div class="venue-hero-header">
-          <h2>{{ t("venue.title") }}</h2>
-          <p>{{ t("venue.hint") }}</p>
-        </div>
-      </section>
+  <PageLayout>
+    <template #title>
+      <h1>{{ t("venue.title") }}</h1>
+      <p>{{ t("venue.hint") }}</p>
+    </template>
 
-      <!-- Main Layout Section -->
-      <section class="venue-main-section">
+    <template #surface>
+      <div class="venue-layout">
         <!-- SVG Map Container -->
         <div class="map-container-card">
           <div class="map-wrapper">
@@ -1125,7 +1087,7 @@ onUnmounted(() => {
                 :aria-label="t('common.zoomIn')"
                 title="Zoom In"
               >
-                <i class="fa-solid fa-plus"></i>
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
               </button>
               <button
                 class="control-btn"
@@ -1134,7 +1096,7 @@ onUnmounted(() => {
                 :aria-label="t('common.zoomOut')"
                 title="Zoom Out"
               >
-                <i class="fa-solid fa-minus"></i>
+                <i class="fa-solid fa-minus" aria-hidden="true"></i>
               </button>
               <button
                 class="control-btn"
@@ -1143,7 +1105,7 @@ onUnmounted(() => {
                 :aria-label="t('common.resetZoom')"
                 title="Reset View"
               >
-                <i class="fa-solid fa-arrows-to-dot"></i>
+                <i class="fa-solid fa-arrows-to-dot" aria-hidden="true"></i>
               </button>
             </div>
           </div>
@@ -1162,8 +1124,9 @@ onUnmounted(() => {
               type="button"
               @click="clearSelection"
               :title="t('common.close')"
+              :aria-label="t('common.close')"
             >
-              <i class="fa-solid fa-xmark"></i>
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
 
             <!-- Hover/Selection Context Info -->
@@ -1336,56 +1299,15 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-      </section>
-    </div>
-  </div>
+      </div>
+    </template>
+  </PageLayout>
 </template>
 
 <style scoped>
 /* Page Layout */
-.venue-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.venue-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.venue-hero {
-  width: min(97.5%, 76em);
-  margin: 0 auto 1.5rem auto;
-}
-
-.venue-hero-header {
-  text-align: center;
-}
-
-.venue-hero-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
-}
-
-.venue-hero-header p {
-  margin: 0.15em 0;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  line-height: 1.6;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* Main map section layout */
-.venue-main-section {
-  width: min(97.5%, 76em);
-  max-width: 100%;
-  margin: 0 auto;
+.venue-layout {
+  width: 100%;
   display: grid;
   grid-template-columns: 3fr 1.6fr;
   gap: 1.5em;
@@ -1393,7 +1315,7 @@ onUnmounted(() => {
 }
 
 @media (max-width: 950px) {
-  .venue-main-section {
+  .venue-layout {
     grid-template-columns: 1fr;
   }
 }

@@ -35,10 +35,13 @@
     "location": {
       "title": "活動位置",
       "name": "阿斯生活空間",
-      "address": "新北市三重區三和路四段111號10樓"
+      "address": "新北市三重區三和路四段111號10樓",
+      "mapTitle": "Google地圖顯示TWBC台灣馬聚活動場地位置"
     },
     "faq": {
       "title": "常見問題",
+      "questionPrefix": "Q：",
+      "answerPrefix": "A：",
       "q1": "這是什麼活動？",
       "a1": "TWBC 是一個以彩虹小馬為主題的粉絲聚會活動！",
       "q2": "所有票種總和有多少張？",
@@ -111,6 +114,7 @@
     }
   },
   "menu": {
+    "navLabel": "主導航",
     "home": "首頁",
     "about": "關於我們",
     "news": "最新消息",
@@ -159,9 +163,10 @@
   },
   "schedule": {
     "title": "時程表",
+    "description": "Taiwan BronyCon 台灣馬聚的活動時程表，包含大眾專題討論、創作工坊與舞台表演等活動安排。",
     "hint": "點擊色塊以查看詳細資訊！",
-    "mobilehint": "← 左右滑動來觀看時程表 →",
-    "note": "以下時程表尚未定案，內容仍可能調整。",
+    "mobilehint": "左右滑動來觀看時程表",
+    "note": "以下時程表僅供參考，實際安排可能有所調整。",
     "duration": "時長",
     "area": "區域",
     "detailPlaceholder": "詳細資訊之後補上。"

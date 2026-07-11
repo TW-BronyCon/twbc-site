@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
+import { handleModalTab } from "~/utils/focus";
 import {
   columns as rawColumns,
   events as rawEvents,
@@ -17,10 +19,29 @@ definePageMeta({
 
 useHead(() => ({
   title: t("schedule.title"),
+  meta: [
+    {
+      name: "description",
+      content: t("schedule.description"),
+    },
+  ],
 }));
 
 const gridContainer = ref<HTMLElement | null>(null);
 const activeModalIndex = ref<number | null>(null);
+
+watch(activeModalIndex, (newVal) => {
+  if (import.meta.client) {
+    const root = document.getElementById("__nuxt");
+    if (root) {
+      if (newVal !== null) {
+        root.setAttribute("inert", "");
+      } else {
+        root.removeAttribute("inert");
+      }
+    }
+  }
+});
 const focusedIndex = ref<number>(-1);
 
 const columns = computed(() => {
@@ -96,47 +117,6 @@ function timeSpanSlots(start: string, end: string) {
 function getColumnIndex(trackKey: string) {
   const index = rawColumns.findIndex((col) => col.key === trackKey);
   return index >= 0 ? index + 1 : 2;
-}
-
-function normalizeHexColor(color?: string) {
-  if (!color || typeof color !== "string") return "#235cc9";
-
-  let hex = color.trim();
-  if (!hex.startsWith("#")) hex = `#${hex}`;
-
-  if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
-    hex = `#${hex
-      .slice(1)
-      .split("")
-      .map((char) => char + char)
-      .join("")}`;
-  }
-
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return "#235cc9";
-
-  return hex;
-}
-
-function getContrastColor(hexColor: string) {
-  let hex = hexColor.trim();
-  if (hex.startsWith("#")) hex = hex.slice(1);
-
-  if (hex.length === 3) {
-    hex = hex
-      .split("")
-      .map((c) => c + c)
-      .join("");
-  }
-
-  if (hex.length !== 6) return "#222";
-
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  // Relative luminance formula (ITU-R BT.709)
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  return luminance > 0.55 ? "#222" : "#fff";
 }
 
 function getDynamicFontSize(rowSpan: number) {
@@ -335,15 +315,34 @@ function getCurrentSelectableIndex() {
   return focusedIndex.value;
 }
 
+const triggerElement = ref<HTMLElement | null>(null);
+
 function openEvent(index: number) {
+  if (import.meta.client) {
+    triggerElement.value = document.activeElement as HTMLElement | null;
+  }
   focusedIndex.value = index;
   activeModalIndex.value = index;
   document.body.style.overflow = "hidden";
+
+  nextTick(() => {
+    const closeBtn = document.querySelector(
+      ".expo-tt-modal-close",
+    ) as HTMLElement | null;
+    if (closeBtn) closeBtn.focus();
+  });
 }
 
 function closeModal() {
   activeModalIndex.value = null;
   document.body.style.overflow = "";
+
+  nextTick(() => {
+    if (triggerElement.value) {
+      triggerElement.value.focus();
+      triggerElement.value = null;
+    }
+  });
 }
 
 function clearFocus() {
@@ -380,14 +379,23 @@ function handleKeyDown(e: KeyboardEvent) {
 
   const isModalOpen = activeModalIndex.value !== null;
 
-  // Escape key should close the modal globally if it is open
-  if (e.key === "Escape") {
-    if (isModalOpen) {
+  // Modal interactions override general navigation
+  if (isModalOpen) {
+    if (e.key === "Escape") {
       e.preventDefault();
       closeModal();
       clearFocus();
+      return;
     }
-    return;
+    if (e.key === "Tab") {
+      const modalEl = document.querySelector(
+        ".expo-tt-modal",
+      ) as HTMLElement | null;
+      if (modalEl) {
+        handleModalTab(e, modalEl);
+      }
+      return;
+    }
   }
 
   // Scope WASD/Arrow/Space/Enter navigation specifically to the timetable grid
@@ -451,184 +459,146 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handleKeyDown);
   document.body.style.overflow = "";
 });
+
+// Deselect active activity when leaving the page
+onBeforeRouteLeave(() => {
+  activeModalIndex.value = null;
+  focusedIndex.value = -1;
+  document.body.style.overflow = "";
+});
 </script>
 
 <template>
-  <div class="legacy-page-root">
-    <div class="legacy-page-body">
-      <section class="expo-tt">
-        <div class="expo-tt-header">
-          <h2>{{ t("schedule.title") }}</h2>
-          <p>{{ t("schedule.hint") }}</p>
-          <p class="touch-only">
-            {{ t("schedule.mobilehint") }}
-          </p>
-          <p>{{ t("schedule.note") }}</p>
-        </div>
+  <PageLayout>
+    <template #title>
+      <h2>{{ t("schedule.title") }}</h2>
+      <p>{{ t("schedule.hint") }}</p>
+      <p class="touch-only">
+        {{ t("schedule.mobilehint") }}
+      </p>
+      <p>{{ t("schedule.note") }}</p>
+    </template>
 
-        <div class="expo-tt-shell">
-          <div ref="gridContainer" class="expo-tt-grid" :style="gridStyles">
-            <!-- Render column titles -->
-            <div
-              v-for="(col, index) in columns"
-              :key="col.key"
-              v-show="col.label"
-              class="expo-col-title"
-              :style="{
-                gridColumn: index + 1,
-                gridRow: 1,
-                color: col.color || '#3f71e6',
-              }"
-            >
-              {{ col.label }}
-            </div>
-
-            <!-- Background slot -->
-            <div class="expo-slot-bg" />
-
-            <!-- Time labels -->
-            <template v-for="timeLabel in timeLabels" :key="timeLabel.key">
-              <div
-                class="expo-time"
-                :class="{ 'expo-time-half': timeLabel.isHalf }"
-                :style="{
-                  gridColumn: timeLabel.col,
-                  gridRow: timeLabel.row,
-                }"
-              >
-                {{ timeLabel.text }}
-              </div>
-            </template>
-
-            <!-- Events -->
-            <button
-              v-for="event in processedEvents"
-              :key="event.index"
-              type="button"
-              :class="[
-                'expo-event',
-                event.vertical ? 'vertical' : '',
-                event.isCompact ? 'compact' : '',
-                { 'keyboard-focus': focusedIndex === event.index },
-              ]"
-              :style="{
-                gridColumn: event.columnIndex,
-                gridRow: `${event.startRow} / span ${event.rowSpan}`,
-                background: event.backgroundColor,
-                color: event.textColor,
-                fontSize: event.fontSize,
-                pointerEvents: event.PointerEvent === false ? 'none' : 'auto',
-              }"
-              :data-index="event.index"
-              @click="toggleEvent(event.index)"
-            >
-              <span class="title" v-html="event.formattedTitle"></span>
-              <span v-if="!event.vertical && !event.isCompact" class="sub">
-                {{ event.start }} - {{ event.end }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Modal -->
-      <div
-        class="expo-tt-modal"
-        :class="{ show: activeModalEvent !== null }"
-        :aria-hidden="activeModalEvent === null"
-      >
-        <div class="expo-tt-modal-bg" @click="closeModal" />
-
-        <div v-if="activeModalEvent !== null" class="expo-tt-modal-box">
-          <button
-            class="expo-tt-modal-close"
-            type="button"
-            :aria-label="t('common.close')"
-            @click="closeModal"
+    <template #surface>
+      <div class="expo-tt-shell">
+        <div ref="gridContainer" class="expo-tt-grid" :style="gridStyles">
+          <!-- Render column titles -->
+          <div
+            v-for="(col, index) in columns"
+            :key="col.key"
+            v-show="col.label"
+            class="expo-col-title"
+            :style="{
+              gridColumn: index + 1,
+              gridRow: 1,
+              color: col.color || '#3f71e6',
+            }"
           >
-            ×
-          </button>
-
-          <div>
-            <h3 v-html="activeModalEvent.formattedTitle"></h3>
-
-            <div class="expo-tt-modal-meta">
-              <span>
-                🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
-                {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
-              </span>
-
-              <span
-                >📍 {{ t("schedule.area") }}: {{ activeModalEvent.area }}</span
-              >
-            </div>
-
-            <p>
-              {{
-                activeModalEvent.detailText || t("schedule.detailPlaceholder")
-              }}
-            </p>
+            {{ col.label }}
           </div>
+
+          <!-- Background slot -->
+          <div class="expo-slot-bg" />
+
+          <!-- Time labels -->
+          <template v-for="timeLabel in timeLabels" :key="timeLabel.key">
+            <div
+              class="expo-time"
+              :class="{ 'expo-time-half': timeLabel.isHalf }"
+              :style="{
+                gridColumn: timeLabel.col,
+                gridRow: timeLabel.row,
+              }"
+            >
+              {{ timeLabel.text }}
+            </div>
+          </template>
+
+          <!-- Events -->
+          <button
+            v-for="event in processedEvents"
+            :key="event.index"
+            type="button"
+            :class="[
+              'expo-event',
+              event.vertical ? 'vertical' : '',
+              event.isCompact ? 'compact' : '',
+              { 'keyboard-focus': focusedIndex === event.index },
+            ]"
+            :style="{
+              gridColumn: event.columnIndex,
+              gridRow: `${event.startRow} / span ${event.rowSpan}`,
+              background: event.backgroundColor,
+              color: event.textColor,
+              fontSize: event.fontSize,
+              pointerEvents: event.PointerEvent === false ? 'none' : 'auto',
+            }"
+            :data-index="event.index"
+            @click="toggleEvent(event.index)"
+          >
+            <span class="title" v-html="event.formattedTitle"></span>
+            <span v-if="!event.vertical && !event.isCompact" class="sub">
+              {{ event.start }} - {{ event.end }}
+            </span>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+
+    <!-- Modal -->
+    <Teleport to="body">
+      <Transition name="schedule-modal">
+        <div
+          v-if="activeModalEvent !== null"
+          class="expo-tt-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="schedule-modal-title"
+          @click.self="closeModal"
+        >
+          <div class="expo-tt-modal-box">
+            <button
+              class="expo-tt-modal-close"
+              type="button"
+              :aria-label="t('common.close')"
+              @click="closeModal"
+            >
+              ×
+            </button>
+
+            <div>
+              <h3
+                id="schedule-modal-title"
+                v-html="activeModalEvent.formattedTitle"
+              ></h3>
+
+              <div class="expo-tt-modal-meta">
+                <span>
+                  🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
+                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
+                </span>
+
+                <span
+                  >📍 {{ t("schedule.area") }}:
+                  {{ activeModalEvent.area }}</span
+                >
+              </div>
+
+              <p>
+                {{
+                  activeModalEvent.detailText || t("schedule.detailPlaceholder")
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+  </PageLayout>
 </template>
 
 <style scoped>
 /* Scoped styles for Schedule Page */
-.legacy-page-root {
-  position: relative;
-  min-height: auto;
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: 4rem;
-  --color-font: #efefef;
-}
-
-.legacy-page-body {
-  position: relative;
-  z-index: 1;
-}
-
-.expo-tt {
-  width: min(97.5%, 76em);
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 2em 2.25em 2.5em;
-  border-radius: 1.25em;
-  position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(72, 38, 82, 0.75),
-    rgba(72, 38, 82, 0.75)
-  );
-  box-shadow:
-    0 1em 2em rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(127, 100, 50, 0.12);
-  color: var(--color-paper-text);
-}
-
-.expo-tt-header {
-  text-align: center;
-  margin: 0.5em 0 -0.5em;
-}
-
-.expo-tt-header h2 {
-  margin: 0 0 0.25em;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.1;
-  color: var(--color-font);
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.6);
-}
-
-.expo-tt-header p {
-  margin: 0.15em 0;
-  font-size: clamp(1.1rem, 1.75vw, 1.4rem);
-  line-height: 1.7;
-  font-weight: 600;
-  color: var(--color-font);
-}
-
 .expo-tt-shell {
   width: 100%;
   margin: 0 auto;
@@ -699,7 +669,7 @@ onUnmounted(() => {
   transform: translateY(-0.5em);
   font-weight: 700;
   font-size: clamp(1rem, 1.75vw, 1.25rem);
-  color: var(--color-font);
+  color: var(--page-title-color);
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);
   z-index: 2;
 }
@@ -752,29 +722,19 @@ onUnmounted(() => {
 }
 
 .expo-tt-modal {
-  display: none;
   position: fixed;
   inset: 0;
   z-index: 9999;
-}
-
-.expo-tt-modal.show {
-  display: block;
-}
-
-.expo-tt-modal-bg {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
 .expo-tt-modal-box {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: min(75vw, 60em);
   max-height: 85vh;
   overflow: auto;
@@ -784,6 +744,7 @@ onUnmounted(() => {
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
   padding: clamp(1.2rem, 2vw, 2rem) clamp(1rem, 2vw, 2.5rem)
     clamp(1rem, 2vw, 2rem);
+  position: relative;
 }
 
 .expo-tt-modal-close {
@@ -835,10 +796,6 @@ onUnmounted(() => {
     font-weight: 800;
     transition: all 0.2s ease-out;
   }
-  .expo-tt {
-    padding: 1.5em 1.2em 2em;
-    transition: all 0.2s ease-out;
-  }
 }
 
 .expo-event.keyboard-focus {
@@ -864,5 +821,33 @@ onUnmounted(() => {
   .touch-only {
     display: block;
   }
+}
+</style>
+
+<style>
+/* Unscoped — modal is teleported to body */
+
+/* Schedule Modal Entry/Exit Animations */
+.schedule-modal-enter-active,
+.schedule-modal-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.schedule-modal-enter-active .expo-tt-modal-box,
+.schedule-modal-leave-active .expo-tt-modal-box {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.schedule-modal-enter-from,
+.schedule-modal-leave-to {
+  opacity: 0;
+}
+
+.schedule-modal-enter-from .expo-tt-modal-box {
+  transform: scale(0.9) translateY(20px);
+}
+
+.schedule-modal-leave-to .expo-tt-modal-box {
+  transform: scale(0.95) translateY(10px);
 }
 </style>

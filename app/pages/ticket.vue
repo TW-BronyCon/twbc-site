@@ -165,166 +165,160 @@ const onMouseLeave = () => {
 </script>
 
 <template>
-  <div class="ticket-root">
-    <div class="container">
-      <div class="border">
-        <div class="border">
-          <h1>{{ $t("ticket.title") }}</h1>
-          <h2>{{ $t("ticket.subtitle") }}</h2>
-          <div
-            v-if="isTierClosed(tiers.find((t) => t.id === 'royale')?.closeTime)"
-            class="ticket-status-banner"
-          >
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <span>{{ $t("ticket.royaleClosedBanner") }}</span>
-          </div>
-          <div class="btn">
-            <button class="sectionbtn" @click="toggleMode">
-              {{
-                currentMode === "detailed"
-                  ? $t("ticket.viewTable")
-                  : $t("ticket.viewDetailed")
-              }}
-            </button>
-          </div>
+  <PageLayout>
+    <template #title>
+      <h1>{{ $t("ticket.title") }}</h1>
+      <p>{{ $t("ticket.subtitle") }}</p>
+    </template>
 
-          <!-- Detailed vs. Table View transition switcher -->
-          <Transition name="fade-slide" mode="out-in">
-            <!-- Detailed View (Card List) -->
-            <div
-              v-if="currentMode === 'detailed'"
-              id="section1"
-              class="section show"
-            >
-              <a
-                v-for="(tier, index) in tiers"
-                :key="tier.id"
-                :href="isTierClosed(tier.closeTime) ? undefined : tier.url"
-                :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
-                class="block-link"
-                :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
-              >
-                <div
-                  class="block"
-                  :style="{ color: tier.color }"
-                  :class="{ 'is-closed': isTierClosed(tier.closeTime) }"
-                >
-                  <!-- Ribbon Banner for Royale card if closed -->
-                  <div
-                    v-if="isTierClosed(tier.closeTime)"
-                    class="ribbon-closed"
-                  >
-                    <span>{{ $t("ticket.closed") }}</span>
-                  </div>
-                  <img
-                    :src="tier.img"
-                    :alt="$t(`ticket.tiers.${tier.id}`)"
-                    class="ticket-img"
-                  />
-                  <div class="ticket-text">
-                    <div class="ticket-title">
-                      {{ $t(`ticket.tiers.${tier.id}`) }}
-                    </div>
-                    <div class="description">
-                      <div class="desc-top">
-                        <span :style="{ color: tier.subColor }">{{
-                          $t(`ticket.descriptions.${tier.id}`)
-                        }}</span>
-                      </div>
-                      <div class="desc-bottom">
-                        {{ $t("ticket.includes")
-                        }}{{
-                          featuresList
-                            .filter((f) => f.availability[index])
-                            .map((f) => $t(`ticket.features.${f.key}`))
-                            .join(isEn ? ", " : "、")
-                        }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ticket-price">{{ tier.price }}</div>
-                </div>
-              </a>
-            </div>
-
-            <!-- Table View (Comparison Grid) -->
-            <div
-              v-else-if="currentMode === 'table'"
-              id="section2"
-              class="section show"
-            >
-              <div class="compare-wrap">
-                <table
-                  :class="['compare-table', { 'is-hovering': isHovering }]"
-                  @mouseleave="onMouseLeave"
-                >
-                  <thead>
-                    <tr>
-                      <th class="feature-head"></th>
-                      <th
-                        v-for="(tier, index) in tiers"
-                        :key="tier.id"
-                        class="tier-head"
-                        :class="{
-                          'active-col': activeColIndex === index,
-                          'is-closed-col': isTierClosed(tier.closeTime),
-                        }"
-                        @mouseenter="onHeaderMouseEnter(index)"
-                      >
-                        <span :class="['tier-label', tier.id]">{{
-                          $t(`ticket.tiers.${tier.id}`)
-                        }}</span>
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <tr
-                      v-for="(feature, rIndex) in featuresList"
-                      :key="feature.key"
-                      :class="{ 'active-row': activeRowIndex === rIndex }"
-                    >
-                      <th
-                        class="feature-name"
-                        @mouseenter="onRowMouseEnter(rIndex)"
-                      >
-                        {{ $t(`ticket.features.${feature.key}`) }}
-                      </th>
-                      <td
-                        v-for="(avail, cIndex) in feature.availability"
-                        :key="cIndex"
-                        :class="[
-                          'col-' + (cIndex + 1),
-                          avail ? 'yes' : 'no',
-                          {
-                            'active-col': activeColIndex === cIndex,
-                            'is-closed-col': isTierClosed(
-                              tiers[cIndex]?.closeTime,
-                            ),
-                          },
-                        ]"
-                        @mouseenter="onCellMouseEnter(rIndex, cIndex)"
-                      >
-                        {{ avail ? "✔" : "✖" }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </Transition>
-        </div>
+    <template #surface>
+      <div
+        v-if="
+          isTierClosed(tiers.find((tier) => tier.id === 'royale')?.closeTime)
+        "
+        class="ticket-status-banner"
+      >
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ $t("ticket.royaleClosedBanner") }}</span>
       </div>
-    </div>
-  </div>
+      <div class="btn">
+        <button class="sectionbtn" @click="toggleMode">
+          {{
+            currentMode === "detailed"
+              ? $t("ticket.viewTable")
+              : $t("ticket.viewDetailed")
+          }}
+        </button>
+      </div>
+
+      <!-- Detailed vs. Table View transition switcher -->
+      <Transition name="fade-slide" mode="out-in">
+        <!-- Detailed View (Card List) -->
+        <div
+          v-if="currentMode === 'detailed'"
+          id="section1"
+          class="section show"
+        >
+          <a
+            v-for="(tier, index) in tiers"
+            :key="tier.id"
+            :href="isTierClosed(tier.closeTime) ? undefined : tier.url"
+            :target="isTierClosed(tier.closeTime) ? undefined : '_blank'"
+            class="block-link"
+            :class="{ 'is-disabled': isTierClosed(tier.closeTime) }"
+            :aria-disabled="isTierClosed(tier.closeTime)"
+          >
+            <div
+              class="block"
+              :style="{ color: tier.color }"
+              :class="{ 'is-closed': isTierClosed(tier.closeTime) }"
+            >
+              <!-- Ribbon Banner for Royale card if closed -->
+              <div v-if="isTierClosed(tier.closeTime)" class="ribbon-closed">
+                <span>{{ $t("ticket.closed") }}</span>
+              </div>
+              <img
+                :src="tier.img"
+                :alt="$t(`ticket.tiers.${tier.id}`)"
+                class="ticket-img"
+              />
+              <div class="ticket-text">
+                <div class="ticket-title">
+                  {{ $t(`ticket.tiers.${tier.id}`) }}
+                </div>
+                <div class="description">
+                  <div class="desc-top">
+                    <span :style="{ color: tier.subColor }">{{
+                      $t(`ticket.descriptions.${tier.id}`)
+                    }}</span>
+                  </div>
+                  <div class="desc-bottom">
+                    {{ $t("ticket.includes")
+                    }}{{
+                      featuresList
+                        .filter((f) => f.availability[index])
+                        .map((f) => $t(`ticket.features.${f.key}`))
+                        .join(isEn ? ", " : "、")
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="ticket-price">{{ tier.price }}</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Table View (Comparison Grid) -->
+        <div
+          v-else-if="currentMode === 'table'"
+          id="section2"
+          class="section show"
+        >
+          <div class="compare-wrap">
+            <table
+              :class="['compare-table', { 'is-hovering': isHovering }]"
+              @mouseleave="onMouseLeave"
+            >
+              <thead>
+                <tr>
+                  <th scope="col" class="feature-head"></th>
+                  <th
+                    v-for="(tier, index) in tiers"
+                    :key="tier.id"
+                    scope="col"
+                    class="tier-head"
+                    :class="{
+                      'active-col': activeColIndex === index,
+                      'is-closed-col': isTierClosed(tier.closeTime),
+                    }"
+                    @mouseenter="onHeaderMouseEnter(index)"
+                  >
+                    <span :class="['tier-label', tier.id]">{{
+                      $t(`ticket.tiers.${tier.id}`)
+                    }}</span>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr
+                  v-for="(feature, rIndex) in featuresList"
+                  :key="feature.key"
+                  :class="{ 'active-row': activeRowIndex === rIndex }"
+                >
+                  <th
+                    scope="row"
+                    class="feature-name"
+                    @mouseenter="onRowMouseEnter(rIndex)"
+                  >
+                    {{ $t(`ticket.features.${feature.key}`) }}
+                  </th>
+                  <td
+                    v-for="(avail, cIndex) in feature.availability"
+                    :key="cIndex"
+                    :class="[
+                      'col-' + (cIndex + 1),
+                      avail ? 'yes' : 'no',
+                      {
+                        'active-col': activeColIndex === cIndex,
+                        'is-closed-col': isTierClosed(tiers[cIndex]?.closeTime),
+                      },
+                    ]"
+                    @mouseenter="onCellMouseEnter(rIndex, cIndex)"
+                  >
+                    {{ avail ? "✔" : "✖" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Transition>
+    </template>
+  </PageLayout>
 </template>
 
 <style scoped>
-.ticket-root {
-  position: relative;
-  padding-top: 3.5rem;
-}
-
 .block-link {
   text-decoration: none;
   color: inherit;
@@ -333,27 +327,6 @@ const onMouseLeave = () => {
 
 .block {
   height: 100%;
-}
-
-/* Unifying styles from ticket.css */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 50% 12%,
-      rgba(255, 223, 158, 0.16),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(112, 62, 151, 0.16),
-      transparent 55%
-    );
 }
 
 /* Mode Switch Transitions */
@@ -370,68 +343,6 @@ body::before {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
-}
-
-.container {
-  width: min(1200px, calc(100vw - 48px));
-  margin: 1.25rem auto;
-  padding: 1rem;
-  border-radius: 1.75rem;
-  background: linear-gradient(
-    180deg,
-    rgba(110, 53, 99, 0.86),
-    rgba(59, 34, 53, 0.9)
-  );
-  box-shadow:
-    0 0 0 1px rgba(255, 226, 170, 0.14),
-    0 18px 48px rgba(0, 0, 0, 0.38);
-  transition: all 0.25s ease;
-}
-
-.border {
-  width: 100%;
-  min-height: 85vh;
-  box-sizing: border-box;
-  padding: 0.65rem;
-  border-radius: 1.4rem;
-  border: 2px solid rgba(224, 187, 107, 0.72);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 240, 204, 0.12),
-    0 0 18px rgba(255, 215, 150, 0.08);
-}
-
-.border .border {
-  border-radius: 1.1rem;
-  background: linear-gradient(
-    180deg,
-    rgba(78, 40, 104, 0.2),
-    rgba(44, 22, 58, 0.14)
-  );
-}
-
-/* ===== 標題 ===== */
-h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.15;
-  text-align: center;
-  color: var(--color-gold-hover);
-  margin: 0.45em 0 0.15em;
-  letter-spacing: 0.08em;
-  text-shadow:
-    0 0 8px rgba(255, 223, 151, 0.22),
-    0 0 20px rgba(255, 212, 133, 0.12);
-  transition: all 0.2s ease-out;
-}
-
-h2 {
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
-  text-align: center;
-  color: var(--color-gold-hover);
-  margin: 0 0 1.4rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  opacity: 0.9;
-  transition: all 0.2s ease-out;
 }
 
 /* ===== 按鈕 ===== */

@@ -1,0 +1,59 @@
+:root {
+  /* Cosmic / Site Core Theme */
+  --color-bg-dark: #120b18;
+  --color-text-light: #ffffff;
+  --color-pink: #ffbdde;
+  --color-gold: #ffe6a7;
+  --color-gold-hover: #ffe6a7;
+  --color-nav-bg: rgba(95, 45, 100, 0.72);
+
+  /* Parchment / Paper / Scroll Theme */
+  --color-paper-bg: #fffdf9;
+  --color-paper-bg-gradient: linear-gradient(145deg, #f7ecd6, #ead7b4);
+  --color-paper-text: #4a3522;
+  --color-paper-text-dark: #341e0d;
+  --color-paper-text-muted: #6a5642;
+
+  /* Ticket Tiers - Cards */
+  --color-tier-budget: #73bfe5;
+  --color-tier-budget-sub: #6baaca;
+  --color-tier-standard: #8673e5;
+  --color-tier-standard-sub: #7c6ccc;
+  --color-tier-sponsor: #e57399;
+  --color-tier-sponsor-sub: #ce6e8e;
+  --color-tier-royale: #e5d273;
+  --color-tier-royale-sub: #b4a34c;
+
+  /* Ticket Tiers - Darker Contrast for Light Backgrounds / Table */
+  --color-tier-budget-dark: #5d9e38;
+  --color-tier-standard-dark: #4d6fc5;
+  --color-tier-sponsor-dark: #b8568d;
+  --color-tier-royale-dark: #bc8b2e;
+
+  /* Scrollbar */
+  --color-scrollbar-track: #1a1a1a;
+  --color-scrollbar-thumb: #444;
+  --color-scrollbar-thumb-hover: #555;
+
+  /* ─── Page Layout Design Tokens ─────────────────────────────── */
+
+  /* Page root */
+  --page-padding-top: clamp(4.5rem, 7vw, 6.5rem);
+  --page-padding-bottom: 4rem;
+
+  /* Hero title */
+  --page-title-color: #efefef;
+  --page-title-size: clamp(2.2rem, 4vw, 3.6rem);
+  --page-title-shadow: 0 2px 8px rgba(255, 255, 255, 0.45);
+
+  /* Content surface card */
+  --page-surface-bg: linear-gradient(
+    180deg,
+    rgba(72, 38, 82, 0.75),
+    rgba(46, 21, 56, 0.75)
+  );
+  --page-surface-border: rgba(127, 100, 50, 0.12);
+  --page-surface-radius: 1.25em;
+  --page-surface-shadow: 0 1em 2em rgba(0, 0, 0, 0.25);
+  --page-surface-max-width: 76em;
+}
