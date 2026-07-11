@@ -25,7 +25,8 @@
     },
     "footer": {
       "copyright": "All Rights Reserved",
-      "copyrightNotice": "© 2026 TWBC"
+      "copyrightNotice": "© 2026 TWBC",
+      "logoAlt": "TWBC Taiwan BronyCon text logo"
     },
     "about": {
       "title": "About Us",
@@ -139,7 +140,8 @@
   "newsPage": {
     "title": "News",
     "heading": "Village Mailbox",
-    "description": "Announcements and updates from Kirin Village will be delivered here."
+    "description": "Announcements and updates from Kirin Village will be delivered here.",
+    "readPost": "Read post: {title}"
   },
   "news": {
     "author": "TWBC Team",
@@ -158,7 +160,10 @@
     }
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "resetZoom": "Reset Zoom"
   },
   "schedule": {
     "title": "Schedule",

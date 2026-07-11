@@ -24,7 +24,8 @@ const partners = [
 // Quote Logic
 const quotes = computed(() => {
   // Method 1: Try tm (translated message)
-  const raw = tm("home.quotes") as unknown;
+  const quotesKey = "home.quotes";
+  const raw = tm(quotesKey) as unknown;
   let list: unknown[] = [];
 
   if (raw && typeof raw !== "string") {

@@ -26,6 +26,9 @@ jobs:
       - name: Check Formatting
         run: npm run format:check
 
+      - name: Check i18n
+        run: npm run i18n:check
+
       - name: Run Typecheck
         run: npm run typecheck
 
