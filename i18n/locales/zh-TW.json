@@ -164,7 +164,8 @@
     "close": "關閉",
     "zoomIn": "放大",
     "zoomOut": "縮小",
-    "resetZoom": "重設縮放"
+    "resetZoom": "重設縮放",
+    "zoomImage": "放大圖片"
   },
   "schedule": {
     "title": "時程表",
