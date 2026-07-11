@@ -165,8 +165,8 @@
     "title": "時程表",
     "description": "Taiwan BronyCon 台灣馬聚的活動時程表，包含大眾專題討論、創作工坊與舞台表演等活動安排。",
     "hint": "點擊色塊以查看詳細資訊！",
-    "mobilehint": "← 左右滑動來觀看時程表 →",
-    "note": "以下時程表尚未定案，內容仍可能調整。",
+    "mobilehint": "左右滑動來觀看時程表",
+    "note": "以下時程表僅供參考，實際安排可能有所調整。",
     "duration": "時長",
     "area": "區域",
     "detailPlaceholder": "詳細資訊之後補上。"
