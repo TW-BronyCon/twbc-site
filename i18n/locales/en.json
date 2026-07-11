@@ -113,6 +113,7 @@
     }
   },
   "menu": {
+    "navLabel": "Primary Navigation",
     "home": "Home",
     "about": "About Us",
     "news": "News",
