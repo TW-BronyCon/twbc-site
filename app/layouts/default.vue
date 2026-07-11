@@ -5,7 +5,9 @@
 
     <div class="site-content">
       <SiteNav />
-      <slot />
+      <main class="main-content">
+        <slot />
+      </main>
       <Footer />
     </div>
   </div>
@@ -25,7 +27,7 @@
   min-height: 100vh;
 }
 
-.site-content > :nth-child(2) {
+.main-content {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
