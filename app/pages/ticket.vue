@@ -173,7 +173,9 @@ const onMouseLeave = () => {
 
     <template #surface>
       <div
-        v-if="isTierClosed(tiers.find((t) => t.id === 'royale')?.closeTime)"
+        v-if="
+          isTierClosed(tiers.find((tier) => tier.id === 'royale')?.closeTime)
+        "
         class="ticket-status-banner"
       >
         <i class="fa-solid fa-circle-exclamation"></i>
