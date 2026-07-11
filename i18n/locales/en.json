@@ -189,7 +189,7 @@
       "bar": "Bar",
       "checkin": "Check-in",
       "entrance": "Entrance",
-      "booth": "Vendor Booth"
+      "booth": "Vendors"
     },
     "modal": {
       "events": "Scheduled Events in this Zone",
@@ -236,8 +236,8 @@
     "backToMap": "Back to Map",
     "links": "Links & Contact",
     "list": {
-      "title": "Creator Booths",
-      "subtitle": "Discover community creations, fan art, and custom merchandise from community creators."
+      "title": "Vendors",
+      "subtitle": "Discover fan art and merchandises from fandom creators."
     }
   }
 }
