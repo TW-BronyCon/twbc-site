@@ -226,6 +226,7 @@ useHead(() => ({
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
