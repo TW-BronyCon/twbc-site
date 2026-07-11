@@ -230,10 +230,10 @@
   "booth": {
     "notFound": {
       "title": "找不到攤位",
-      "message": "很抱歉，找不到該攤位的詳細資訊。",
-      "backToMap": "返回會場地圖"
+      "message": "很抱歉，找不到該攤位的詳細資訊。"
     },
-    "backToMap": "返回地圖",
+    "backToMap": "返回會場地圖",
+    "backToList": "返回攤位列表",
     "links": "相關連結與聯絡方式",
     "list": {
       "title": "創作者攤位",

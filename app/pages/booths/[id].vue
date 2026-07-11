@@ -134,12 +134,18 @@ const currentImage = computed(() => {
 
           <!-- Actions -->
           <div class="actions-section">
+            <!-- Back to Map -->
             <NuxtLink
               :to="localePath({ path: '/venue', query: { booth: booth.id } })"
               class="back-map-btn"
             >
               <i class="fa-solid fa-map-location-dot"></i>
               <span>{{ t("booth.backToMap") }}</span>
+            </NuxtLink>
+            <!-- Back to Booths List -->
+            <NuxtLink :to="localePath('/booths')" class="back-list-btn">
+              <i class="fa-solid fa-list"></i>
+              <span>{{ t("booth.backToList") }}</span>
             </NuxtLink>
           </div>
         </div>
@@ -148,9 +154,9 @@ const currentImage = computed(() => {
       <!-- Not Found State -->
       <div v-else class="not-found-state">
         <p class="not-found-message">{{ t("booth.notFound.message") }}</p>
-        <NuxtLink :to="localePath('/venue')" class="back-map-btn">
-          <i class="fa-solid fa-map-location-dot"></i>
-          <span>{{ t("booth.notFound.backToMap") }}</span>
+        <NuxtLink :to="localePath('/booths')" class="back-list-btn">
+          <i class="fa-solid fa-list"></i>
+          <span>{{ t("booth.backToList") }}</span>
         </NuxtLink>
       </div>
 
@@ -353,9 +359,12 @@ const currentImage = computed(() => {
 /* Actions Section */
 .actions-section {
   margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 
-.back-map-btn {
+.back-map-btn,
+.back-list-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -371,7 +380,8 @@ const currentImage = computed(() => {
   cursor: pointer;
 }
 
-.back-map-btn:hover {
+.back-map-btn:hover,
+.back-list-btn:hover {
   background: transparent;
   color: var(--color-gold);
   transform: translateY(-2px);

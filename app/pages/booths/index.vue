@@ -30,7 +30,7 @@ useHead(() => ({
         <div class="toolbar">
           <NuxtLink :to="localePath('/venue')" class="map-link-btn">
             <i class="fa-solid fa-map-location-dot"></i>
-            <span>{{ t("booth.notFound.backToMap") }}</span>
+            <span>{{ t("booth.backToMap") }}</span>
           </NuxtLink>
         </div>
 

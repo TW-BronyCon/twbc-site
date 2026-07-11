@@ -230,9 +230,9 @@
   "booth": {
     "notFound": {
       "title": "Booth Not Found",
-      "message": "Sorry, we couldn't find the details for this booth.",
-      "backToMap": "Back to Venue Map"
+      "message": "Sorry, we couldn't find the details for this booth."
     },
+    "backToList": "Back to Booth List",
     "backToMap": "Back to Map",
     "links": "Links & Contact",
     "list": {
