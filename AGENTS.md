@@ -4,7 +4,7 @@ This document defines guidelines and instructions for AI agents working on the T
 
 ## Git & Workflow Guidelines
 
-- **Single-Feature Commits**: make every commit littery do one feature. Do not bundle multiple features, unrelated fixes, or global refactors into a single commit.
+- **Commit Messages**: Meet commit message conventions.
 - **Conventional Commits**: Follow [Conventional Commits](https://www.conventionalcommits.org/) format:
   - `feat`: End-user visible new functionality or behavior change.
   - `fix`: End-user visible bug fixes.
