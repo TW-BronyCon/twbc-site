@@ -384,7 +384,7 @@ onUnmounted(() => {
 <template>
   <PageLayout>
     <template #title>
-      <h2>{{ t("venue.title") }}</h2>
+      <h1>{{ t("venue.title") }}</h1>
       <p>{{ t("venue.hint") }}</p>
     </template>
 

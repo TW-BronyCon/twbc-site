@@ -13,7 +13,7 @@ useHead(() => ({
 <template>
   <PageLayout>
     <template #title>
-      <h2>{{ t("transport.title") }}</h2>
+      <h1>{{ t("transport.title") }}</h1>
     </template>
 
     <template #surface>
