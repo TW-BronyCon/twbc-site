@@ -75,7 +75,15 @@ const currentImage = computed(() => {
       <div v-if="booth" class="booth-detail-grid">
         <!-- Gallery Section -->
         <div class="booth-gallery-col">
-          <div class="main-image-container" @click="isLightboxOpen = true">
+          <div
+            class="main-image-container"
+            role="button"
+            tabindex="0"
+            :aria-label="t('common.zoomImage')"
+            @click="isLightboxOpen = true"
+            @keydown.enter="isLightboxOpen = true"
+            @keydown.space.prevent="isLightboxOpen = true"
+          >
             <img
               v-if="currentImage"
               :src="currentImage"

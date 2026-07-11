@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+/** Union of value types that vue-i18n's `rt()` can accept. */
+type MessageValue =
+  string | ((...args: unknown[]) => string) | Record<string, unknown>;
+
 const { t, tm, rt, locale, locales } = useI18n();
 const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
@@ -49,7 +53,7 @@ const quotes = computed(() => {
     .map((q) => {
       // Use rt to resolve pre-compiled i18n messages
       try {
-        return rt(q as any);
+        return rt(q as MessageValue);
       } catch (e) {
         // Fallback if rt is not available or fails
       }
