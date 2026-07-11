@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { booths } from "~/data/boothData";
 
@@ -28,6 +28,23 @@ useHead(() => ({
 
 // Gallery active state
 const activeImageIdx = ref(0);
+
+// Lightbox state
+const isLightboxOpen = ref(false);
+
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (e.key === "Escape") {
+    isLightboxOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+});
 
 const boothImages = computed(() => {
   if (!booth.value) return [];
@@ -58,7 +75,7 @@ const currentImage = computed(() => {
       <div v-if="booth" class="booth-detail-grid">
         <!-- Gallery Section -->
         <div class="booth-gallery-col">
-          <div class="main-image-container">
+          <div class="main-image-container" @click="isLightboxOpen = true">
             <img
               v-if="currentImage"
               :src="currentImage"
@@ -136,6 +153,33 @@ const currentImage = computed(() => {
           <span>{{ t("booth.notFound.backToMap") }}</span>
         </NuxtLink>
       </div>
+
+      <!-- Lightbox Modal -->
+      <Teleport to="body">
+        <Transition name="lightbox-fade">
+          <div
+            v-if="isLightboxOpen && currentImage"
+            class="lightbox-overlay"
+            @click="isLightboxOpen = false"
+          >
+            <button
+              class="lightbox-close"
+              type="button"
+              @click="isLightboxOpen = false"
+              :aria-label="t('common.close')"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="lightbox-content" @click.stop>
+              <img
+                :src="currentImage"
+                :alt="booth ? booth.name[isEn ? 'en' : 'zh'] : ''"
+                class="lightbox-img"
+              />
+            </div>
+          </div>
+        </Transition>
+      </Teleport>
     </template>
   </PageLayout>
 </template>
@@ -192,6 +236,7 @@ const currentImage = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: zoom-in;
 }
 
 .main-image {
@@ -343,5 +388,86 @@ const currentImage = computed(() => {
   font-size: 1.15rem;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
+}
+
+/* Lightbox Styles */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 5, 20, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 230, 167, 0.15);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 1010;
+}
+
+.lightbox-close:hover {
+  background: var(--color-gold);
+  color: #120b18;
+  border-color: var(--color-gold);
+  transform: scale(1.1);
+}
+
+.lightbox-content {
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 230, 167, 0.15);
+  cursor: default;
+  transition: transform 0.3s ease;
+}
+
+/* Lightbox Fade Transition */
+.lightbox-fade-enter-active,
+.lightbox-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-fade-enter-from,
+.lightbox-fade-leave-to {
+  opacity: 0;
+}
+
+.lightbox-fade-enter-active .lightbox-img {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lightbox-fade-enter-from .lightbox-img {
+  transform: scale(0.9);
 }
 </style>

@@ -53,10 +53,8 @@ Use kebab-case: `add-countdown-component`, `fix-mobile-layout`
 
 if a page is not production ready, add following to the top of the page:
 
-``` vue
-definePageMeta({
-  underDevelopment: true,
-});
+```vue
+definePageMeta({ underDevelopment: true, });
 ```
 
 It will show wartermarks and ribbons on the page to indicate that the page is under development.
