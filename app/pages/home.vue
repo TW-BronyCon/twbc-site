@@ -44,7 +44,7 @@ const translatedCountdownMsg = computed(() => {
         </div>
 
         <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{
-          $t("home.nav.tickets")
+          $t("menu.ticket")
         }}</NuxtLink>
       </section>
 

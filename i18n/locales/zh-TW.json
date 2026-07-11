@@ -15,14 +15,6 @@
       "eventEnded": "活動已完結",
       "eventStarted": "盛會已奏響"
     },
-    "nav": {
-      "tickets": "立即購票",
-      "volunteer": "志工申請",
-      "vendor": "攤位申請(已截止)",
-      "event": "自主活動申請(已截止)",
-      "apply": "活動申請",
-      "comingSoon": "規劃中"
-    },
     "footer": {
       "logoAlt": "TWBC台灣馬聚官方網站",
       "copyright": "版權所有",
@@ -76,10 +68,8 @@
   "ticket": {
     "title": "票種",
     "subtitle": "請選擇想要的活動票券",
-    "backHome": "返回首頁",
     "viewTable": "票種比較",
     "viewDetailed": "詳細清單",
-    "purchase": "立即購票",
     "includes": "內含：",
     "closed": "已截止",
     "royaleClosedBanner": "5000 NTD 貴賓票已截止",
@@ -120,8 +110,6 @@
     "news": "最新消息",
     "ticket": "購票資訊",
     "apply": "活動申請",
-    "timetable": "時程表",
-    "location": "場地資訊",
     "schedule": "時程表",
     "venue": "場地資訊",
     "transport": "交通指南",
@@ -133,9 +121,8 @@
     "venue": "場地資訊(即將公佈)"
   },
   "apply": {
-    "comingSoon": "規劃中",
     "volunteer": "志工申請",
-    "vendor": "攤位申請(已截止)",
+    "vendor": "攤位申請",
     "event": "自主活動申請(已截止)"
   },
   "newsPage": {
@@ -149,15 +136,6 @@
     "labels": {
       "time": "時間",
       "author": "寄件人"
-    },
-    "actions": {
-      "copyLink": "複製貼文網址",
-      "openPost": "前往原貼文",
-      "backHome": "回首頁"
-    },
-    "messages": {
-      "copied": "已複製網址",
-      "copyFailed": "複製失敗，請手動複製"
     }
   },
   "common": {
@@ -195,7 +173,6 @@
     "modal": {
       "events": "本區域時程表活動",
       "noEvents": "此區域目前無安排特定活動。",
-      "visitWebsite": "前往網站",
       "details": "區域詳情",
       "boothTitle": "攤位{id}",
       "description": "攤位介紹",

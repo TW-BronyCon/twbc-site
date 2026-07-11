@@ -8,20 +8,12 @@
     "subtitle": "August 15, 2026",
     "countdown": {
       "title": "Countdown",
-      "days": "d",
-      "hours": "h",
-      "minutes": "m",
-      "seconds": "s",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds",
       "eventEnded": "Event has ended",
       "eventStarted": "Event has started"
-    },
-    "nav": {
-      "tickets": "Register",
-      "volunteer": "Volunteer",
-      "vendor": "Vendor (Closed)",
-      "event": "Event (Closed)",
-      "apply": "Applications",
-      "comingSoon": "Coming Soon"
     },
     "footer": {
       "logoAlt": "TWBC Taiwan BronyCon Official Website",
@@ -76,10 +68,8 @@
   "ticket": {
     "title": "Tickets",
     "subtitle": "Please choose your ticket",
-    "backHome": "Back to Home",
     "viewTable": "Compare Tiers",
     "viewDetailed": "Detailed List",
-    "purchase": "Buy Now",
     "includes": "Includes: ",
     "closed": "Closed",
     "royaleClosedBanner": "5000 NTD Royale ticket: Sales Closed",
@@ -120,8 +110,6 @@
     "news": "News",
     "ticket": "Tickets",
     "apply": "Apply",
-    "timetable": "Timetable",
-    "location": "Location",
     "schedule": "Schedule",
     "venue": "Venue",
     "transport": "Transport",
@@ -133,9 +121,8 @@
     "venue": "Venue(TBA)"
   },
   "apply": {
-    "comingSoon": "TBD",
     "volunteer": "Volunteer",
-    "vendor": "Vendor (Closed)",
+    "vendor": "Vendor",
     "event": "Event (Closed)"
   },
   "newsPage": {
@@ -149,15 +136,6 @@
     "labels": {
       "time": "Time",
       "author": "Sender"
-    },
-    "actions": {
-      "copyLink": "Copy Post Link",
-      "openPost": "Open Original Post",
-      "backHome": "Back to Home"
-    },
-    "messages": {
-      "copied": "Link copied",
-      "copyFailed": "Failed to copy. Please copy it manually."
     }
   },
   "common": {
@@ -195,7 +173,6 @@
     "modal": {
       "events": "Scheduled Events in this Zone",
       "noEvents": "No events scheduled currently.",
-      "visitWebsite": "Visit Website",
       "details": "Zone Details",
       "boothTitle": "Booth {id}",
       "description": "Description",

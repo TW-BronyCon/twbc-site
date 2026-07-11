@@ -99,7 +99,12 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
             >
           </li>
           <li>
-            <span class="submenu-disabled">{{ $t("apply.vendor") }}</span>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ $t("apply.vendor") }}</a
+            >
           </li>
           <li>
             <span class="submenu-disabled">{{ $t("apply.event") }}</span>
