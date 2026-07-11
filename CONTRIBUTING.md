@@ -57,4 +57,4 @@ if a page is not production ready, add following to the top of the page:
 definePageMeta({ underDevelopment: true, });
 ```
 
-It will show wartermarks and ribbons on the page to indicate that the page is under development.
+It will show watermarks and ribbons on the page to indicate that the page is under development.
