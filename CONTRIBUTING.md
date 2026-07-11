@@ -48,3 +48,15 @@ Use kebab-case: `add-countdown-component`, `fix-mobile-layout`
 - AI review comments should be addressed and resolved by the PR author.
 - Human review comments should be resolved by the reviewer.
 - Fix formatting and lint errors in the same commit as the code change, not as a separate commit.
+
+## Under Development Pages
+
+if a page is not production ready, add following to the top of the page:
+
+``` vue
+definePageMeta({
+  underDevelopment: true,
+});
+```
+
+It will show wartermarks and ribbons on the page to indicate that the page is under development.

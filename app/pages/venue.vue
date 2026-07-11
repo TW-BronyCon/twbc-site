@@ -4,6 +4,8 @@ import { booths, type Booth } from "~/data/boothData";
 import { events, EVENT_COLORS } from "~/data/scheduleData";
 
 const { t, locale } = useI18n();
+const localePath = useLocalePath();
+const route = useRoute();
 
 useHead(() => ({
   title: t("venue.title"),
@@ -373,6 +375,13 @@ onMounted(() => {
   window.addEventListener("keydown", handleKeyDown);
   updateSvgRectSize();
   window.addEventListener("resize", updateSvgRectSize);
+
+  if (route.query.booth) {
+    const boothId = route.query.booth as string;
+    setTimeout(() => {
+      openBoothById(boothId);
+    }, 100);
+  }
 });
 
 onUnmounted(() => {
@@ -1144,6 +1153,16 @@ onUnmounted(() => {
                   <p class="detail-desc">
                     {{ selectedBooth.description[isEn ? "en" : "zh"] }}
                   </p>
+
+                  <div class="booth-cta-section">
+                    <NuxtLink
+                      :to="localePath(`/booths/${selectedBooth.id}`)"
+                      class="view-detail-btn"
+                    >
+                      <span>{{ t("venue.modal.viewBoothDetail") }}</span>
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </NuxtLink>
+                  </div>
 
                   <!-- Links -->
                   <div
@@ -1935,5 +1954,34 @@ onUnmounted(() => {
   color: #120b18;
   border-color: var(--color-gold);
   transform: translateY(-1px);
+}
+
+.booth-cta-section {
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.view-detail-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  background: var(--color-gold);
+  color: #120b18;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+  border: 1px solid var(--color-gold);
+}
+
+.view-detail-btn:hover {
+  background: transparent;
+  color: var(--color-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 230, 167, 0.2);
 }
 </style>

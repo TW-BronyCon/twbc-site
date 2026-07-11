@@ -24,9 +24,9 @@
       "comingSoon": "Coming Soon"
     },
     "footer": {
+      "logoAlt": "TWBC Taiwan BronyCon Official Website",
       "copyright": "All Rights Reserved",
-      "copyrightNotice": "© 2026 TWBC",
-      "logoAlt": "TWBC Taiwan BronyCon text logo"
+      "copyrightNotice": "© 2026 TWBC"
     },
     "about": {
       "title": "About Us",
@@ -124,7 +124,8 @@
     "location": "Location",
     "schedule": "Schedule",
     "venue": "Venue",
-    "transport": "Transport"
+    "transport": "Transport",
+    "booths": "Booths"
   },
   "tba": {
     "about": "About Us(TBA)",
@@ -197,7 +198,8 @@
       "details": "Zone Details",
       "boothTitle": "Booth {id}",
       "description": "Description",
-      "links": "Links"
+      "links": "Links",
+      "viewBoothDetail": "View Details"
     },
     "zones": {
       "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
@@ -224,5 +226,18 @@
     "watermark": "UNDER DEVELOPMENT",
     "ribbon": "DEV BUILD",
     "preview": "PREVIEW"
+  },
+  "booth": {
+    "notFound": {
+      "title": "Booth Not Found",
+      "message": "Sorry, we couldn't find the details for this booth.",
+      "backToMap": "Back to Venue Map"
+    },
+    "backToMap": "Back to Map",
+    "links": "Links & Contact",
+    "list": {
+      "title": "Creator Booths",
+      "subtitle": "Discover community creations, fan art, and custom merchandise from community creators."
+    }
   }
 }

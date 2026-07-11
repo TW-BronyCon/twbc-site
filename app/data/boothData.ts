@@ -15,6 +15,7 @@ export interface Booth {
   description: LocalizedText;
   links?: SocialLink[];
   image?: string;
+  images?: string[];
 }
 
 export const booths: Booth[] = [
@@ -25,6 +26,11 @@ export const booths: Booth[] = [
       zh: "青焰的小馬布偶，還有雷曦文化的小馬毛絨週邊",
       en: "Plushies made by Neko and 雷曦（Reesee）'s plush merchandise.",
     },
+    image: "/img/booths/booth-1-banner.webp",
+    images: [
+      "/img/booths/booth-1-banner.webp",
+      "/img/booths/booth-1-avatar.webp",
+    ],
     links: [
       {
         label: "Website",
@@ -50,6 +56,8 @@ export const booths: Booth[] = [
       zh: "台灣知名小馬繪師，厚塗風格，M6或主要角色吊飾、徽章、簽繪板、桌布、滑鼠墊等",
       en: "A famous Taiwanese MLP artist, thick-painting style, M6 or main character charms, badges, autograph boards, tablecloths, mousepads.",
     },
+    image: "/img/booths/booth-2.webp",
+    images: ["/img/booths/booth-2.webp"],
     links: [
       {
         label: "Website",
@@ -80,6 +88,8 @@ export const booths: Booth[] = [
       zh: "徽章、毛巾、貼紙；M6、Q版、搖滾版",
       en: "Badges, towels, stickers; M6, chibi version, rock version.",
     },
+    image: "/img/booths/booth-3.webp",
+    images: ["/img/booths/booth-3.webp"],
     links: [
       {
         label: "Instagram",
@@ -95,6 +105,8 @@ export const booths: Booth[] = [
       zh: "同人小說設定集、精美明信片與受小馬國歷史啟發的特色書籤。",
       en: "Fanfiction booklets, postcard sets, and bookmark collections inspired by Equestria.",
     },
+    image: "/img/booths/booth-4.webp",
+    images: ["/img/booths/booth-4.webp"],
     links: [
       {
         label: "DeviantArt",
