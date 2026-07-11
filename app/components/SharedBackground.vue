@@ -38,9 +38,11 @@ interface ParallaxImage extends HTMLImageElement {
   _movable?: number;
 }
 
+type BackgroundVariant = "village" | "homepage";
+
 const props = withDefaults(
   defineProps<{
-    variant?: string;
+    variant?: BackgroundVariant;
     config?: BackgroundLayerConfig[];
   }>(),
   {
