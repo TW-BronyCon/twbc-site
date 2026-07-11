@@ -112,7 +112,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: "瘋狂小馬故事", en: "Crazy Pony Stories" },
+    title: { zh: "瘋狂小馬故事", en: "Mad Libs" },
     track: "main",
     start: "10:45",
     end: "11:45",
@@ -137,7 +137,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: "專題分享\n青焰布偶", en: "Featured Talk\nQingyan Plush" },
+    title: { zh: "專題分享\n青焰布偶", en: "Special Lecture\nNKPLUSH" },
     track: "main",
     start: "13:00",
     end: "14:00",
@@ -172,7 +172,7 @@ export const events: TimetableEvent[] = [
   {
     title: {
       zh: "友誼的小船說翻就翻",
-      en: "The boat of friendship tips over",
+      en: "The boat of friendship sinks when least expected",
     },
     track: "main",
     start: "15:30",
@@ -242,7 +242,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: "攤位街", en: "Vendor Alley" },
+    title: { zh: "攤位街", en: "Vendor Area" },
     track: "vendor",
     start: "10:30",
     end: "12:00",
@@ -253,7 +253,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
-    title: { zh: "攤位街", en: "Vendor Alley" },
+    title: { zh: "攤位街", en: "Vendor Area" },
     track: "vendor",
     start: "13:00",
     end: "17:00",
