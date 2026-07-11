@@ -35,10 +35,13 @@
     "location": {
       "title": "活動位置",
       "name": "阿斯生活空間",
-      "address": "新北市三重區三和路四段111號10樓"
+      "address": "新北市三重區三和路四段111號10樓",
+      "mapTitle": "Google地圖顯示TWBC台灣馬聚活動場地位置"
     },
     "faq": {
       "title": "常見問題",
+      "questionPrefix": "Q：",
+      "answerPrefix": "A：",
       "q1": "這是什麼活動？",
       "a1": "TWBC 是一個以彩虹小馬為主題的粉絲聚會活動！",
       "q2": "所有票種總和有多少張？",

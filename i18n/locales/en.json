@@ -35,10 +35,13 @@
     "location": {
       "title": "Location",
       "name": "Asi Space",
-      "address": "10F, No. 111, Sec. 4, Sanhe Rd., Sanchong Dist., New Taipei City"
+      "address": "10F, No. 111, Sec. 4, Sanhe Rd., Sanchong Dist., New Taipei City",
+      "mapTitle": "Google Map showing TW BronyCon venue location"
     },
     "faq": {
       "title": "FAQ",
+      "questionPrefix": "Q: ",
+      "answerPrefix": "A: ",
       "q1": "What is this event?",
       "a1": "TWBC is a convention for My Little Pony fans!",
       "q2": "How many tickets are available in total?",

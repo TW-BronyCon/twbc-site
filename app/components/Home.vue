@@ -64,7 +64,7 @@ const translatedCountdownMsg = computed(() => {
         </h4>
         <iframe
           class="map"
-          title="Google Map showing TW BronyCon venue location"
+          :title="$t('home.location.mapTitle')"
           loading="lazy"
           src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d903.4343855604266!2d121.4858447!3d25.0768833!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8d751f69539%3A0x3363e968c8ea913!2zQXNpIFNwYWNlIFJlbnRhbCDpmL_mlq_nlJ_mtLvnqbrplpPloLTlnLDlh7rnp58!5e0!3m2!1szh-TW!2stw!4v1777220130926!5m2!1szh-TW!2stw"
           referrerpolicy="no-referrer-when-downgrade"
@@ -75,8 +75,8 @@ const translatedCountdownMsg = computed(() => {
       <section class="info-card large">
         <h2>{{ $t("home.faq.title") }}</h2>
         <div v-for="i in 4" :key="i">
-          <h4>Q：{{ $t(`home.faq.q${i}`) }}</h4>
-          <p>A：{{ $t(`home.faq.a${i}`) }}</p>
+          <h4>{{ $t("home.faq.questionPrefix") }}{{ $t(`home.faq.q${i}`) }}</h4>
+          <p>{{ $t("home.faq.answerPrefix") }}{{ $t(`home.faq.a${i}`) }}</p>
         </div>
       </section>
     </main>
