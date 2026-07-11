@@ -18,6 +18,12 @@ definePageMeta({
 
 useHead(() => ({
   title: t("schedule.title"),
+  meta: [
+    {
+      name: "description",
+      content: t("schedule.description"),
+    },
+  ],
 }));
 
 const gridContainer = ref<HTMLElement | null>(null);

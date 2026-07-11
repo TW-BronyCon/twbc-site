@@ -23,6 +23,12 @@ const { t, locale } = useI18n();
 
 useHead({
   title: () => t("newsPage.title"),
+  meta: [
+    {
+      name: "description",
+      content: () => t("newsPage.description"),
+    },
+  ],
 });
 
 type NewsPost = {

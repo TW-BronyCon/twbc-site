@@ -158,6 +158,7 @@
   },
   "schedule": {
     "title": "Schedule",
+    "description": "Schedule of events, panels, and performances at Taiwan BronyCon.",
     "hint": "Tap an event block to view details.",
     "mobilehint": "← Swipe to view the Schedule →",
     "note": "The schedule below is not final and may still be adjusted.",
