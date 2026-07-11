@@ -21,6 +21,16 @@ export function handleModalTab(e: KeyboardEvent, modalElement: HTMLElement) {
 
   if (!first || !last) return;
 
+  // If focus has escaped the modal, bring it back to the first focusable element
+  if (
+    document.activeElement !== modalElement &&
+    !modalElement.contains(document.activeElement)
+  ) {
+    e.preventDefault();
+    first.focus();
+    return;
+  }
+
   if (e.shiftKey) {
     // Shift + Tab: focus last element if currently at first
     if (document.activeElement === first) {
