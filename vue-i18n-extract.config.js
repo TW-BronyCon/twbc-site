@@ -1,17 +1,17 @@
 export const vueFiles = "./app/**/*.?(vue|ts)";
 export const languageFiles = "./i18n/locales/*.json";
 export const exclude = [
-  "seo",
-  "home",
-  "menu",
-  "apply",
-  "tba",
-  "ticket",
-  "newsPage",
-  "news",
-  "common",
-  "schedule",
-  "venue",
+  "home.countdown",
+  "home.faq",
+  "home.quotes",
+  "home.footer.logoAlt",
+  "tickets.tiers",
+  "ticket.description",
+  "ticket.features",
+  "ticket.tiers",
+  "venue.legend",
+  "venue.zones",
+  "tba.",
 ];
 export const output = false;
 export const add = false;
