@@ -20,7 +20,13 @@ const translatedCountdownMsg = computed(() => {
   <div class="homepage-root">
     <main class="container">
       <section class="hero">
-        <img class="logo" src="/img/text-logo.avif" alt="TWBC" />
+        <img
+          class="logo"
+          src="/img/text-logo.avif"
+          alt="TWBC"
+          width="2362"
+          height="1816"
+        />
 
         <div class="date">{{ $t("home.subtitle") }}</div>
 
