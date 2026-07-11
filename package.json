@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.21",
+    "@types/node": "^26.1.1",
     "prettier": "^3.9.4",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.7"
