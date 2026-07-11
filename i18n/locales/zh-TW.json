@@ -25,7 +25,8 @@
     },
     "footer": {
       "copyright": "版權所有",
-      "copyrightNotice": "© 2026 TWBC"
+      "copyrightNotice": "© 2026 TWBC",
+      "logoAlt": "TWBC 台灣馬聚文字標誌"
     },
     "about": {
       "title": "關於我們",
@@ -139,7 +140,8 @@
   "newsPage": {
     "title": "最新消息",
     "heading": "村口信箱",
-    "description": "來自麒麟村的公告與消息，都會寄到這裡。"
+    "description": "來自麒麟村的公告與消息，都會寄到這裡。",
+    "readPost": "閱讀公告：{title}"
   },
   "news": {
     "author": "TWBC台灣馬聚",
@@ -158,7 +160,10 @@
     }
   },
   "common": {
-    "close": "關閉"
+    "close": "關閉",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "resetZoom": "重設縮放"
   },
   "schedule": {
     "title": "時程表",
