@@ -10,7 +10,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxi typecheck",
-    "i18n:check": "vue-i18n-extract --vueFiles './app/**/*.?(vue|ts)' --languageFiles './i18n/locales/*.json'",
+    "i18n:check": "vue-i18n-extract",
     "format:check": "prettier --check .",
     "format": "prettier --write ."
   },
