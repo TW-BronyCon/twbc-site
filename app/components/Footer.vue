@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const { t, tm, locale, locales } = useI18n();
+const { t, tm, rt, locale, locales } = useI18n();
 const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
 
@@ -47,6 +47,12 @@ const quotes = computed(() => {
 
   return list
     .map((q) => {
+      // Use rt to resolve pre-compiled i18n messages
+      try {
+        return rt(q as any);
+      } catch (e) {
+        // Fallback if rt is not available or fails
+      }
       // If it's already a string, return it
       if (typeof q === "string") return q;
       // If it's a function (some i18n setups return message functions), call it
