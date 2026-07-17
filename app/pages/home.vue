@@ -8,8 +8,8 @@ const localePath = useLocalePath();
 const { countdownMsg, days, hours, minutes, seconds } = useCountdown(
   // "2026-08-15T10:00:00+08:00",
   // "2026-08-15T21:00:00+08:00",
-  "2026-07-17T17:10:00+08:00",
-  "2026-07-17T17:15:30+08:00",
+  "2026-07-17T17:26:00+08:00",
+  "2026-07-17T17:26:10+08:00",
 );
 
 const translatedCountdownMsg = computed(() => {
@@ -36,66 +36,68 @@ const formatNumber = (num: number): string => {
 
         <div class="date">{{ $t("home.subtitle") }}</div>
 
-        <div v-if="!countdownMsg" class="count-title">
-          {{ $t("home.countdown.title") }}
-        </div>
-        <div class="countdown">
-          <span v-if="translatedCountdownMsg" class="countdown-message">{{
-            translatedCountdownMsg
-          }}</span>
-          <template v-else>
-            <div v-if="days > 0" class="countdown-card">
-              <div class="countdown-number-wrapper">
-                <Transition name="digit-slide">
-                  <span :key="days" class="countdown-number">{{
-                    formatNumber(days)
-                  }}</span>
-                </Transition>
+        <div class="countdown-area">
+          <div v-if="!countdownMsg" class="count-title">
+            {{ $t("home.countdown.title") }}
+          </div>
+          <div class="countdown">
+            <span v-if="translatedCountdownMsg" class="countdown-message">{{
+              translatedCountdownMsg
+            }}</span>
+            <template v-else>
+              <div v-if="days > 0" class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="days" class="countdown-number">{{
+                      formatNumber(days)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.days")
+                }}</span>
               </div>
-              <span class="countdown-label">{{
-                $t("home.countdown.days")
-              }}</span>
-            </div>
-            <div v-if="days > 0 || hours > 0" class="countdown-card">
-              <div class="countdown-number-wrapper">
-                <Transition name="digit-slide">
-                  <span :key="hours" class="countdown-number">{{
-                    formatNumber(hours)
-                  }}</span>
-                </Transition>
+              <div v-if="days > 0 || hours > 0" class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="hours" class="countdown-number">{{
+                      formatNumber(hours)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.hours")
+                }}</span>
               </div>
-              <span class="countdown-label">{{
-                $t("home.countdown.hours")
-              }}</span>
-            </div>
-            <div
-              v-if="days > 0 || hours > 0 || minutes > 0"
-              class="countdown-card"
-            >
-              <div class="countdown-number-wrapper">
-                <Transition name="digit-slide">
-                  <span :key="minutes" class="countdown-number">{{
-                    formatNumber(minutes)
-                  }}</span>
-                </Transition>
+              <div
+                v-if="days > 0 || hours > 0 || minutes > 0"
+                class="countdown-card"
+              >
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="minutes" class="countdown-number">{{
+                      formatNumber(minutes)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.minutes")
+                }}</span>
               </div>
-              <span class="countdown-label">{{
-                $t("home.countdown.minutes")
-              }}</span>
-            </div>
-            <div class="countdown-card">
-              <div class="countdown-number-wrapper">
-                <Transition name="digit-slide">
-                  <span :key="seconds" class="countdown-number">{{
-                    formatNumber(seconds)
-                  }}</span>
-                </Transition>
+              <div class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="seconds" class="countdown-number">{{
+                      formatNumber(seconds)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.seconds")
+                }}</span>
               </div>
-              <span class="countdown-label">{{
-                $t("home.countdown.seconds")
-              }}</span>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
 
         <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{
@@ -206,8 +208,18 @@ const formatNumber = (num: number): string => {
   color: var(--color-text-light);
 }
 
+.countdown-area {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem 0 2rem;
+  gap: 0.75rem;
+}
+
 .count-title {
-  margin-top: 0.9em;
+  margin: 0;
   font-size: clamp(1.5em, 3.5vw, 1.75em);
 }
 
@@ -217,7 +229,7 @@ const formatNumber = (num: number): string => {
   justify-content: center;
   gap: clamp(0.5rem, 2vw, 1.25rem);
   flex-wrap: wrap;
-  margin: 1rem 0 1.5rem;
+  margin: 0;
 }
 
 .countdown-card {
