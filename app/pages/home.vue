@@ -32,8 +32,10 @@ const formatNumber = (num: number): string => {
           height="1816"
         />
 
-        <div class="date">{{ $t("home.subtitle") }}</div>
-        <div class="time">09:30</div>
+        <div class="date">
+          {{ $t("home.subtitle") }}
+          <span class="time-addon">09:30 (GMT+8)</span>
+        </div>
 
         <div class="countdown-area">
           <div v-if="!countdownMsg" class="count-title">
@@ -203,15 +205,16 @@ const formatNumber = (num: number): string => {
 
 .hero .date {
   font-size: clamp(1.75em, 3.5vw, 2.25em);
-  margin-bottom: 0.2em;
+  margin-bottom: 0.5em;
   color: var(--color-text-light);
 }
 
-.hero .time {
-  font-size: clamp(1.25em, 2.5vw, 1.5em);
-  margin-bottom: 0.4em;
+.hero .time-addon {
+  font-size: 0.65em;
   color: var(--color-pink);
   font-weight: 600;
+  margin-left: 0.3em;
+  white-space: nowrap;
 }
 
 .countdown-area {
