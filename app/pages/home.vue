@@ -6,7 +6,7 @@ const localePath = useLocalePath();
 
 // ---------- Controllers ----------
 const { countdownMsg, days, hours, minutes, seconds } = useCountdown(
-  "2026-08-15T10:00:00+08:00",
+  "2026-08-15T09:30:00+08:00",
   "2026-08-15T21:00:00+08:00",
 );
 
@@ -14,6 +14,10 @@ const translatedCountdownMsg = computed(() => {
   if (!countdownMsg.value) return "";
   return t(`home.countdown.${countdownMsg.value}`);
 });
+
+const formatNumber = (num: number): string => {
+  return String(num).padStart(2, "0");
+};
 </script>
 
 <template>
@@ -28,19 +32,73 @@ const translatedCountdownMsg = computed(() => {
           height="1816"
         />
 
-        <div class="date">{{ $t("home.subtitle") }}</div>
+        <div class="date">
+          {{ $t("home.subtitle") }}
+          <span class="time-addon">09:30 (GMT+8)</span>
+        </div>
 
-        <div class="count-title">{{ $t("home.countdown.title") }}</div>
-        <div class="countdown">
-          <span v-if="translatedCountdownMsg" class="countdown-message">{{
-            translatedCountdownMsg
-          }}</span>
-          <template v-else>
-            <span>{{ days }}</span> {{ $t("home.countdown.days") }}
-            <span>{{ hours }}</span> {{ $t("home.countdown.hours") }}
-            <span>{{ minutes }}</span> {{ $t("home.countdown.minutes") }}
-            <span>{{ seconds }}</span> {{ $t("home.countdown.seconds") }}
-          </template>
+        <div class="countdown-area">
+          <div v-if="!countdownMsg" class="count-title">
+            {{ $t("home.countdown.title") }}
+          </div>
+          <div class="countdown">
+            <span v-if="translatedCountdownMsg" class="countdown-message">{{
+              translatedCountdownMsg
+            }}</span>
+            <template v-else>
+              <div v-if="days > 0" class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="days" class="countdown-number">{{
+                      formatNumber(days)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.days")
+                }}</span>
+              </div>
+              <div v-if="days > 0 || hours > 0" class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="hours" class="countdown-number">{{
+                      formatNumber(hours)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.hours")
+                }}</span>
+              </div>
+              <div
+                v-if="days > 0 || hours > 0 || minutes > 0"
+                class="countdown-card"
+              >
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="minutes" class="countdown-number">{{
+                      formatNumber(minutes)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.minutes")
+                }}</span>
+              </div>
+              <div class="countdown-card">
+                <div class="countdown-number-wrapper">
+                  <Transition name="digit-slide">
+                    <span :key="seconds" class="countdown-number">{{
+                      formatNumber(seconds)
+                    }}</span>
+                  </Transition>
+                </div>
+                <span class="countdown-label">{{
+                  $t("home.countdown.seconds")
+                }}</span>
+              </div>
+            </template>
+          </div>
         </div>
 
         <NuxtLink class="buy-btn" :to="localePath('/ticket')">{{
@@ -151,29 +209,129 @@ const translatedCountdownMsg = computed(() => {
   color: var(--color-text-light);
 }
 
+.hero .time-addon {
+  font-size: 0.65em;
+  color: var(--color-pink);
+  font-weight: 600;
+  margin-left: 0.3em;
+  white-space: nowrap;
+}
+
+.countdown-area {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem 0 2rem;
+  gap: 0.75rem;
+}
+
 .count-title {
-  margin-top: 0.9em;
+  margin: 0;
   font-size: clamp(1.5em, 3.5vw, 1.75em);
 }
 
 /* Countdown */
 .countdown {
-  font-size: clamp(1.5em, 3.5vw, 2em);
   display: flex;
   justify-content: center;
-  gap: clamp(0.25em, 2vw, 1.25em);
-  white-space: nowrap;
-  margin: 0.25em 0 0.5em;
+  gap: clamp(0.5rem, 2vw, 1.25rem);
+  flex-wrap: wrap;
+  margin: 0;
 }
 
-.countdown span {
-  min-width: clamp(1.5ch, 2vw, 2ch);
-  text-align: center;
+.countdown-card {
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1.25rem);
+  min-width: clamp(4.25rem, 11vw, 5.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s,
+    box-shadow 0.3s;
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.countdown-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.countdown-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.countdown-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.countdown-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.countdown-number-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: clamp(2rem, 5vw, 2.75rem);
+  width: 100%;
+}
+
+.countdown-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+  color: var(--color-pink);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .countdown-message {
   display: inline-block;
   text-align: center;
+  font-size: clamp(1.5em, 3.5vw, 2em);
+  color: var(--color-pink);
+}
+
+/* Animations */
+.digit-slide-enter-active,
+.digit-slide-leave-active {
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease;
+}
+
+.digit-slide-enter-from {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.digit-slide-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Buy Button */
@@ -262,7 +420,7 @@ const translatedCountdownMsg = computed(() => {
   margin-top: 1em;
 }
 
-.pinkie-quote {
+.info-card h4.pinkie-quote {
   display: block;
   margin-top: 1em;
   color: var(--color-pink);

@@ -79,9 +79,9 @@ let svgRectW = 0;
 let svgRectH = 0;
 
 const updateSvgRectSize = () => {
-  const svg = document.getElementById("venue-svg");
-  if (svg) {
-    const rect = svg.getBoundingClientRect();
+  const wrapper = document.getElementById("map-wrapper");
+  if (wrapper) {
+    const rect = wrapper.getBoundingClientRect();
     svgRectW = rect.width;
     svgRectH = rect.height;
   }
@@ -101,10 +101,15 @@ const clampPan = () => {
     return;
   }
 
-  const minX = svgRectW * (1 - zoom.value);
-  const maxX = 0;
-  const minY = svgRectH * (1 - zoom.value);
-  const maxY = 0;
+  // Allow panning beyond the strict boundaries when zoomed to let elements on the edges center properly.
+  // The padding is 0 when zoom is 1, and grows as zoom increases.
+  const paddingX = svgRectW * 0.4 * (zoom.value - 1);
+  const paddingY = svgRectH * 0.4 * (zoom.value - 1);
+
+  const minX = svgRectW * (1 - zoom.value) - paddingX;
+  const maxX = paddingX;
+  const minY = svgRectH * (1 - zoom.value) - paddingY;
+  const maxY = paddingY;
 
   panX.value = Math.max(minX, Math.min(maxX, panX.value));
   panY.value = Math.max(minY, Math.min(maxY, panY.value));
@@ -118,6 +123,9 @@ const startPan = (e: MouseEvent) => {
   dragStartY.value = e.clientY;
   dragDistance.value = 0;
   updateSvgRectSize();
+
+  window.addEventListener("mousemove", onPan);
+  window.addEventListener("mouseup", endPan);
 };
 
 const onPan = (e: MouseEvent) => {
@@ -132,7 +140,10 @@ const onPan = (e: MouseEvent) => {
 };
 
 const endPan = () => {
+  if (!isDragging.value) return;
   isDragging.value = false;
+  window.removeEventListener("mousemove", onPan);
+  window.removeEventListener("mouseup", endPan);
 };
 
 const handleWheel = (e: WheelEvent) => {
@@ -167,9 +178,9 @@ const startTouchPan = (e: TouchEvent) => {
     );
     startZoom.value = zoom.value;
 
-    const svg = document.getElementById("venue-svg");
-    if (svg) {
-      const rect = svg.getBoundingClientRect();
+    const wrapper = document.getElementById("map-wrapper");
+    if (wrapper) {
+      const rect = wrapper.getBoundingClientRect();
       touchMidX.value = (touch0.clientX + touch1.clientX) / 2 - rect.left;
       touchMidY.value = (touch0.clientY + touch1.clientY) / 2 - rect.top;
     }
@@ -216,6 +227,10 @@ const onTouchPan = (e: TouchEvent) => {
 const endTouchPan = (e: TouchEvent) => {
   if (e.touches.length === 0) {
     isDragging.value = false;
+    // If the user was just pinch-zooming, keep dragDistance high to prevent triggering a click when fingers lift
+    if (startTouchDistance.value > 0) {
+      dragDistance.value = 999999;
+    }
     startTouchDistance.value = 0;
   } else if (e.touches.length === 1) {
     const touch0 = e.touches[0];
@@ -225,7 +240,13 @@ const endTouchPan = (e: TouchEvent) => {
     startY.value = touch0.clientY - panY.value;
     dragStartX.value = touch0.clientX;
     dragStartY.value = touch0.clientY;
-    dragDistance.value = 0;
+
+    // If the user was just pinch-zooming, keep dragDistance high to prevent triggering a click on release
+    if (startTouchDistance.value > 0) {
+      dragDistance.value = 999999;
+    } else {
+      dragDistance.value = 0;
+    }
     startTouchDistance.value = 0;
   }
 };
@@ -244,9 +265,9 @@ const adjustZoom = (
     let rectLeft = 0;
     let rectTop = 0;
     if (useClientCoord) {
-      const svg = document.getElementById("venue-svg");
-      if (svg) {
-        const rect = svg.getBoundingClientRect();
+      const wrapper = document.getElementById("map-wrapper");
+      if (wrapper) {
+        const rect = wrapper.getBoundingClientRect();
         rectLeft = rect.left;
         rectTop = rect.top;
       }
@@ -310,7 +331,7 @@ const zoomToCoords = (svgX: number, svgY: number, targetZoom = 2) => {
 
 // Handlers
 const openZone = (zoneId: string) => {
-  if (dragDistance.value > 36) return; // Skip click if panned (6px squared)
+  if (dragDistance.value > 256) return; // Skip click if panned (16px squared for improved touch sensitivity)
   selectedZoneId.value = zoneId;
   selectedBooth.value = null;
 
@@ -331,7 +352,7 @@ const openZone = (zoneId: string) => {
 };
 
 const openBooth = (booth: Booth) => {
-  if (dragDistance.value > 36) return; // Skip click if panned (6px squared)
+  if (dragDistance.value > 256) return; // Skip click if panned (16px squared for improved touch sensitivity)
   selectedBooth.value = booth;
   selectedZoneId.value = null;
 
@@ -373,20 +394,22 @@ const handleKeyDown = (e: KeyboardEvent) => {
 
 onMounted(() => {
   window.addEventListener("keydown", handleKeyDown);
-  updateSvgRectSize();
   window.addEventListener("resize", updateSvgRectSize);
 
-  if (route.query.booth) {
-    const boothId = route.query.booth as string;
-    setTimeout(() => {
+  setTimeout(() => {
+    updateSvgRectSize();
+    if (route.query.booth) {
+      const boothId = route.query.booth as string;
       openBoothById(boothId);
-    }, 100);
-  }
+    }
+  }, 100);
 });
 
 onUnmounted(() => {
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("resize", updateSvgRectSize);
+  window.removeEventListener("mousemove", onPan);
+  window.removeEventListener("mouseup", endPan);
 });
 </script>
 
@@ -401,691 +424,704 @@ onUnmounted(() => {
       <div class="venue-layout">
         <!-- SVG Map Container -->
         <div class="map-container-card">
-          <div class="map-wrapper">
-            <svg
-              id="venue-svg"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 598.22 598.22"
-              :style="{ cursor: cursorStyle }"
-              @mousedown="startPan"
-              @mousemove="onPan"
-              @mouseup="endPan"
-              @mouseleave="endPan"
-              @wheel="handleWheel"
-              @touchstart="startTouchPan"
-              @touchmove="onTouchPan"
-              @touchend="endTouchPan"
+          <div class="map-wrapper" id="map-wrapper">
+            <div
+              class="map-viewport"
+              :class="{
+                'smooth-pan': !isDragging && startTouchDistance === 0,
+              }"
+              :style="{
+                transform: `translate3d(${panX}px, ${panY}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0',
+              }"
             >
-              <defs>
-                <!-- SVG Filter for custom glow effects -->
-                <filter
-                  id="neon-glow"
-                  x="-20%"
-                  y="-20%"
-                  width="140%"
-                  height="140%"
-                >
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              <!-- Scalable Viewport Group -->
-              <g
-                :class="{ 'smooth-pan': !isDragging }"
+              <svg
+                id="venue-svg"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 598.22 598.22"
                 :style="{
-                  transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
-                  transformOrigin: '0 0',
+                  cursor: cursorStyle,
+                  touchAction: zoom > 1 ? 'none' : 'pan-y',
                 }"
+                @mousedown="startPan"
+                @wheel="handleWheel"
+                @touchstart="startTouchPan"
+                @touchmove="onTouchPan"
+                @touchend="endTouchPan"
               >
-                <!-- Wood Floor Background -->
-                <path
-                  class="wood-floor"
-                  d="M497.88,107.34v188.78l-39.08,53.09h-249.9l-91.28-122.84-25.7,19.1-22.53-30.43,3.13-2.34c-1.49-.05-2.96-.16-4.42-.32l.14-1.14c-10.19-1.3-19.84-5.36-27.9-11.73l11.46-14.52c16.49,13.05,40.43,10.26,53.48-6.23,13.04-16.47,10.27-40.39-6.18-53.45l-.47-.39,10.14-13.23.67-4.35h388.44Z"
-                />
+                <defs>
+                  <!-- SVG Filter for custom glow effects -->
+                  <filter
+                    id="neon-glow"
+                    x="-20%"
+                    y="-20%"
+                    width="140%"
+                    height="140%"
+                  >
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
 
-                <!-- Outer Border Walls -->
-                <path
-                  class="outer-border"
-                  d="M546.36,465.67l-95.84-.2v16.86h-60.18v-17.06l-114.95-.3v-39.79h-20.65l-32.85,24.41L55.39,225.52l17.13-12.82c-31.34-1.08-56.4-26.82-56.4-58.42s26.17-58.46,58.46-58.46c13.06,0,25.13,4.28,34.86,11.52h436.92v200.87l-59.36,80.79v34.3h59.36"
-                />
+                <!-- Scalable Viewport Group -->
+                <g>
+                  <!-- Wood Floor Background -->
+                  <path
+                    class="wood-floor"
+                    d="M497.88,107.34v188.78l-39.08,53.09h-249.9l-91.28-122.84-25.7,19.1-22.53-30.43,3.13-2.34c-1.49-.05-2.96-.16-4.42-.32l.14-1.14c-10.19-1.3-19.84-5.36-27.9-11.73l11.46-14.52c16.49,13.05,40.43,10.26,53.48-6.23,13.04-16.47,10.27-40.39-6.18-53.45l-.47-.39,10.14-13.23.67-4.35h388.44Z"
+                  />
 
-                <!-- Structural Pillars -->
-                <rect
-                  class="pillar"
-                  x="264.81"
-                  y="237.23"
-                  width="23.26"
-                  height="23.73"
-                />
-                <rect
-                  class="pillar"
-                  x="407.27"
-                  y="237.23"
-                  width="23.26"
-                  height="23.73"
-                />
-                <rect
-                  class="pillar"
-                  x="308.75"
-                  y="392.76"
-                  width="68.84"
-                  height="30.54"
-                />
+                  <!-- Outer Border Walls -->
+                  <path
+                    class="outer-border"
+                    d="M546.36,465.67l-95.84-.2v16.86h-60.18v-17.06l-114.95-.3v-39.79h-20.65l-32.85,24.41L55.39,225.52l17.13-12.82c-31.34-1.08-56.4-26.82-56.4-58.42s26.17-58.46,58.46-58.46c13.06,0,25.13,4.28,34.86,11.52h436.92v200.87l-59.36,80.79v34.3h59.36"
+                  />
 
-                <!-- Connector line -->
-                <line
-                  class="map-line"
-                  x1="304.55"
-                  y1="423.31"
-                  x2="487"
-                  y2="423.31"
-                />
-
-                <!-- Interactive Zone: Main Stage -->
-                <g
-                  class="zone-group stage-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'stage' || selectedZoneId === 'stage',
-                  }"
-                  @mouseover="hoveredZoneId = 'stage'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('stage')"
-                >
+                  <!-- Structural Pillars -->
                   <rect
-                    class="zone-shape shape-stage"
-                    x="260.35"
-                    y="107.34"
-                    width="175.11"
-                    height="156.75"
+                    class="pillar"
+                    x="264.81"
+                    y="237.23"
+                    width="23.26"
+                    height="23.73"
                   />
-                  <text class="zone-label-text" x="347.9" y="185.7">
-                    <tspan
-                      v-for="(line, idx) in getLines(t('venue.legend.stage'))"
-                      :key="idx"
-                      x="347.9"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.stage')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
-
-                <!-- Interactive Zone: Vendor Alley -->
-                <g
-                  class="zone-group vendors-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'vendors' ||
-                      selectedZoneId === 'vendors',
-                  }"
-                  @mouseover="hoveredZoneId = 'vendors'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('vendors')"
-                >
-                  <polygon
-                    class="zone-shape shape-vendors"
-                    points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"
-                  />
-                  <text class="zone-label-text" x="190.0" y="310.0">
-                    <tspan
-                      v-for="(line, idx) in getLines(t('venue.legend.vendors'))"
-                      :key="idx"
-                      x="190.0"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.vendors')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
-
-                <!-- Interactive Zone: Workshop Area -->
-                <g
-                  class="zone-group workshop-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'workshop' ||
-                      selectedZoneId === 'workshop',
-                  }"
-                  @mouseover="hoveredZoneId = 'workshop'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('workshop')"
-                >
                   <rect
-                    class="zone-shape shape-workshop"
-                    x="435.46"
-                    y="107.35"
-                    width="62.42"
-                    height="169.22"
+                    class="pillar"
+                    x="407.27"
+                    y="237.23"
+                    width="23.26"
+                    height="23.73"
                   />
-                  <text class="zone-label-text" x="466.7" y="192.0">
-                    <tspan
-                      v-for="(line, idx) in getLines(
-                        t('venue.legend.workshop'),
-                      )"
-                      :key="idx"
-                      x="466.7"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.workshop')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
-
-                <!-- Interactive Zone: Social Area -->
-                <g
-                  class="zone-group social-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'social' || selectedZoneId === 'social',
-                  }"
-                  @mouseover="hoveredZoneId = 'social'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('social')"
-                >
                   <rect
-                    class="zone-shape shape-social"
-                    x="260.35"
-                    y="264.09"
-                    width="175.11"
-                    height="85.13"
+                    class="pillar"
+                    x="308.75"
+                    y="392.76"
+                    width="68.84"
+                    height="30.54"
                   />
-                  <text class="zone-label-text" x="347.9" y="306.7">
-                    <tspan
-                      v-for="(line, idx) in getLines(t('venue.legend.social'))"
-                      :key="idx"
-                      x="347.9"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.social')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
 
-                <!-- Interactive Zone: Exhibition -->
-                <g
-                  class="zone-group exhibition-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'exhibition' ||
-                      selectedZoneId === 'exhibition',
-                  }"
-                  @mouseover="hoveredZoneId = 'exhibition'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('exhibition')"
-                >
-                  <polygon
-                    class="zone-shape shape-exhibition"
-                    points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"
+                  <!-- Connector line -->
+                  <line
+                    class="map-line"
+                    x1="304.55"
+                    y1="423.31"
+                    x2="487"
+                    y2="423.31"
                   />
-                  <text class="zone-label-text" x="435.0" y="385.0">
-                    <tspan
-                      v-for="(line, idx) in getLines(
-                        t('venue.legend.exhibition'),
-                      )"
-                      :key="idx"
-                      x="435.0"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.exhibition')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
 
-                <!-- Interactive Zone: Bar -->
-                <g
-                  class="zone-group bar-group"
-                  :class="{
-                    active: hoveredZoneId === 'bar' || selectedZoneId === 'bar',
-                  }"
-                  @mouseover="hoveredZoneId = 'bar'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('bar')"
-                >
-                  <polygon
-                    class="zone-shape shape-bar"
-                    points="22.3 180.48 25.12 185.48 28.41 190.17 32.15 194.52 36.3 198.49 40.82 202.03 45.66 205.11 50.78 207.69 56.13 209.77 61.66 211.31 67.31 212.3 73.03 212.73 78.77 212.6 84.47 211.91 90.07 210.66 95.52 208.87 100.77 206.55 105.77 203.74 110.46 200.44 114.82 196.7 118.78 192.55 122.32 188.03 125.4 183.19 127.99 178.07 130.06 172.72 131.6 167.19 132.59 161.54 133.02 155.82 132.89 150.08 132.2 144.38 130.95 138.78 129.16 133.33 126.85 128.08 124.03 123.08 120.73 118.39 116.99 114.03 112.84 110.07 108.32 106.53 103.48 103.45 98.36 100.86 93.01 98.79 87.48 97.25 81.83 96.26 76.11 95.83 70.37 95.96 64.68 96.65 59.07 97.9 53.62 99.69 48.37 102 43.37 104.82 38.68 108.12 34.33 111.86 30.36 116.01 26.82 120.53 23.74 125.37 21.16 130.49 19.08 135.84 17.54 141.37 16.55 147.02 16.12 152.74 16.25 158.48 16.94 164.17 18.19 169.78 19.98 175.23 22.3 180.48"
-                  />
-                  <text class="zone-label-text" x="74.6" y="154.3">
-                    <tspan
-                      v-for="(line, idx) in getLines(t('venue.legend.bar'))"
-                      :key="idx"
-                      x="74.6"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.bar')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
+                  <!-- Interactive Zone: Main Stage -->
+                  <g
+                    class="zone-group stage-group"
+                    :class="{
+                      active:
+                        hoveredZoneId === 'stage' || selectedZoneId === 'stage',
+                    }"
+                    @mouseover="hoveredZoneId = 'stage'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('stage')"
+                  >
+                    <rect
+                      class="zone-shape shape-stage"
+                      x="260.35"
+                      y="107.34"
+                      width="175.11"
+                      height="156.75"
+                    />
+                    <text class="zone-label-text" x="347.9" y="185.7">
+                      <tspan
+                        v-for="(line, idx) in getLines(t('venue.legend.stage'))"
+                        :key="idx"
+                        x="347.9"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.stage')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
+                    </text>
+                  </g>
 
-                <!-- Interactive Zone: Check-in -->
-                <g
-                  class="zone-group checkin-group"
-                  :class="{
-                    active:
-                      hoveredZoneId === 'checkin' ||
-                      selectedZoneId === 'checkin',
-                  }"
-                  @mouseover="hoveredZoneId = 'checkin'"
-                  @mouseleave="hoveredZoneId = null"
-                  @click="openZone('checkin')"
-                >
-                  <rect
-                    class="zone-shape shape-checkin"
-                    x="390.34"
-                    y="465.47"
-                    width="60.18"
-                    height="17.06"
-                  />
-                  <text class="zone-label-text" x="420.4" y="474.0">
-                    <tspan
-                      v-for="(line, idx) in getLines(t('venue.legend.checkin'))"
-                      :key="idx"
-                      x="420.4"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.checkin')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
+                  <!-- Interactive Zone: Vendor Alley -->
+                  <g
+                    class="zone-group vendors-group"
+                    :class="{
+                      active:
+                        hoveredZoneId === 'vendors' ||
+                        selectedZoneId === 'vendors',
+                    }"
+                    @mouseover="hoveredZoneId = 'vendors'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('vendors')"
+                  >
+                    <polygon
+                      class="zone-shape shape-vendors"
+                      points="260.35 183.43 175.42 183.43 77.93 255.86 221.89 449.6 254.74 425.18 260.35 425.19 260.35 183.43"
+                    />
+                    <text class="zone-label-text" x="190.0" y="310.0">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.vendors'),
+                        )"
+                        :key="idx"
+                        x="190.0"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.vendors')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
+                    </text>
+                  </g>
 
-                <!-- Non-interactive Zone: Entrance -->
-                <g class="entrance-group">
-                  <polygon
-                    class="shape-entrance"
-                    points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"
-                  />
-                  <text class="zone-label-text-static" x="544.5" y="445.5">
-                    <tspan
-                      v-for="(line, idx) in getLines(
-                        t('venue.legend.entrance'),
-                      )"
-                      :key="idx"
-                      x="544.5"
-                      :dy="
-                        idx === 0
-                          ? getLines(t('venue.legend.entrance')).length > 1
-                            ? '-0.6em'
-                            : '0'
-                          : '1.2em'
-                      "
-                    >
-                      {{ line }}
-                    </tspan>
-                  </text>
-                </g>
+                  <!-- Interactive Zone: Workshop Area -->
+                  <g
+                    class="zone-group workshop-group"
+                    :class="{
+                      active:
+                        hoveredZoneId === 'workshop' ||
+                        selectedZoneId === 'workshop',
+                    }"
+                    @mouseover="hoveredZoneId = 'workshop'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('workshop')"
+                  >
+                    <rect
+                      class="zone-shape shape-workshop"
+                      x="435.46"
+                      y="107.35"
+                      width="62.42"
+                      height="169.22"
+                    />
+                    <text class="zone-label-text" x="466.7" y="192.0">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.workshop'),
+                        )"
+                        :key="idx"
+                        x="466.7"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.workshop')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
+                    </text>
+                  </g>
 
-                <!-- Interactive Booths Layer -->
-                <g id="booths-layer">
-                  <!-- Booth 1 -->
+                  <!-- Interactive Zone: Social Area -->
                   <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '1')"
+                    class="zone-group social-group"
                     :class="{
                       active:
-                        hoveredBoothId === '1' || selectedBooth?.id === '1',
+                        hoveredZoneId === 'social' ||
+                        selectedZoneId === 'social',
                     }"
-                    transform="translate(107.56, 260.74) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '1'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('1')"
+                    @mouseover="hoveredZoneId = 'social'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('social')"
                   >
                     <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
+                      class="zone-shape shape-social"
+                      x="260.35"
+                      y="264.09"
+                      width="175.11"
+                      height="85.13"
                     />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
-                    >
-                      1
+                    <text class="zone-label-text" x="347.9" y="306.7">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.social'),
+                        )"
+                        :key="idx"
+                        x="347.9"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.social')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
                     </text>
                   </g>
-                  <!-- Booth 2 -->
+
+                  <!-- Interactive Zone: Exhibition -->
                   <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '2')"
+                    class="zone-group exhibition-group"
                     :class="{
                       active:
-                        hoveredBoothId === '2' || selectedBooth?.id === '2',
+                        hoveredZoneId === 'exhibition' ||
+                        selectedZoneId === 'exhibition',
                     }"
-                    transform="translate(125.97, 285.52) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '2'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('2')"
+                    @mouseover="hoveredZoneId = 'exhibition'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('exhibition')"
                   >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
+                    <polygon
+                      class="zone-shape shape-exhibition"
+                      points="487 389.01 487 423.31 377.59 423.31 377.59 349.22 458.8 349.22 497.88 296.12 535.13 323.49 487 389.01"
                     />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
-                    >
-                      2
+                    <text class="zone-label-text" x="435.0" y="385.0">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.exhibition'),
+                        )"
+                        :key="idx"
+                        x="435.0"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.exhibition')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
                     </text>
                   </g>
-                  <!-- Booth 3 -->
+
+                  <!-- Interactive Zone: Bar -->
                   <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '3')"
+                    class="zone-group bar-group"
                     :class="{
                       active:
-                        hoveredBoothId === '3' || selectedBooth?.id === '3',
+                        hoveredZoneId === 'bar' || selectedZoneId === 'bar',
                     }"
-                    transform="translate(152.03, 320.59) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '3'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('3')"
+                    @mouseover="hoveredZoneId = 'bar'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('bar')"
                   >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
+                    <polygon
+                      class="zone-shape shape-bar"
+                      points="22.3 180.48 25.12 185.48 28.41 190.17 32.15 194.52 36.3 198.49 40.82 202.03 45.66 205.11 50.78 207.69 56.13 209.77 61.66 211.31 67.31 212.3 73.03 212.73 78.77 212.6 84.47 211.91 90.07 210.66 95.52 208.87 100.77 206.55 105.77 203.74 110.46 200.44 114.82 196.7 118.78 192.55 122.32 188.03 125.4 183.19 127.99 178.07 130.06 172.72 131.6 167.19 132.59 161.54 133.02 155.82 132.89 150.08 132.2 144.38 130.95 138.78 129.16 133.33 126.85 128.08 124.03 123.08 120.73 118.39 116.99 114.03 112.84 110.07 108.32 106.53 103.48 103.45 98.36 100.86 93.01 98.79 87.48 97.25 81.83 96.26 76.11 95.83 70.37 95.96 64.68 96.65 59.07 97.9 53.62 99.69 48.37 102 43.37 104.82 38.68 108.12 34.33 111.86 30.36 116.01 26.82 120.53 23.74 125.37 21.16 130.49 19.08 135.84 17.54 141.37 16.55 147.02 16.12 152.74 16.25 158.48 16.94 164.17 18.19 169.78 19.98 175.23 22.3 180.48"
                     />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
-                    >
-                      3
+                    <text class="zone-label-text" x="74.6" y="154.3">
+                      <tspan
+                        v-for="(line, idx) in getLines(t('venue.legend.bar'))"
+                        :key="idx"
+                        x="74.6"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.bar')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
                     </text>
                   </g>
-                  <!-- Booth 4 -->
+
+                  <!-- Interactive Zone: Check-in -->
                   <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '4')"
+                    class="zone-group checkin-group"
                     :class="{
                       active:
-                        hoveredBoothId === '4' || selectedBooth?.id === '4',
+                        hoveredZoneId === 'checkin' ||
+                        selectedZoneId === 'checkin',
                     }"
-                    transform="translate(170.44, 345.37) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '4'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('4')"
+                    @mouseover="hoveredZoneId = 'checkin'"
+                    @mouseleave="hoveredZoneId = null"
+                    @click="openZone('checkin')"
                   >
                     <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
+                      class="zone-shape shape-checkin"
+                      x="390.34"
+                      y="465.47"
+                      width="60.18"
+                      height="17.06"
                     />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
-                    >
-                      4
+                    <text class="zone-label-text" x="420.4" y="474.0">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.checkin'),
+                        )"
+                        :key="idx"
+                        x="420.4"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.checkin')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
                     </text>
                   </g>
-                  <!-- Booth 5 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '5')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '5' || selectedBooth?.id === '5',
-                    }"
-                    transform="translate(196.5, 380.44) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '5'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('5')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
+
+                  <!-- Non-interactive Zone: Entrance -->
+                  <g class="entrance-group">
+                    <polygon
+                      class="shape-entrance"
+                      points="553.51 441.24 549.52 445.47 553.51 449.7 553.51 441.24"
                     />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
-                    >
-                      5
+                    <text class="zone-label-text-static" x="544.5" y="445.5">
+                      <tspan
+                        v-for="(line, idx) in getLines(
+                          t('venue.legend.entrance'),
+                        )"
+                        :key="idx"
+                        x="544.5"
+                        :dy="
+                          idx === 0
+                            ? getLines(t('venue.legend.entrance')).length > 1
+                              ? '-0.6em'
+                              : '0'
+                            : '1.2em'
+                        "
+                      >
+                        {{ line }}
+                      </tspan>
                     </text>
                   </g>
-                  <!-- Booth 6 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '6')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '6' || selectedBooth?.id === '6',
-                    }"
-                    transform="translate(165.16, 233.38) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '6'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('6')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
-                    />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
+
+                  <!-- Interactive Booths Layer -->
+                  <g id="booths-layer">
+                    <!-- Booth 1 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '1')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '1' || selectedBooth?.id === '1',
+                      }"
+                      transform="translate(107.56, 260.74) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '1'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('1')"
                     >
-                      6
-                    </text>
-                  </g>
-                  <!-- Booth 7 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '7')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '7' || selectedBooth?.id === '7',
-                    }"
-                    transform="translate(183.57, 258.17) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '7'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('7')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
-                    />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        1
+                      </text>
+                    </g>
+                    <!-- Booth 2 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '2')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '2' || selectedBooth?.id === '2',
+                      }"
+                      transform="translate(125.97, 285.52) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '2'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('2')"
                     >
-                      7
-                    </text>
-                  </g>
-                  <!-- Booth 8 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '8')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '8' || selectedBooth?.id === '8',
-                    }"
-                    transform="translate(196.95, 209.75) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '8'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('8')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
-                    />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        2
+                      </text>
+                    </g>
+                    <!-- Booth 3 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '3')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '3' || selectedBooth?.id === '3',
+                      }"
+                      transform="translate(152.03, 320.59) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '3'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('3')"
                     >
-                      8
-                    </text>
-                  </g>
-                  <!-- Booth 9 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '9')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '9' || selectedBooth?.id === '9',
-                    }"
-                    transform="translate(215.37, 234.53) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '9'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('9')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-9.34"
-                      y="-7.72"
-                      width="18.68"
-                      height="15.44"
-                      rx="2"
-                      ry="2"
-                    />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        3
+                      </text>
+                    </g>
+                    <!-- Booth 4 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '4')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '4' || selectedBooth?.id === '4',
+                      }"
+                      transform="translate(170.44, 345.37) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '4'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('4')"
                     >
-                      9
-                    </text>
-                  </g>
-                  <!-- Booth 10 -->
-                  <g
-                    class="booth-group"
-                    v-if="booths.some((b) => b.id === '10')"
-                    :class="{
-                      active:
-                        hoveredBoothId === '10' || selectedBooth?.id === '10',
-                    }"
-                    transform="translate(212.86, 264.25) rotate(-36.62)"
-                    @mouseover="hoveredBoothId = '10'"
-                    @mouseleave="hoveredBoothId = null"
-                    @click.stop="openBoothById('10')"
-                  >
-                    <rect
-                      class="booth-rect"
-                      x="-7.72"
-                      y="-9.34"
-                      width="15.44"
-                      height="18.68"
-                      rx="2"
-                      ry="2"
-                    />
-                    <text
-                      class="booth-label"
-                      x="0"
-                      y="0.5"
-                      dominant-baseline="central"
-                      text-anchor="middle"
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        4
+                      </text>
+                    </g>
+                    <!-- Booth 5 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '5')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '5' || selectedBooth?.id === '5',
+                      }"
+                      transform="translate(196.5, 380.44) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '5'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('5')"
                     >
-                      10
-                    </text>
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        5
+                      </text>
+                    </g>
+                    <!-- Booth 6 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '6')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '6' || selectedBooth?.id === '6',
+                      }"
+                      transform="translate(165.16, 233.38) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '6'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('6')"
+                    >
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        6
+                      </text>
+                    </g>
+                    <!-- Booth 7 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '7')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '7' || selectedBooth?.id === '7',
+                      }"
+                      transform="translate(183.57, 258.17) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '7'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('7')"
+                    >
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        7
+                      </text>
+                    </g>
+                    <!-- Booth 8 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '8')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '8' || selectedBooth?.id === '8',
+                      }"
+                      transform="translate(196.95, 209.75) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '8'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('8')"
+                    >
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        8
+                      </text>
+                    </g>
+                    <!-- Booth 9 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '9')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '9' || selectedBooth?.id === '9',
+                      }"
+                      transform="translate(215.37, 234.53) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '9'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('9')"
+                    >
+                      <rect
+                        class="booth-rect"
+                        x="-9.34"
+                        y="-7.72"
+                        width="18.68"
+                        height="15.44"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        9
+                      </text>
+                    </g>
+                    <!-- Booth 10 -->
+                    <g
+                      class="booth-group"
+                      v-if="booths.some((b) => b.id === '10')"
+                      :class="{
+                        active:
+                          hoveredBoothId === '10' || selectedBooth?.id === '10',
+                      }"
+                      transform="translate(212.86, 264.25) rotate(-36.62)"
+                      @mouseover="hoveredBoothId = '10'"
+                      @mouseleave="hoveredBoothId = null"
+                      @click.stop="openBoothById('10')"
+                    >
+                      <rect
+                        class="booth-rect"
+                        x="-7.72"
+                        y="-9.34"
+                        width="15.44"
+                        height="18.68"
+                        rx="2"
+                        ry="2"
+                      />
+                      <text
+                        class="booth-label"
+                        x="0"
+                        y="0.5"
+                        dominant-baseline="central"
+                        text-anchor="middle"
+                      >
+                        10
+                      </text>
+                    </g>
                   </g>
                 </g>
-              </g>
-            </svg>
+              </svg>
+            </div>
 
             <!-- Interactive Zoom & Pan Controls Overlay -->
             <div class="map-controls">
@@ -1340,6 +1376,7 @@ onUnmounted(() => {
 }
 
 .map-container-card {
+  min-width: 0; /* Prevent grid column overflow on smaller desktops/tablets */
   padding: 1.5em;
   border-radius: 1.25em;
   background: linear-gradient(
@@ -1359,9 +1396,12 @@ onUnmounted(() => {
 .map-wrapper {
   width: 100%;
   max-width: 650px;
+  min-width: 0; /* Prevent flexbox item overflow */
   position: relative;
   overflow: hidden;
   user-select: none;
+  border-radius: 0.75em; /* Smooth corners for the map viewport */
+  border: 1px solid rgba(255, 230, 167, 0.25); /* Gold outline border around the map */
 }
 
 /* Sidebar Wrapper & Card Styling (Prevents content-based height expansion on desktop) */
@@ -1453,13 +1493,21 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.map-viewport {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: none;
+  will-change: transform;
+}
+
+.map-viewport.smooth-pan {
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 #venue-svg g {
   /* Disabled transition for active drag/pan gesture to prevent heavy/rubbery feedback on touches */
   transition: none;
-}
-
-#venue-svg g.smooth-pan {
-  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Map Controls */
@@ -1606,11 +1654,11 @@ onUnmounted(() => {
 
 /* Workshop Color System */
 .shape-workshop {
-  fill: #1a98ff;
-  stroke: #1a98ff;
+  fill: #ffaa82;
+  stroke: #ffaa82;
 }
 .font-workshop path {
-  fill: #85c8ff;
+  fill: #ffdcd0;
 }
 .workshop-group:hover .shape-workshop,
 .workshop-group.active .shape-workshop {
@@ -1808,7 +1856,7 @@ onUnmounted(() => {
   color: #120b18;
 }
 .zone-badge-workshop {
-  background-color: rgba(30, 144, 255, 0.75);
+  background-color: rgba(255, 170, 130, 0.75);
 }
 .zone-badge-social {
   background-color: rgba(26, 255, 236, 0.75);

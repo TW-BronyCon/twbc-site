@@ -16,11 +16,14 @@ export const useCountdown = (targetDateStr: string, endDateStr: string) => {
   async function syncTime() {
     try {
       const res = await fetch(
-        "https://timeapi.io/api/Time/current/zone?timeZone=Asia/Taipei",
+        "https://time.now/developer/api/timezone/Asia/Taipei",
       );
       const data = await res.json();
-      const serverTime = new Date(data.dateTime);
+      const serverTime = new Date(data.datetime);
       const localTime = new Date();
+      if (isNaN(serverTime.getTime())) {
+        throw new Error("Invalid server time");
+      }
       timeOffset.value = serverTime.getTime() - localTime.getTime();
     } catch (error) {
       timeOffset.value = 0;
@@ -51,9 +54,10 @@ export const useCountdown = (targetDateStr: string, endDateStr: string) => {
   }
 
   onMounted(async () => {
-    await syncTime();
     updateCountdown();
     countdownTimer = setInterval(updateCountdown, 1000);
+    await syncTime();
+    updateCountdown();
   });
 
   onUnmounted(() => {
