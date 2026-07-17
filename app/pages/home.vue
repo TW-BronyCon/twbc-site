@@ -14,6 +14,10 @@ const translatedCountdownMsg = computed(() => {
   if (!countdownMsg.value) return "";
   return t(`home.countdown.${countdownMsg.value}`);
 });
+
+const formatNumber = (num: number): string => {
+  return String(num).padStart(2, "0");
+};
 </script>
 
 <template>
@@ -36,10 +40,54 @@ const translatedCountdownMsg = computed(() => {
             translatedCountdownMsg
           }}</span>
           <template v-else>
-            <span>{{ days }}</span> {{ $t("home.countdown.days") }}
-            <span>{{ hours }}</span> {{ $t("home.countdown.hours") }}
-            <span>{{ minutes }}</span> {{ $t("home.countdown.minutes") }}
-            <span>{{ seconds }}</span> {{ $t("home.countdown.seconds") }}
+            <div class="countdown-card">
+              <div class="countdown-number-wrapper">
+                <Transition name="digit-slide">
+                  <span :key="days" class="countdown-number">{{
+                    formatNumber(days)
+                  }}</span>
+                </Transition>
+              </div>
+              <span class="countdown-label">{{
+                $t("home.countdown.days")
+              }}</span>
+            </div>
+            <div class="countdown-card">
+              <div class="countdown-number-wrapper">
+                <Transition name="digit-slide">
+                  <span :key="hours" class="countdown-number">{{
+                    formatNumber(hours)
+                  }}</span>
+                </Transition>
+              </div>
+              <span class="countdown-label">{{
+                $t("home.countdown.hours")
+              }}</span>
+            </div>
+            <div class="countdown-card">
+              <div class="countdown-number-wrapper">
+                <Transition name="digit-slide">
+                  <span :key="minutes" class="countdown-number">{{
+                    formatNumber(minutes)
+                  }}</span>
+                </Transition>
+              </div>
+              <span class="countdown-label">{{
+                $t("home.countdown.minutes")
+              }}</span>
+            </div>
+            <div class="countdown-card">
+              <div class="countdown-number-wrapper">
+                <Transition name="digit-slide">
+                  <span :key="seconds" class="countdown-number">{{
+                    formatNumber(seconds)
+                  }}</span>
+                </Transition>
+              </div>
+              <span class="countdown-label">{{
+                $t("home.countdown.seconds")
+              }}</span>
+            </div>
           </template>
         </div>
 
@@ -158,22 +206,104 @@ const translatedCountdownMsg = computed(() => {
 
 /* Countdown */
 .countdown {
-  font-size: clamp(1.5em, 3.5vw, 2em);
   display: flex;
   justify-content: center;
-  gap: clamp(0.25em, 2vw, 1.25em);
-  white-space: nowrap;
-  margin: 0.25em 0 0.5em;
+  gap: clamp(0.5rem, 2vw, 1.25rem);
+  flex-wrap: wrap;
+  margin: 1rem 0 1.5rem;
 }
 
-.countdown span {
-  min-width: clamp(1.5ch, 2vw, 2ch);
-  text-align: center;
+.countdown-card {
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1.25rem);
+  min-width: clamp(4.25rem, 11vw, 5.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s,
+    box-shadow 0.3s;
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.countdown-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.countdown-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.countdown-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.countdown-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.countdown-number-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: clamp(2rem, 5vw, 2.75rem);
+  width: 100%;
+}
+
+.countdown-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+  color: var(--color-pink);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .countdown-message {
   display: inline-block;
   text-align: center;
+  font-size: clamp(1.5em, 3.5vw, 2em);
+  color: var(--color-pink);
+}
+
+/* Animations */
+.digit-slide-enter-active,
+.digit-slide-leave-active {
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease;
+}
+
+.digit-slide-enter-from {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.digit-slide-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Buy Button */

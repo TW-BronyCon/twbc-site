@@ -51,9 +51,10 @@ export const useCountdown = (targetDateStr: string, endDateStr: string) => {
   }
 
   onMounted(async () => {
-    await syncTime();
     updateCountdown();
     countdownTimer = setInterval(updateCountdown, 1000);
+    await syncTime();
+    updateCountdown();
   });
 
   onUnmounted(() => {
