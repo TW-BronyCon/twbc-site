@@ -6,10 +6,8 @@ const localePath = useLocalePath();
 
 // ---------- Controllers ----------
 const { countdownMsg, days, hours, minutes, seconds } = useCountdown(
-  // "2026-08-15T10:00:00+08:00",
-  // "2026-08-15T21:00:00+08:00",
-  "2026-07-17T17:26:00+08:00",
-  "2026-07-17T17:26:10+08:00",
+  "2026-08-15T09:30:00+08:00",
+  "2026-08-15T21:00:00+08:00",
 );
 
 const translatedCountdownMsg = computed(() => {
@@ -35,6 +33,7 @@ const formatNumber = (num: number): string => {
         />
 
         <div class="date">{{ $t("home.subtitle") }}</div>
+        <div class="time">09:30</div>
 
         <div class="countdown-area">
           <div v-if="!countdownMsg" class="count-title">
@@ -204,8 +203,15 @@ const formatNumber = (num: number): string => {
 
 .hero .date {
   font-size: clamp(1.75em, 3.5vw, 2.25em);
-  margin-bottom: 0.5em;
+  margin-bottom: 0.2em;
   color: var(--color-text-light);
+}
+
+.hero .time {
+  font-size: clamp(1.25em, 2.5vw, 1.5em);
+  margin-bottom: 0.4em;
+  color: var(--color-pink);
+  font-weight: 600;
 }
 
 .countdown-area {
