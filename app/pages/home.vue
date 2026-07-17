@@ -420,7 +420,7 @@ const formatNumber = (num: number): string => {
   margin-top: 1em;
 }
 
-.pinkie-quote {
+.info-card h4.pinkie-quote {
   display: block;
   margin-top: 1em;
   color: var(--color-pink);
