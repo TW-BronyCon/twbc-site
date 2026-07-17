@@ -6,8 +6,10 @@ const localePath = useLocalePath();
 
 // ---------- Controllers ----------
 const { countdownMsg, days, hours, minutes, seconds } = useCountdown(
-  "2026-08-15T10:00:00+08:00",
-  "2026-08-15T21:00:00+08:00",
+  // "2026-08-15T10:00:00+08:00",
+  // "2026-08-15T21:00:00+08:00",
+  "2026-07-17T17:10:00+08:00",
+  "2026-07-17T17:15:30+08:00",
 );
 
 const translatedCountdownMsg = computed(() => {
@@ -34,13 +36,15 @@ const formatNumber = (num: number): string => {
 
         <div class="date">{{ $t("home.subtitle") }}</div>
 
-        <div class="count-title">{{ $t("home.countdown.title") }}</div>
+        <div v-if="!countdownMsg" class="count-title">
+          {{ $t("home.countdown.title") }}
+        </div>
         <div class="countdown">
           <span v-if="translatedCountdownMsg" class="countdown-message">{{
             translatedCountdownMsg
           }}</span>
           <template v-else>
-            <div class="countdown-card">
+            <div v-if="days > 0" class="countdown-card">
               <div class="countdown-number-wrapper">
                 <Transition name="digit-slide">
                   <span :key="days" class="countdown-number">{{
@@ -52,7 +56,7 @@ const formatNumber = (num: number): string => {
                 $t("home.countdown.days")
               }}</span>
             </div>
-            <div class="countdown-card">
+            <div v-if="days > 0 || hours > 0" class="countdown-card">
               <div class="countdown-number-wrapper">
                 <Transition name="digit-slide">
                   <span :key="hours" class="countdown-number">{{
@@ -64,7 +68,10 @@ const formatNumber = (num: number): string => {
                 $t("home.countdown.hours")
               }}</span>
             </div>
-            <div class="countdown-card">
+            <div
+              v-if="days > 0 || hours > 0 || minutes > 0"
+              class="countdown-card"
+            >
               <div class="countdown-number-wrapper">
                 <Transition name="digit-slide">
                   <span :key="minutes" class="countdown-number">{{

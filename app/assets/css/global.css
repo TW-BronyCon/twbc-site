@@ -10,6 +10,7 @@ body {
   background-color: var(--color-bg-dark);
   color: var(--color-text-light);
   font-family: "Noto Sans TC", sans-serif;
+  overflow-x: hidden;
 }
 
 *,
