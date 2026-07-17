@@ -1,22 +1,25 @@
 @import "./variables.css";
 
 /* Global Reset */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+html {
   box-sizing: border-box;
   background-color: var(--color-bg-dark);
-  color: var(--color-text-light);
-  font-family: "Noto Sans TC", sans-serif;
-  overflow-x: hidden;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-family: "Noto Sans TC", sans-serif;
+  overflow-x: hidden;
 }
 
 /* Custom Scrollbar */
