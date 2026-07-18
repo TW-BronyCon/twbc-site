@@ -2,7 +2,7 @@
 const { t } = useI18n();
 
 definePageMeta({
-  underDevelopment: true,
+  underDevelopment: false,
 });
 
 useHead(() => ({

@@ -22,6 +22,10 @@ const openedStorageKey = "twbc-opened-news";
 
 const { t, locale } = useI18n();
 
+definePageMeta({
+  underDevelopment: false,
+});
+
 useHead({
   title: () => t("newsPage.title"),
   meta: [

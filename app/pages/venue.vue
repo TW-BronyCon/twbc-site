@@ -7,6 +7,10 @@ const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const route = useRoute();
 
+definePageMeta({
+  underDevelopment: false,
+});
+
 useHead(() => ({
   title: t("venue.title"),
 }));
