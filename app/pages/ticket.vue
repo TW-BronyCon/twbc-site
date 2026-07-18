@@ -10,6 +10,10 @@ const { t, locale } = useI18n();
 
 const isEn = computed(() => locale.value.startsWith("en"));
 
+definePageMeta({
+  underDevelopment: false,
+});
+
 // Page SEO metadata
 useHead({
   title: t("ticket.title"),

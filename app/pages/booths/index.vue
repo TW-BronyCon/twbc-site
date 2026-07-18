@@ -6,6 +6,10 @@ const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const isEn = computed(() => locale.value.startsWith("en"));
 
+definePageMeta({
+  underDevelopment: false,
+});
+
 useHead(() => ({
   title: t("booth.list.title"),
   meta: [
