@@ -1901,6 +1901,8 @@ onUnmounted(() => {
   font-size: 0.95rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .sidebar-section-title {

@@ -115,20 +115,39 @@ export const booths: Booth[] = [
       },
     ],
   },
-  // },
+  {
+    id: "6",
+    name: { zh: "雲港商行", en: "Cloud Harbor" },
+    description: {
+      zh: "雲港商行是以小馬主題收藏與精選周邊為主的期間限定攤位，提供角色玩偶、徽章、壓克力小物、書籍、拼圖、書籤、節慶裝飾與限定食品等商品，並依角色、狀態與數量整理，方便快速尋找收藏。\n商品以現場販售與取貨為主，多為少量現貨，部分品項僅有1件，售完不一定補貨；標示「已售出」或「待補貨」者目前無法購買，實際庫存以現場為準。\n攤位備有紫悅、雲寶、珍奇、蘋果嘉兒、柔柔、碧琪等角色收藏，適合補齊角色、尋找少見周邊，或帶一件可愛小物回家。",
+      en: "Cloud Harbor is a limited-time booth focused on pony-themed collectibles and curated merchandise, including character plushies, badges, acrylic items, books, puzzles, bookmarks, seasonal decorations, and limited-edition snacks. Items are organized by character, condition, and quantity so visitors can quickly find the collectibles they want.\nSales and pickups are handled on site. Most items are limited in stock, and some are one-of-a-kind, so restocks are not guaranteed after they sell out. Items marked as sold out or pending restock are currently unavailable, and actual availability is subject to the booth's on-site inventory.\nThe booth features collectibles for characters such as Twilight Sparkle, Rainbow Dash, Rarity, Applejack, Fluttershy, and Pinkie Pie, making it a good place to complete a character collection, look for harder-to-find merchandise, or bring home a cute keepsake.",
+    },
+    image: "/img/booths/booth-5-banner.avif",
+    images: [
+      "/img/booths/booth-5-avatar.avif",
+      "/img/booths/booth-5-banner.avif"
+    ],
+    links: [
+      {
+        label: "Website",
+        url: "https://cloud-harbor.org",
+        icon: "fa-solid fa-globe",
+      },
+    ],
+  },
   // {
-  //   id: '5',
-  //   name: { zh: '閃電特遣隊', en: 'Wonderbolt Runway' },
+  //   id: '7',
+  //   name: { zh: '官方攤位', en: "Official Booth" },
   //   description: {
-  //     zh: '帥氣的痛包、胸章以及各式酷炫小馬主題刺繡布貼。',
-  //     en: 'Cool Ita-bags, character badges, and custom pony-themed embroidery patches.',
+  //     zh: '高質感壓克力立牌、閃閃發光的吊飾以及精緻小馬卡貼。',
+  //     en: 'High-quality acrylic standees, glitter keychains, and elegant card stickers.',
   //   },
   //   links: [
-  //     { label: 'X (Twitter)', url: 'https://twitter.com', icon: 'fa-brands fa-x-twitter' }
+  //     { label: 'Website', url: 'https://twbronycon.org', icon: 'fa-solid fa-globe' }
   //   ]
   // },
   // {
-  //   id: '6',
+  //   id: '5',
   //   name: { zh: '柔柔的避難所', en: "Fluttershy's Sanctuary" },
   //   description: {
   //     zh: '以植物與小動物為主題的精美徽章、手繪貼紙及環保布包。',
@@ -136,17 +155,6 @@ export const booths: Booth[] = [
   //   },
   //   links: [
   //     { label: 'Plurk', url: 'https://plurk.com', icon: 'fa-solid fa-paper-plane' }
-  //   ]
-  // },
-  // {
-  //   id: '7',
-  //   name: { zh: '珍奇精品店', en: "Rarity's Boutique" },
-  //   description: {
-  //     zh: '高質感壓克力立牌、閃閃發光的吊飾以及精緻小馬卡貼。',
-  //     en: 'High-quality acrylic standees, glitter keychains, and elegant card stickers.',
-  //   },
-  //   links: [
-  //     { label: 'Website', url: 'https://twbronycon.org', icon: 'fa-solid fa-globe' }
   //   ]
   // },
   // {

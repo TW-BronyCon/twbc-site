@@ -331,6 +331,7 @@ const currentImage = computed(() => {
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.9);
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .links-grid {
