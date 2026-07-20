@@ -11,8 +11,10 @@ export interface SocialLink {
 
 export interface Booth {
   id: string;
+  mapId: string;
   name: LocalizedText;
-  description: LocalizedText;
+  introduction: LocalizedText;
+  details?: LocalizedText;
   links?: SocialLink[];
   image?: string;
   images?: string[];
@@ -21,8 +23,9 @@ export interface Booth {
 export const booths: Booth[] = [
   {
     id: "1",
+    mapId: "1",
     name: { zh: "青焰小馬布偶", en: "NKPLUSH" },
-    description: {
+    introduction: {
       zh: "青焰的小馬布偶，還有雷曦文化的小馬毛絨週邊",
       en: "Plushies made by Neko and 雷曦（Reesee）'s plush merchandise.",
     },
@@ -51,8 +54,9 @@ export const booths: Booth[] = [
   },
   {
     id: "2",
+    mapId: "2",
     name: { zh: "勉勉", en: "Mian Mian" },
-    description: {
+    introduction: {
       zh: "台灣知名小馬繪師，厚塗風格，M6或主要角色吊飾、徽章、簽繪板、桌布、滑鼠墊等",
       en: "A famous Taiwanese MLP artist, thick-painting style, M6 or main character charms, badges, autograph boards, tablecloths, mousepads.",
     },
@@ -83,8 +87,9 @@ export const booths: Booth[] = [
   },
   {
     id: "3",
+    mapId: "3",
     name: { zh: "藝潔的小木屋", en: "YeeJay's Art" },
-    description: {
+    introduction: {
       zh: "徽章、毛巾、貼紙；M6、Q版、搖滾版",
       en: "Badges, towels, stickers; M6, chibi version, rock version.",
     },
@@ -100,8 +105,9 @@ export const booths: Booth[] = [
   },
   {
     id: "4",
+    mapId: "4",
     name: { zh: "RavenWolf的書報攤", en: "RavenWolf's Newsstand" },
-    description: {
+    introduction: {
       zh: "同人小說設定集、精美明信片與受小馬國歷史啟發的特色書籤。",
       en: "Fanfiction booklets, postcard sets, and bookmark collections inspired by Equestria.",
     },
@@ -115,33 +121,36 @@ export const booths: Booth[] = [
       },
     ],
   },
-  // },
-  // {
-  //   id: '5',
-  //   name: { zh: '閃電特遣隊', en: 'Wonderbolt Runway' },
-  //   description: {
-  //     zh: '帥氣的痛包、胸章以及各式酷炫小馬主題刺繡布貼。',
-  //     en: 'Cool Ita-bags, character badges, and custom pony-themed embroidery patches.',
-  //   },
-  //   links: [
-  //     { label: 'X (Twitter)', url: 'https://twitter.com', icon: 'fa-brands fa-x-twitter' }
-  //   ]
-  // },
-  // {
-  //   id: '6',
-  //   name: { zh: '柔柔的避難所', en: "Fluttershy's Sanctuary" },
-  //   description: {
-  //     zh: '以植物與小動物為主題的精美徽章、手繪貼紙及環保布包。',
-  //     en: 'Nature-inspired animal pins, hand-drawn stickers, and eco-friendly bags.',
-  //   },
-  //   links: [
-  //     { label: 'Plurk', url: 'https://plurk.com', icon: 'fa-solid fa-paper-plane' }
-  //   ]
-  // },
+  {
+    id: "5",
+    mapId: "6",
+    name: { zh: "雲港商行", en: "Cloud Harbor" },
+    introduction: {
+      zh: "雲港商行是以小馬主題收藏與精選周邊為主的期間限定攤位，提供角色玩偶、徽章、壓克力小物、書籍、拼圖、書籤、節慶裝飾與限定食品等商品，並依角色、狀態與數量整理，方便快速尋找收藏。",
+      en: "Cloud Harbor is a limited-time booth focused on pony-themed collectibles and curated merchandise, including character plushies, badges, acrylic items, books, puzzles, bookmarks, seasonal decorations, and limited-edition snacks. Items are organized by character, condition, and quantity so visitors can quickly find the collectibles they want.",
+    },
+    details: {
+      zh: "商品以現場販售與取貨為主，多為少量現貨，部分品項僅有1件，售完不一定補貨；標示「已售出」或「待補貨」者目前無法購買，實際庫存以現場為準。\n攤位備有紫悅、雲寶、珍奇、蘋果嘉兒、柔柔、碧琪等角色收藏，適合補齊角色、尋找少見周邊，或帶一件可愛小物回家。",
+      en: "Sales and pickups are handled on site. Most items are limited in stock, and some are one-of-a-kind, so restocks are not guaranteed after they sell out. Items marked as sold out or pending restock are currently unavailable, and actual availability is subject to the booth's on-site inventory.\nThe booth features collectibles for characters such as Twilight Sparkle, Rainbow Dash, Rarity, Applejack, Fluttershy, and Pinkie Pie, making it a good place to complete a character collection, look for harder-to-find merchandise, or bring home a cute keepsake.",
+    },
+    image: "/img/booths/booth-5-banner.avif",
+    images: [
+      "/img/booths/booth-5-avatar.avif",
+      "/img/booths/booth-5-banner.avif",
+    ],
+    links: [
+      {
+        label: "Website",
+        url: "https://cloud-harbor.org",
+        icon: "fa-solid fa-globe",
+      },
+    ],
+  },
   // {
   //   id: '7',
-  //   name: { zh: '珍奇精品店', en: "Rarity's Boutique" },
-  //   description: {
+  //   mapId: '7',
+  //   name: { zh: '官方攤位', en: "Official Booth" },
+  //   introduction: {
   //     zh: '高質感壓克力立牌、閃閃發光的吊飾以及精緻小馬卡貼。',
   //     en: 'High-quality acrylic standees, glitter keychains, and elegant card stickers.',
   //   },
@@ -150,9 +159,22 @@ export const booths: Booth[] = [
   //   ]
   // },
   // {
+  //   id: '5',
+  //   mapId: '5',
+  //   name: { zh: '柔柔的避難所', en: "Fluttershy's Sanctuary" },
+  //   introduction: {
+  //     zh: '以植物與小動物為主題的精美徽章、手繪貼紙及環保布包。',
+  //     en: 'Nature-inspired animal pins, hand-drawn stickers, and eco-friendly bags.',
+  //   },
+  //   links: [
+  //     { label: 'Plurk', url: 'https://plurk.com', icon: 'fa-solid fa-paper-plane' }
+  //   ]
+  // },
+  // {
   //   id: '8',
+  //   mapId: '8',
   //   name: { zh: '碧琪的派對列車', en: "Pinkie's Party Express" },
-  //   description: {
+  //   introduction: {
   //     zh: '繽紛多彩的手作串珠手鍊、派對小帽以及熱情洋溢的周邊小禮品。',
   //     en: 'Colorful handmade beaded bracelets, party hats, and enthusiastic pony merch.',
   //   },
@@ -162,8 +184,9 @@ export const booths: Booth[] = [
   // },
   // {
   //   id: '9',
+  //   mapId: '9',
   //   name: { zh: '甜心寶寶烘焙坊', en: "Sweetie Belle's Bakery" },
-  //   description: {
+  //   introduction: {
   //     zh: '精緻的手作小馬主題甜點貼紙、插畫卡片與甜美風掛飾。',
   //     en: 'Delicate handmade pony-themed dessert stickers, illustration cards, and sweet ornaments.',
   //   },
@@ -173,8 +196,9 @@ export const booths: Booth[] = [
   // },
   // {
   //   id: '10',
+  //   mapId: '10',
   //   name: { zh: '澤科拉的藥水鋪', en: "Zecora's Potions" },
-  //   description: {
+  //   introduction: {
   //     zh: '神秘的手繪塔羅牌明信片、斑馬花紋特色掛件與魔法小藥瓶徽章。',
   //     en: 'Mysterious hand-drawn Tarot postcards, zebra-pattern charms, and magic potion badges.',
   //   },

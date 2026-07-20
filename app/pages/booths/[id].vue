@@ -20,7 +20,7 @@ useHead(() => ({
     {
       name: "description",
       content: booth.value
-        ? booth.value.description[isEn.value ? "en" : "zh"]
+        ? booth.value.introduction[isEn.value ? "en" : "zh"]
         : t("booth.notFound.message"),
     },
   ],
@@ -114,11 +114,19 @@ const currentImage = computed(() => {
 
         <!-- Info Section -->
         <div class="booth-info-col">
-          <!-- Description -->
+          <!-- Introduction -->
           <div class="info-card">
-            <h4 class="section-title">{{ t("venue.modal.description") }}</h4>
+            <h4 class="section-title">{{ t("venue.modal.boothIntro") }}</h4>
             <p class="description-text">
-              {{ booth.description[isEn ? "en" : "zh"] }}
+              {{ booth.introduction[isEn ? "en" : "zh"] }}
+            </p>
+          </div>
+
+          <!-- Details (extended content, only on detail page) -->
+          <div v-if="booth.details" class="info-card">
+            <h4 class="section-title">{{ t("booth.details") }}</h4>
+            <p class="description-text">
+              {{ booth.details[isEn ? "en" : "zh"] }}
             </p>
           </div>
 
@@ -331,6 +339,7 @@ const currentImage = computed(() => {
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.9);
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .links-grid {
@@ -379,8 +388,8 @@ const currentImage = computed(() => {
   gap: 0.6rem;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  background: var(--color-gold);
-  color: #120b18;
+  background: transparent;
+  color: var(--color-gold);
   text-decoration: none;
   font-weight: 700;
   transition: all 0.25s ease;
@@ -390,8 +399,8 @@ const currentImage = computed(() => {
 
 .back-map-btn:hover,
 .back-list-btn:hover {
-  background: transparent;
-  color: var(--color-gold);
+  background: var(--color-gold);
+  color: #120b18;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 230, 167, 0.25);
 }

@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { booths, type Booth } from "~/data/boothData";
+
+/** Look up a booth by its physical map position. */
+const boothByMapId = (mapId: string): Booth | undefined =>
+  booths.find((b) => b.mapId === mapId);
 import { events, EVENT_COLORS } from "~/data/scheduleData";
 
 const { t, locale } = useI18n();
@@ -360,6 +364,7 @@ const openBooth = (booth: Booth) => {
   selectedBooth.value = booth;
   selectedZoneId.value = null;
 
+  // Keyed by mapId (physical position on the SVG)
   const boothCenters: Record<string, { x: number; y: number }> = {
     "1": { x: 107.56, y: 260.74 },
     "2": { x: 125.97, y: 285.52 },
@@ -372,7 +377,7 @@ const openBooth = (booth: Booth) => {
     "9": { x: 215.37, y: 234.53 },
     "10": { x: 212.86, y: 264.25 },
   };
-  const coords = boothCenters[booth.id];
+  const coords = boothCenters[booth.mapId];
   if (coords) {
     zoomToCoords(coords.x, coords.y, 2.5);
   }
@@ -380,6 +385,13 @@ const openBooth = (booth: Booth) => {
 
 const openBoothById = (id: string) => {
   const booth = booths.find((b) => b.id === id);
+  if (booth) {
+    openBooth(booth);
+  }
+};
+
+const openBoothByMapId = (mapId: string) => {
+  const booth = boothByMapId(mapId);
   if (booth) {
     openBooth(booth);
   }
@@ -802,18 +814,19 @@ onUnmounted(() => {
 
                   <!-- Interactive Booths Layer -->
                   <g id="booths-layer">
-                    <!-- Booth 1 -->
+                    <!-- Booth 1 (mapId=1) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '1')"
+                      v-if="booths.some((b) => b.mapId === '1')"
                       :class="{
                         active:
-                          hoveredBoothId === '1' || selectedBooth?.id === '1',
+                          hoveredBoothId === '1' ||
+                          selectedBooth?.mapId === '1',
                       }"
                       transform="translate(107.56, 260.74) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '1'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('1')"
+                      @click.stop="openBoothByMapId('1')"
                     >
                       <rect
                         class="booth-rect"
@@ -831,21 +844,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        1
+                        {{ boothByMapId("1")?.id ?? "1" }}
                       </text>
                     </g>
-                    <!-- Booth 2 -->
+                    <!-- Booth 2 (mapId=2) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '2')"
+                      v-if="booths.some((b) => b.mapId === '2')"
                       :class="{
                         active:
-                          hoveredBoothId === '2' || selectedBooth?.id === '2',
+                          hoveredBoothId === '2' ||
+                          selectedBooth?.mapId === '2',
                       }"
                       transform="translate(125.97, 285.52) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '2'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('2')"
+                      @click.stop="openBoothByMapId('2')"
                     >
                       <rect
                         class="booth-rect"
@@ -863,21 +877,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        2
+                        {{ boothByMapId("2")?.id ?? "2" }}
                       </text>
                     </g>
-                    <!-- Booth 3 -->
+                    <!-- Booth 3 (mapId=3) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '3')"
+                      v-if="booths.some((b) => b.mapId === '3')"
                       :class="{
                         active:
-                          hoveredBoothId === '3' || selectedBooth?.id === '3',
+                          hoveredBoothId === '3' ||
+                          selectedBooth?.mapId === '3',
                       }"
                       transform="translate(152.03, 320.59) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '3'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('3')"
+                      @click.stop="openBoothByMapId('3')"
                     >
                       <rect
                         class="booth-rect"
@@ -895,21 +910,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        3
+                        {{ boothByMapId("3")?.id ?? "3" }}
                       </text>
                     </g>
-                    <!-- Booth 4 -->
+                    <!-- Booth 4 (mapId=4) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '4')"
+                      v-if="booths.some((b) => b.mapId === '4')"
                       :class="{
                         active:
-                          hoveredBoothId === '4' || selectedBooth?.id === '4',
+                          hoveredBoothId === '4' ||
+                          selectedBooth?.mapId === '4',
                       }"
                       transform="translate(170.44, 345.37) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '4'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('4')"
+                      @click.stop="openBoothByMapId('4')"
                     >
                       <rect
                         class="booth-rect"
@@ -927,21 +943,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        4
+                        {{ boothByMapId("4")?.id ?? "4" }}
                       </text>
                     </g>
-                    <!-- Booth 5 -->
+                    <!-- Booth 5 (mapId=5) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '5')"
+                      v-if="booths.some((b) => b.mapId === '5')"
                       :class="{
                         active:
-                          hoveredBoothId === '5' || selectedBooth?.id === '5',
+                          hoveredBoothId === '5' ||
+                          selectedBooth?.mapId === '5',
                       }"
                       transform="translate(196.5, 380.44) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '5'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('5')"
+                      @click.stop="openBoothByMapId('5')"
                     >
                       <rect
                         class="booth-rect"
@@ -959,21 +976,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        5
+                        {{ boothByMapId("5")?.id ?? "5" }}
                       </text>
                     </g>
-                    <!-- Booth 6 -->
+                    <!-- Booth 6 (mapId=6) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '6')"
+                      v-if="booths.some((b) => b.mapId === '6')"
                       :class="{
                         active:
-                          hoveredBoothId === '6' || selectedBooth?.id === '6',
+                          hoveredBoothId === '6' ||
+                          selectedBooth?.mapId === '6',
                       }"
                       transform="translate(165.16, 233.38) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '6'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('6')"
+                      @click.stop="openBoothByMapId('6')"
                     >
                       <rect
                         class="booth-rect"
@@ -991,21 +1009,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        6
+                        {{ boothByMapId("6")?.id ?? "6" }}
                       </text>
                     </g>
-                    <!-- Booth 7 -->
+                    <!-- Booth 7 (mapId=7) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '7')"
+                      v-if="booths.some((b) => b.mapId === '7')"
                       :class="{
                         active:
-                          hoveredBoothId === '7' || selectedBooth?.id === '7',
+                          hoveredBoothId === '7' ||
+                          selectedBooth?.mapId === '7',
                       }"
                       transform="translate(183.57, 258.17) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '7'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('7')"
+                      @click.stop="openBoothByMapId('7')"
                     >
                       <rect
                         class="booth-rect"
@@ -1023,21 +1042,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        7
+                        {{ boothByMapId("7")?.id ?? "7" }}
                       </text>
                     </g>
-                    <!-- Booth 8 -->
+                    <!-- Booth 8 (mapId=8) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '8')"
+                      v-if="booths.some((b) => b.mapId === '8')"
                       :class="{
                         active:
-                          hoveredBoothId === '8' || selectedBooth?.id === '8',
+                          hoveredBoothId === '8' ||
+                          selectedBooth?.mapId === '8',
                       }"
                       transform="translate(196.95, 209.75) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '8'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('8')"
+                      @click.stop="openBoothByMapId('8')"
                     >
                       <rect
                         class="booth-rect"
@@ -1055,21 +1075,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        8
+                        {{ boothByMapId("8")?.id ?? "8" }}
                       </text>
                     </g>
-                    <!-- Booth 9 -->
+                    <!-- Booth 9 (mapId=9) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '9')"
+                      v-if="booths.some((b) => b.mapId === '9')"
                       :class="{
                         active:
-                          hoveredBoothId === '9' || selectedBooth?.id === '9',
+                          hoveredBoothId === '9' ||
+                          selectedBooth?.mapId === '9',
                       }"
                       transform="translate(215.37, 234.53) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '9'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('9')"
+                      @click.stop="openBoothByMapId('9')"
                     >
                       <rect
                         class="booth-rect"
@@ -1087,21 +1108,22 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        9
+                        {{ boothByMapId("9")?.id ?? "9" }}
                       </text>
                     </g>
-                    <!-- Booth 10 -->
+                    <!-- Booth 10 (mapId=10) -->
                     <g
                       class="booth-group"
-                      v-if="booths.some((b) => b.id === '10')"
+                      v-if="booths.some((b) => b.mapId === '10')"
                       :class="{
                         active:
-                          hoveredBoothId === '10' || selectedBooth?.id === '10',
+                          hoveredBoothId === '10' ||
+                          selectedBooth?.mapId === '10',
                       }"
                       transform="translate(212.86, 264.25) rotate(-36.62)"
                       @mouseover="hoveredBoothId = '10'"
                       @mouseleave="hoveredBoothId = null"
-                      @click.stop="openBoothById('10')"
+                      @click.stop="openBoothByMapId('10')"
                     >
                       <rect
                         class="booth-rect"
@@ -1119,7 +1141,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        10
+                        {{ boothByMapId("10")?.id ?? "10" }}
                       </text>
                     </g>
                   </g>
@@ -1188,10 +1210,10 @@ onUnmounted(() => {
                   }}</span>
                   <h3>{{ selectedBooth.name[isEn ? "en" : "zh"] }}</h3>
                   <div class="sidebar-section-title">
-                    {{ t("venue.modal.description") }}
+                    {{ t("venue.modal.boothIntro") }}
                   </div>
                   <p class="detail-desc">
-                    {{ selectedBooth.description[isEn ? "en" : "zh"] }}
+                    {{ selectedBooth.introduction[isEn ? "en" : "zh"] }}
                   </p>
 
                   <div class="booth-cta-section">
@@ -1289,18 +1311,16 @@ onUnmounted(() => {
               <template v-else-if="hoveredBoothId">
                 <div class="sidebar-item-preview">
                   <span class="preview-badge booth-badge">{{
-                    t("venue.modal.boothTitle", { id: hoveredBoothId })
+                    t("venue.modal.boothTitle", {
+                      id: boothByMapId(hoveredBoothId)?.id ?? hoveredBoothId,
+                    })
                   }}</span>
                   <h3>
-                    {{
-                      booths.find((b) => b.id === hoveredBoothId)?.name[
-                        isEn ? "en" : "zh"
-                      ]
-                    }}
+                    {{ boothByMapId(hoveredBoothId)?.name[isEn ? "en" : "zh"] }}
                   </h3>
                   <p class="preview-desc">
                     {{
-                      booths.find((b) => b.id === hoveredBoothId)?.description[
+                      boothByMapId(hoveredBoothId)?.introduction[
                         isEn ? "en" : "zh"
                       ]
                     }}
@@ -1901,6 +1921,8 @@ onUnmounted(() => {
   font-size: 0.95rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .sidebar-section-title {

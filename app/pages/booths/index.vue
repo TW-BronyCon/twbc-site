@@ -65,7 +65,7 @@ useHead(() => ({
                 {{ booth.name[isEn ? "en" : "zh"] }}
               </h3>
               <p class="booth-card-desc">
-                {{ booth.description[isEn ? "en" : "zh"] }}
+                {{ booth.introduction[isEn ? "en" : "zh"] }}
               </p>
 
               <!-- Quick Links -->
@@ -229,6 +229,8 @@ useHead(() => ({
   font-size: 0.9rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
   display: -webkit-box;
   line-clamp: 3;
   -webkit-line-clamp: 3;
