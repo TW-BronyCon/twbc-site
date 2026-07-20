@@ -65,7 +65,7 @@ useHead(() => ({
                 {{ booth.name[isEn ? "en" : "zh"] }}
               </h3>
               <p class="booth-card-desc">
-                {{ booth.description[isEn ? "en" : "zh"] }}
+                {{ booth.introduction[isEn ? "en" : "zh"] }}
               </p>
 
               <!-- Quick Links -->

@@ -175,7 +175,7 @@
       "noEvents": "No events scheduled currently.",
       "details": "Zone Details",
       "boothTitle": "Booth {id}",
-      "description": "Description",
+      "boothIntro": "Booth Introduction",
       "links": "Links",
       "viewBoothDetail": "View Details"
     },
@@ -212,6 +212,7 @@
     },
     "backToList": "Back to Booth List",
     "backToMap": "Back to Map",
+    "details": "Details",
     "links": "Links & Contact",
     "list": {
       "title": "Vendors",

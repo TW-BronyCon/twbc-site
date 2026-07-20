@@ -175,7 +175,7 @@
       "noEvents": "此區域目前無安排特定活動。",
       "details": "區域詳情",
       "boothTitle": "攤位{id}",
-      "description": "攤位介紹",
+      "boothIntro": "攤位簡介",
       "links": "相關連結",
       "viewBoothDetail": "查看攤位詳情"
     },
@@ -212,6 +212,7 @@
     },
     "backToMap": "返回會場地圖",
     "backToList": "返回攤位列表",
+    "details": "詳細資訊",
     "links": "相關連結與聯絡方式",
     "list": {
       "title": "攤位",
