@@ -218,5 +218,25 @@
       "title": "Vendors",
       "subtitle": "Discover fan art and merchandises from fandom creators."
     }
+  },
+  "error": {
+    "pageTitle": "Error {code}",
+    "title404": "Lost in the Everfree Forest",
+    "desc404": "The page you are looking for has vanished into thin air or never existed in Equestria.",
+    "title403": "Access Magic Forbidden",
+    "desc403": "You do not have permission to enter this magical domain.",
+    "title400": "Bad Request Signal",
+    "desc400": "The request sent to the pony server was invalid or corrupted.",
+    "titleGeneral4xx": "Wayward Request",
+    "descGeneral4xx": "Something went wrong with your request. Please check the address and try again.",
+    "title500": "Magic Energy Overload",
+    "desc500": "Our server encountered an internal disruption. The royal guards are looking into it!",
+    "title503": "Princess Celestia Resting",
+    "desc503": "The service is temporarily unavailable or undergoing maintenance. Please check back soon.",
+    "titleGeneral5xx": "Portal Disruption",
+    "descGeneral5xx": "Our server encountered a magical failure while processing your request.",
+    "titleDefault": "An Unexpected Spark Occurred",
+    "descDefault": "An unidentified error interrupted your journey.",
+    "backHome": "Back to Home"
   }
 }

@@ -2,9 +2,17 @@
 import { computed } from "vue";
 import type { VueMessageType } from "vue-i18n";
 
-const { t, tm, rt, locale, locales } = useI18n();
+const { t, tm, rt, locale, locales, setLocale } = useI18n();
 const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
+const error = useError();
+
+const handleLocaleSwitch = (code: string, event: MouseEvent) => {
+  if (error.value) {
+    event.preventDefault();
+    setLocale(code as "zh-TW" | "en");
+  }
+};
 
 const partners = [
   {
@@ -109,6 +117,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
               :to="switchLocalePath(item.code)"
               :class="{ active: locale === item.code }"
               class="lang-link"
+              @click="handleLocaleSwitch(item.code, $event)"
             >
               {{ item.name }}
             </NuxtLink>
@@ -238,6 +247,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
   text-decoration: none;
   opacity: 0.6;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .lang-link:hover {
@@ -248,7 +258,7 @@ const { currentQuote, isQuoteFadingOut } = useQuotes(
 .lang-link.active {
   opacity: 1;
   font-weight: bold;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .footer-tagline {
