@@ -11,6 +11,8 @@ export const exclude = [
   "ticket.tiers",
   "venue.legend",
   "venue.zones",
+  "error.title",
+  "error.desc",
   "tba.",
 ];
 export const output = false;
