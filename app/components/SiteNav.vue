@@ -92,7 +92,7 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
         <ul class="submenu">
           <li>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSc-oA7Cbqis71Azd_7ZF2i6e7OqMr9h5pXCwP8D7IZFfIiCFg/viewform"
+              href="https://go.twbronycon.org/volunteer"
               target="_blank"
               rel="noopener noreferrer"
               >{{ $t("apply.volunteer") }}</a
@@ -100,7 +100,7 @@ onUnmounted(() => document.removeEventListener("click", closeMenus));
           </li>
           <li>
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSe_AH-DG67VmJxCAm8Dt07m8IosoE765XZKukSn5AIWN-HIvQ/viewform"
+              href="https://go.twbronycon.org/vendor"
               target="_blank"
               rel="noopener noreferrer"
               >{{ $t("apply.vendor") }}</a
