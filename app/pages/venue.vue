@@ -15,9 +15,19 @@ definePageMeta({
   underDevelopment: false,
 });
 
-useHead(() => ({
-  title: t("venue.title"),
-}));
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
+  title: () => t("venue.title"),
+  ogTitle: () => t("venue.title"),
+  twitterTitle: () => t("venue.title"),
+  description: () => t("seo.description"),
+  ogDescription: () => t("seo.description"),
+  twitterDescription: () => t("seo.description"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 
 // Selection states
 const selectedZoneId = ref<string | null>(null);

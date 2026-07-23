@@ -10,15 +10,20 @@ definePageMeta({
   underDevelopment: false,
 });
 
-useHead(() => ({
-  title: t("booth.list.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("booth.list.subtitle"),
-    },
-  ],
-}));
+const route = useRoute();
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
+  title: () => t("booth.list.title"),
+  ogTitle: () => t("booth.list.title"),
+  twitterTitle: () => t("booth.list.title"),
+  description: () => t("booth.list.subtitle"),
+  ogDescription: () => t("booth.list.subtitle"),
+  twitterDescription: () => t("booth.list.subtitle"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 </script>
 
 <template>

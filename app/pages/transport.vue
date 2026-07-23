@@ -5,9 +5,20 @@ definePageMeta({
   underDevelopment: false,
 });
 
-useHead(() => ({
-  title: t("transport.title"),
-}));
+const route = useRoute();
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
+  title: () => t("transport.title"),
+  ogTitle: () => t("transport.title"),
+  twitterTitle: () => t("transport.title"),
+  description: () => t("seo.description"),
+  ogDescription: () => t("seo.description"),
+  twitterDescription: () => t("seo.description"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 </script>
 
 <template>

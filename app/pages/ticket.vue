@@ -14,9 +14,19 @@ definePageMeta({
   underDevelopment: false,
 });
 
-// Page SEO metadata
-useHead({
-  title: t("ticket.title"),
+const route = useRoute();
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
+  title: () => t("ticket.title"),
+  ogTitle: () => t("ticket.title"),
+  twitterTitle: () => t("ticket.title"),
+  description: () => t("seo.description"),
+  ogDescription: () => t("seo.description"),
+  twitterDescription: () => t("seo.description"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
 });
 
 // Display mode state: 'detailed' view (cards) or 'table' view (comparison grid)
