@@ -26,6 +26,7 @@ export interface Column {
 }
 
 export interface TimetableEvent {
+  id?: string;
   title: LocalizedText;
   track: string;
   start: string;
@@ -198,6 +199,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
+    id: "rainboom",
     title: { zh: "彩虹音爆", en: "Sonic Rainboom" },
     track: "main",
     start: "18:00",

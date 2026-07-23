@@ -153,7 +153,8 @@
     "note": "The schedule below is for reference only and may be subject to change.",
     "duration": "Duration",
     "area": "Area",
-    "detailPlaceholder": "Details will be added later."
+    "detailPlaceholder": "Details will be added later.",
+    "viewEventDetail": "View Event Details"
   },
   "venue": {
     "title": "Venue Map",
@@ -239,5 +240,23 @@
     "titleDefault": "An Unexpected Spark Occurred",
     "descDefault": "An unidentified error interrupted your journey.",
     "backHome": "Back to Home"
+  },
+  "events": {
+    "rainboom": {
+      "title": "Sonic Rainboom",
+      "subtitle": "TWBC Late-Night Music Party",
+      "time": "18:00 - 20:00 | Main Stage",
+      "intro": "As a Brony, are the catchy tunes of My Little Pony constantly stuck in your head? Do you find yourself on an endless loop listening to MLP music? The late-night music party will feature 3 DJs taking turns on stage to hype up the crowd. Have you reviewed your favorite MLP songs yet?",
+      "lineup": "DJ Line-up & Event Highlights",
+      "djVibe": "Live MLP DJ Sets",
+      "djVibeDesc": "Featuring 3 community DJs spinning custom MLP remixes and electronic tracks. Relive your favorite musical moments with high-energy beats!",
+      "lightShow": "Vibrant Visuals & Lights",
+      "lightShowDesc": "Dynamic lighting and background visuals synced perfectly to the rhythm of pony music.",
+      "singAlong": "Brony Community Sing-along",
+      "singAlongDesc": "Dance and sing along with fellow Bronies. Feel the magic of friendship in every beat!",
+      "noticeTitle": "Party Guidelines",
+      "noticeContent": "• Light sticks, glow gear, and glowing cosplay are highly welcome!\n• Stay hydrated and take breaks when needed.\n• Respect others and follow staff instructions to ensure a safe and fun environment for all.",
+      "backToSchedule": "Back to Schedule"
+    }
   }
 }
