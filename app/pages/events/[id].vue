@@ -14,32 +14,31 @@ const isEn = computed(() => locale.value.startsWith("en"));
 // Find the event in schedule data (fallback)
 const event = computed(() => events.find((e) => e.id === id));
 
-// Locale suffix for fetching file
+// Locale suffix for file resolution
 const localeSuffix = computed(() => {
   return locale.value === "zh-TW" ? "zh-TW" : "en";
 });
 
-// Fetch raw markdown file content dynamically on server/client
-const { data: rawMd } = await useAsyncData(
-  `event-md-${id}-${locale.value}`,
-  async () => {
-    try {
-      // Try localized version first
-      const path = `/content/events/${id}.${localeSuffix.value}.md`;
-      return await $fetch<string>(path, { parseResponse: (txt) => txt });
-    } catch (err) {
-      try {
-        // Fallback to non-localized default
-        const defaultPath = `/content/events/${id}.md`;
-        return await $fetch<string>(defaultPath, {
-          parseResponse: (txt) => txt,
-        });
-      } catch (fallbackErr) {
-        return null;
-      }
-    }
-  },
-);
+// Import all event markdown files at compile-time/build-time using Vite glob import
+// This avoids doing realtime network fetches over HTTP.
+const eventMdFiles = import.meta.glob("/content/events/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+// Retrieve the raw markdown string statically from the preloaded modules
+const rawMd = computed(() => {
+  const pathWithLocale = `/content/events/${id}.${localeSuffix.value}.md`;
+  if (eventMdFiles[pathWithLocale]) {
+    return eventMdFiles[pathWithLocale];
+  }
+  const defaultPath = `/content/events/${id}.md`;
+  if (eventMdFiles[defaultPath]) {
+    return eventMdFiles[defaultPath];
+  }
+  return null;
+});
 
 // Simple yaml-like frontmatter parser
 function parseMarkdownWithFrontmatter(raw: string) {
