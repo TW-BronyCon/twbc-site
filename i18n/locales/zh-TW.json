@@ -200,7 +200,8 @@
       "boothTitle": "攤位{id}",
       "boothIntro": "攤位簡介",
       "links": "相關連結",
-      "viewBoothDetail": "查看攤位詳情"
+      "viewBoothDetail": "查看攤位詳情",
+      "backToEvent": "返回「{event}」"
     },
     "zones": {
       "stage": "大會活動核心。開幕介紹、專題分享、趣味遊戲、DJ表演、大合唱與大合照等精彩活動都將在此舉辦。",
@@ -269,7 +270,9 @@
       "title": "找不到活動",
       "message": "抱歉，找不到此活動的詳細資訊。"
     },
-    "backToSchedule": "返回時程表",
-    "attachments": "活動附件"
+    "attachments": "活動附件",
+    "viewSchedule": "查看時程表",
+    "viewOnMap": "查看地圖",
+    "viewOnMapTooltip": "在互動地圖中查看此區域"
   }
 }

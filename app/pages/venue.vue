@@ -35,6 +35,16 @@ const selectedBooth = ref<Booth | null>(null);
 const hoveredZoneId = ref<string | null>(null);
 const hoveredBoothId = ref<string | null>(null);
 
+const fromEventId = computed(() => route.query.fromEvent as string | undefined);
+const fromEvent = computed(() => {
+  if (!fromEventId.value) return null;
+  return events.find((e) => e.id === fromEventId.value);
+});
+const fromEventTitle = computed(() => {
+  if (!fromEvent.value) return "";
+  return isEn.value ? fromEvent.value.title.en : fromEvent.value.title.zh;
+});
+
 // Helper for locale checking
 const isEn = computed(() => locale.value.startsWith("en"));
 
@@ -65,6 +75,7 @@ const zoneEvents = computed(() => {
       const bg = normalizeHexColor(rawColor);
       const text = getContrastColor(bg);
       return {
+        id: e.id,
         title: isEn.value ? e.title.en : e.title.zh,
         start: e.start,
         end: e.end,
@@ -427,6 +438,9 @@ onMounted(() => {
     if (route.query.booth) {
       const boothId = route.query.booth as string;
       openBoothById(boothId);
+    } else if (route.query.zone) {
+      const zoneId = route.query.zone as string;
+      openZone(zoneId);
     }
   }, 100);
 });
@@ -1270,6 +1284,7 @@ onUnmounted(() => {
                   >
                     {{ cleanLabel(t(`venue.legend.${selectedZoneId}`)) }}
                   </span>
+
                   <h3>{{ cleanLabel(t(`venue.legend.${selectedZoneId}`)) }}</h3>
                   <div class="sidebar-section-title">
                     {{ t("venue.modal.details") }}
@@ -1292,23 +1307,55 @@ onUnmounted(() => {
                     </div>
 
                     <div v-if="zoneEvents.length > 0" class="events-list">
-                      <div
+                      <NuxtLink
                         v-for="(event, idx) in zoneEvents"
                         :key="idx"
-                        class="event-item"
-                        :style="{
-                          borderLeftColor: event.bg,
-                          backgroundColor: event.bg + '12',
-                        }"
+                        :to="
+                          event.id
+                            ? localePath(`/events/${event.id}`)
+                            : undefined
+                        "
+                        :class="[
+                          'event-item-wrapper',
+                          { 'interactive-wrapper': event.id },
+                        ]"
                       >
-                        <div class="event-time" :style="{ color: event.bg }">
-                          🕒 {{ event.start }} - {{ event.end }}
+                        <div
+                          :class="[
+                            'event-item',
+                            {
+                              'interactive-item': event.id,
+                              'active-event-item': event.id === fromEventId,
+                            },
+                          ]"
+                          :style="{
+                            borderLeftColor:
+                              event.id === fromEventId
+                                ? 'var(--color-gold)'
+                                : event.bg,
+                            backgroundColor:
+                              event.id === fromEventId
+                                ? 'rgba(255, 230, 167, 0.08)'
+                                : event.bg + '12',
+                          }"
+                        >
+                          <div class="event-item-content">
+                            <div
+                              class="event-time"
+                              :style="{ color: event.bg }"
+                            >
+                              🕒 {{ event.start }} - {{ event.end }}
+                            </div>
+                            <div class="event-title">{{ event.title }}</div>
+                            <div v-if="event.detail" class="event-desc">
+                              {{ event.detail }}
+                            </div>
+                          </div>
+                          <div class="event-item-action" v-if="event.id">
+                            <i class="fa-solid fa-chevron-right"></i>
+                          </div>
                         </div>
-                        <div class="event-title">{{ event.title }}</div>
-                        <div v-if="event.detail" class="event-desc">
-                          {{ event.detail }}
-                        </div>
-                      </div>
+                      </NuxtLink>
                     </div>
                     <p v-else class="no-events-text">
                       {{ t("venue.modal.noEvents") }}
@@ -1975,13 +2022,58 @@ onUnmounted(() => {
   width: 100%;
 }
 
+.event-item-wrapper {
+  display: block;
+  text-decoration: none;
+  width: 100%;
+}
+
+.event-item-wrapper.interactive-wrapper {
+  cursor: pointer;
+}
+
 .event-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-left: 3px solid var(--color-gold);
   padding: 0.6rem 0.8rem;
   border-radius: 0 6px 6px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.02);
   border-right: 1px solid rgba(255, 255, 255, 0.02);
   border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.event-item-wrapper.interactive-wrapper:hover .event-item {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(4px);
+}
+
+.event-item.active-event-item {
+  border-left-width: 5px;
+  box-shadow: 0 0 12px rgba(255, 230, 167, 0.15);
+}
+
+.event-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-item-action {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  padding-left: 0.2rem;
+}
+
+.event-item-wrapper.interactive-wrapper:hover .event-item-action {
+  color: var(--color-gold);
+  transform: translateX(2px);
 }
 
 .event-time {
