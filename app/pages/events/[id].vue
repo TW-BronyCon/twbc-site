@@ -265,6 +265,8 @@ useSeoMeta({
   ogImage: pageImage,
   twitterImage: pageImage,
   ogUrl: computed(() => `${siteUrl}${route.path}`),
+  ogImageWidth: null,
+  ogImageHeight: null,
 });
 </script>
 
