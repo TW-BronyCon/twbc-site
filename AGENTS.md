@@ -56,7 +56,10 @@ This document defines guidelines and instructions for AI agents working on the T
 
 ## Performance & SEO Best Practices
 
-- **Metadata**:
-  - Set proper title and meta descriptions on every page using `useSeoMeta` or `useHead`.
+- **Metadata & Open Graph**:
+  - Use `useSeoMeta` to configure page-level metadata. Ensure that standard tags have matching Open Graph (`ogTitle`, `ogDescription`, `ogImage`) and Twitter card counterparts.
+  - **Initialization Order**: Always place the `useSeoMeta` call at the bottom of the `<script setup>` block. This prevents runtime initialization/hydration errors where computed meta fields reference reactive data (like booth list items or parsed markdown images) before they are defined.
+  - **OG Image Aspect Ratio**: For any page with dynamic, content-based images (e.g., posters, banner attachments, booth logos), explicitly set `ogImageWidth: null` and `ogImageHeight: null`. This overrides the default parent square dimensions (1200x1200px) from `app.vue` and allows preview cards to render the image in its original aspect ratio.
+  - **Absolute Image URLs**: Always ensure that `ogImage` and `twitterImage` are fully qualified absolute URLs (starting with `https://twbronycon.org`). If the source image path is relative (e.g., `/img/...`), prepend the canonical site origin.
 - **Asset Optimization**:
   - Use high-performance image formats (like AVIF or WebP) and define correct width/height parameters to minimize Cumulative Layout Shift (CLS).
