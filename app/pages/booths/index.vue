@@ -45,59 +45,65 @@ useSeoMeta({
 
         <!-- Booths Card Grid -->
         <div class="booths-grid">
-          <div v-for="booth in booths" :key="booth.id" class="booth-card">
-            <!-- Card Image -->
-            <div class="booth-card-image">
-              <img
-                v-if="booth.image"
-                :src="booth.image"
-                :alt="booth.name[isEn ? 'en' : 'zh']"
-                loading="lazy"
-                width="360"
-                height="240"
-              />
-              <div v-else class="image-placeholder">
-                <i class="fa-regular fa-image"></i>
+          <div
+            v-for="booth in booths"
+            :key="booth.id"
+            class="booth-card-trigger"
+          >
+            <div class="booth-card">
+              <!-- Card Image -->
+              <div class="booth-card-image">
+                <img
+                  v-if="booth.image"
+                  :src="booth.image"
+                  :alt="booth.name[isEn ? 'en' : 'zh']"
+                  loading="lazy"
+                  width="360"
+                  height="240"
+                />
+                <div v-else class="image-placeholder">
+                  <i class="fa-regular fa-image"></i>
+                </div>
               </div>
-            </div>
 
-            <!-- Card Content -->
-            <div class="booth-card-content">
-              <h3 class="booth-card-title">
-                {{ booth.name[isEn ? "en" : "zh"] }}
-              </h3>
-              <p class="booth-card-desc">
-                {{ booth.introduction[isEn ? "en" : "zh"] }}
-              </p>
+              <!-- Card Content -->
+              <div class="booth-card-content">
+                <h3 class="booth-card-title">
+                  {{ booth.name[isEn ? "en" : "zh"] }}
+                </h3>
+                <p class="booth-card-desc">
+                  {{ booth.introduction[isEn ? "en" : "zh"] }}
+                </p>
 
-              <!-- Quick Links -->
-              <div
-                v-if="booth.links && booth.links.length > 0"
-                class="booth-card-links"
-              >
-                <a
-                  v-for="(link, idx) in booth.links.slice(0, 3)"
-                  :key="idx"
-                  :href="link.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  :title="link.label"
-                  class="quick-link"
+                <!-- Quick Links -->
+                <div
+                  v-if="booth.links && booth.links.length > 0"
+                  class="booth-card-links"
                 >
-                  <i :class="link.icon || 'fa-solid fa-link'"></i>
-                </a>
+                  <a
+                    v-for="(link, idx) in booth.links.slice(0, 3)"
+                    :key="idx"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :title="link.label"
+                    class="quick-link"
+                  >
+                    <i :class="link.icon || 'fa-solid fa-link'"></i>
+                  </a>
+                </div>
               </div>
-            </div>
 
-            <!-- Card Footer / Actions -->
-            <div class="booth-card-footer">
-              <NuxtLink
-                :to="localePath(`/booths/${booth.id}`)"
-                class="details-btn"
-              >
-                <span>{{ t("venue.modal.viewBoothDetail") }}</span>
-                <i class="fa-solid fa-arrow-right"></i>
-              </NuxtLink>
+              <!-- Card Footer / Actions -->
+              <div class="booth-card-footer">
+                <NuxtLink
+                  :to="localePath(`/booths/${booth.id}`)"
+                  class="details-btn"
+                >
+                  <span>{{ t("venue.modal.viewBoothDetail") }}</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </NuxtLink>
+              </div>
             </div>
           </div>
         </div>
@@ -160,6 +166,11 @@ useSeoMeta({
   }
 }
 
+/* Booth Card Trigger Wrapper */
+.booth-card-trigger {
+  display: flex;
+}
+
 /* Booth Card */
 .booth-card {
   display: flex;
@@ -169,9 +180,10 @@ useSeoMeta({
   border: 1px solid rgba(255, 230, 167, 0.08);
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
-.booth-card:hover {
+.booth-card-trigger:hover .booth-card {
   border-color: rgba(255, 230, 167, 0.35);
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -193,7 +205,7 @@ useSeoMeta({
   transition: transform 0.5s ease;
 }
 
-.booth-card:hover .booth-card-image img {
+.booth-card-trigger:hover .booth-card-image img {
   transform: scale(1.05);
 }
 
