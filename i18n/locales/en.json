@@ -258,5 +258,12 @@
       "noticeContent": "• Light sticks, glow gear, and glowing cosplay are highly welcome!\n• Stay hydrated and take breaks when needed.\n• Respect others and follow staff instructions to ensure a safe and fun environment for all.",
       "backToSchedule": "Back to Schedule"
     }
+  },
+  "event": {
+    "notFound": {
+      "title": "Event Not Found",
+      "message": "Sorry, we couldn't find the details for this event."
+    },
+    "backToSchedule": "Back to Schedule"
   }
 }

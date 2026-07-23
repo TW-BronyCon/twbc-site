@@ -14,6 +14,7 @@ export const exclude = [
   "error.title",
   "error.desc",
   "tba.",
+  "events",
 ];
 export const output = false;
 export const add = false;
