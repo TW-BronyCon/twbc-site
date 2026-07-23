@@ -1,30 +1,81 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { marked } from "marked";
 import { events } from "~/data/scheduleData";
 
-const { t, te, locale } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const localePath = useLocalePath();
 
 const id = route.params.id as string;
 const isEn = computed(() => locale.value.startsWith("en"));
 
-// Find the event in schedule data
+// Find the event in schedule data (fallback)
 const event = computed(() => events.find((e) => e.id === id));
 
-// Translations checks and getters
-function hasTranslation(key: string): boolean {
-  return te(`events.${id}.${key}`);
+// Locale suffix for fetching file
+const localeSuffix = computed(() => {
+  return locale.value === "zh-TW" ? "zh-TW" : "en";
+});
+
+// Fetch raw markdown file content dynamically on server/client
+const { data: rawMd } = await useAsyncData(
+  `event-md-${id}-${locale.value}`,
+  async () => {
+    try {
+      // Try localized version first
+      const path = `/content/events/${id}.${localeSuffix.value}.md`;
+      return await $fetch<string>(path, { parseResponse: (txt) => txt });
+    } catch (err) {
+      try {
+        // Fallback to non-localized default
+        const defaultPath = `/content/events/${id}.md`;
+        return await $fetch<string>(defaultPath, {
+          parseResponse: (txt) => txt,
+        });
+      } catch (fallbackErr) {
+        return null;
+      }
+    }
+  },
+);
+
+// Simple yaml-like frontmatter parser
+function parseMarkdownWithFrontmatter(raw: string) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  if (match) {
+    const yamlBlock = match[1] || "";
+    const markdownContent = match[2] || "";
+
+    const meta: Record<string, string> = {};
+    yamlBlock.split("\n").forEach((line) => {
+      const idx = line.indexOf(":");
+      if (idx > -1) {
+        const key = line.slice(0, idx).trim();
+        const value = line.slice(idx + 1).trim();
+        meta[key] = value;
+      }
+    });
+
+    return { meta, content: markdownContent };
+  }
+  return { meta: {} as Record<string, string>, content: raw };
 }
 
-function getTranslation(key: string): string {
-  return te(`events.${id}.${key}`) ? t(`events.${id}.${key}`) : "";
-}
+// Compute parsed content and metadata
+const parsed = computed(() => {
+  if (!rawMd.value) return { meta: {} as Record<string, string>, html: "" };
+  const { meta, content } = parseMarkdownWithFrontmatter(rawMd.value);
+  const html = marked.parse(content) as string;
+  return { meta, html };
+});
 
-// Fallbacks for schedule events properties
+const hasEvent = computed(() => !!event.value || !!rawMd.value);
+
+// Resolve properties with fallbacks
 const eventTitle = computed(() => {
-  if (hasTranslation("title")) return getTranslation("title");
+  if (parsed.value.meta.title) return parsed.value.meta.title;
   return event.value
     ? isEn.value
       ? event.value.title.en
@@ -32,8 +83,22 @@ const eventTitle = computed(() => {
     : "";
 });
 
+const eventSubtitle = computed(() => {
+  return parsed.value.meta.subtitle || "";
+});
+
+const eventTimeRange = computed(() => {
+  if (parsed.value.meta.time) return parsed.value.meta.time;
+  return event.value ? `${event.value.start} - ${event.value.end}` : "";
+});
+
+const eventArea = computed(() => {
+  if (parsed.value.meta.area) return parsed.value.meta.area;
+  return event.value ? event.value.track : "";
+});
+
 const eventDetailText = computed(() => {
-  if (hasTranslation("intro")) return getTranslation("intro");
+  // If there's no compiled markdown HTML, we fallback to event.detail from JSON
   return event.value && event.value.detail
     ? isEn.value
       ? event.value.detail.en
@@ -41,26 +106,15 @@ const eventDetailText = computed(() => {
     : "";
 });
 
-const eventTimeRange = computed(() => {
-  if (hasTranslation("time")) return getTranslation("time");
-  return event.value ? `${event.value.start} - ${event.value.end}` : "";
-});
-
-const eventArea = computed(() => {
-  if (!event.value) return "";
-  // Resolve localized track label from columns if available, or fall back to track key
-  return event.value.track;
-});
-
 useHead(() => ({
-  title: event.value
+  title: hasEvent.value
     ? `${eventTitle.value} - Taiwan BronyCon`
     : t("event.notFound.title"),
   meta: [
     {
       name: "description",
-      content: event.value
-        ? eventDetailText.value
+      content: hasEvent.value
+        ? parsed.value.meta.intro || eventDetailText.value
         : t("event.notFound.message"),
     },
   ],
@@ -70,9 +124,9 @@ useHead(() => ({
 <template>
   <PageLayout>
     <template #title>
-      <div class="event-header" v-if="event">
-        <span class="event-badge" v-if="hasTranslation('subtitle')">
-          {{ getTranslation("subtitle") }}
+      <div class="event-header" v-if="hasEvent">
+        <span class="event-badge" v-if="eventSubtitle">
+          {{ eventSubtitle }}
         </span>
         <h1>{{ eventTitle }}</h1>
       </div>
@@ -82,7 +136,7 @@ useHead(() => ({
     </template>
 
     <template #surface>
-      <div v-if="event" class="event-detail-container">
+      <div v-if="hasEvent" class="event-detail-container">
         <!-- Hero section with graphic and quick info -->
         <div class="event-hero info-card">
           <div class="event-poster">
@@ -96,7 +150,7 @@ useHead(() => ({
 
           <div class="event-summary">
             <div class="info-tag-list">
-              <span class="info-tag">
+              <span class="info-tag" v-if="eventTimeRange">
                 <i class="fa-solid fa-clock" />
                 <span>{{ eventTimeRange }}</span>
               </span>
@@ -105,78 +159,26 @@ useHead(() => ({
                 <span>{{ eventArea }}</span>
               </span>
             </div>
-            <p class="intro-text">
+            <!-- If we have parsed HTML, we render it below in a standard markdown area. 
+                 Otherwise, fall back to showing the simple intro text. -->
+            <p class="intro-text" v-if="!parsed.html && eventDetailText">
               {{ eventDetailText }}
             </p>
           </div>
         </div>
 
-        <!-- Highlights section -->
-        <div v-if="hasTranslation('lineup')" class="event-highlights info-card">
-          <h3 class="section-title">
-            <i class="fa-solid fa-star" />
-            <span>{{ getTranslation("lineup") }}</span>
-          </h3>
-          <div class="highlights-grid">
-            <div v-if="hasTranslation('djVibe')" class="highlight-item-box">
-              <div class="item-header">
-                <i class="fa-solid fa-sliders" />
-                <h4>{{ getTranslation("djVibe") }}</h4>
-              </div>
-              <p class="description-text">
-                {{ getTranslation("djVibeDesc") }}
-              </p>
-            </div>
-
-            <div v-if="hasTranslation('lightShow')" class="highlight-item-box">
-              <div class="item-header">
-                <i class="fa-solid fa-wand-magic-sparkles" />
-                <h4>{{ getTranslation("lightShow") }}</h4>
-              </div>
-              <p class="description-text">
-                {{ getTranslation("lightShowDesc") }}
-              </p>
-            </div>
-
-            <div v-if="hasTranslation('singAlong')" class="highlight-item-box">
-              <div class="item-header">
-                <i class="fa-solid fa-people-group" />
-                <h4>{{ getTranslation("singAlong") }}</h4>
-              </div>
-              <p class="description-text">
-                {{ getTranslation("singAlongDesc") }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Guidelines / Notice -->
+        <!-- Compiled Markdown Content Area -->
         <div
-          v-if="hasTranslation('noticeTitle')"
-          class="event-guidelines info-card"
-        >
-          <h3 class="section-title">
-            <i class="fa-solid fa-circle-exclamation" />
-            <span>{{ getTranslation("noticeTitle") }}</span>
-          </h3>
-          <div class="guidelines-box">
-            <p
-              v-for="(line, idx) in getTranslation('noticeContent').split('\n')"
-              :key="idx"
-              class="description-text"
-            >
-              {{ line }}
-            </p>
-          </div>
-        </div>
+          v-if="parsed.html"
+          class="event-markdown-content info-card"
+          v-html="parsed.html"
+        ></div>
 
         <!-- Back to Schedule Link -->
         <div class="actions-section">
           <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
             <i class="fa-solid fa-list" />
-            <span>{{
-              getTranslation("backToSchedule") || t("event.backToSchedule")
-            }}</span>
+            <span>{{ t("event.backToSchedule") }}</span>
           </NuxtLink>
         </div>
       </div>
@@ -339,77 +341,48 @@ useHead(() => ({
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Highlights Section */
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 1.15rem;
+/* Dynamic Markdown Content Styling */
+.event-markdown-content :deep(h1),
+.event-markdown-content :deep(h2),
+.event-markdown-content :deep(h3) {
   color: var(--color-gold);
   border-bottom: 1px solid rgba(255, 230, 167, 0.15);
   padding-bottom: 0.5rem;
-  margin: 0 0 1rem 0;
-}
-
-@media (max-width: 850px) {
-  .section-title {
-    justify-content: center;
-  }
-}
-
-.highlights-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.highlight-item-box {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 230, 167, 0.06);
-  border-radius: 8px;
-  transition: all 0.25s ease;
-}
-
-.highlight-item-box:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 230, 167, 0.25);
-  transform: translateY(-2px);
-}
-
-.item-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-gold);
-}
-
-.item-header i {
-  font-size: 1rem;
-}
-
-.item-header h4 {
-  margin: 0;
-  font-size: 1.05rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #ffffff;
 }
 
-.description-text {
-  margin: 0;
+.event-markdown-content :deep(h1:first-child),
+.event-markdown-content :deep(h2:first-child),
+.event-markdown-content :deep(h3:first-child) {
+  margin-top: 0;
+}
+
+.event-markdown-content :deep(p) {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1.25rem;
 }
 
-/* Guidelines Section */
-.guidelines-box {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+.event-markdown-content :deep(ul),
+.event-markdown-content :deep(ol) {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.event-markdown-content :deep(li) {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+}
+
+.event-markdown-content :deep(strong) {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /* Actions Section */
