@@ -45,13 +45,15 @@ export const useQuotes = (
     }, 300);
   }
 
+  const hasMounted = ref(false);
+
   // Watch for changes in the quotes list
   watch(
     () => toValue(quotesList),
     (newList) => {
       if (newList && newList.length > 0) {
         remainingQuotes = [...newList];
-        if (currentQuote.value === initialValue) {
+        if (hasMounted.value && currentQuote.value === initialValue) {
           updateQuote(true);
         }
       }
@@ -60,6 +62,7 @@ export const useQuotes = (
   );
 
   onMounted(() => {
+    hasMounted.value = true;
     if (currentQuote.value === initialValue) {
       updateQuote(true);
     }
