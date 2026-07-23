@@ -152,8 +152,26 @@
     "mobilehint": "左右滑動來觀看時程表",
     "note": "以下時程表僅供參考，實際安排可能有所調整。",
     "duration": "時長",
+    "durationHoursMinutes": "{hours}小時{minutes}分鐘",
+    "durationHours": "{hours}小時",
+    "durationMinutes": "{minutes}分鐘",
     "area": "區域",
-    "detailPlaceholder": "詳細資訊之後補上。"
+    "detailPlaceholder": "詳細資訊之後補上。",
+    "viewEventDetail": "查看活動詳情",
+    "types": {
+      "entry": "入場時間",
+      "opening": "開場介紹",
+      "community": "社群活動",
+      "break": "休息時間",
+      "talk": "專題演講",
+      "music": "音樂表演",
+      "sing": "大合唱",
+      "photo": "大合照",
+      "workshop": "工坊活動",
+      "vendor": "攤位活動",
+      "social": "交誼時間",
+      "social-special": "特別交誼活動"
+    }
   },
   "venue": {
     "title": "會場地圖",
@@ -239,5 +257,14 @@
     "titleDefault": "發生意料之外的火花",
     "descDefault": "一項未知的錯誤打斷了您的旅程。",
     "backHome": "返回首頁"
+  },
+
+  "event": {
+    "notFound": {
+      "title": "找不到活動",
+      "message": "抱歉，找不到此活動的詳細資訊。"
+    },
+    "backToSchedule": "返回時程表",
+    "attachments": "活動附件"
   }
 }

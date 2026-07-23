@@ -26,6 +26,7 @@ export interface Column {
 }
 
 export interface TimetableEvent {
+  id?: string;
   title: LocalizedText;
   track: string;
   start: string;
@@ -90,6 +91,7 @@ export const columns: Column[] = [
 
 export const events: TimetableEvent[] = [
   {
+    id: "entry",
     title: { zh: "進場", en: "Entry" },
     track: "main",
     start: "09:30",
@@ -101,6 +103,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "opening",
     title: { zh: "開場介紹", en: "Opening" },
     track: "main",
     start: "10:00",
@@ -112,6 +115,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "mad-libs",
     title: { zh: "瘋狂小馬故事", en: "Mad Libs" },
     track: "main",
     start: "10:45",
@@ -123,6 +127,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "break-screening",
     title: {
       zh: "休息時間(影片欣賞)\nA Decade of Pony",
       en: "Break / Screening\nA Decade of Pony",
@@ -137,6 +142,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "nkplush-talk",
     title: { zh: "專題分享\n青焰布偶", en: "Special Lecture\nNKPLUSH" },
     track: "main",
     start: "13:00",
@@ -148,6 +154,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "still-challenge",
     title: { zh: "劇照大挑戰", en: "Pony Still Challenge" },
     track: "main",
     start: "14:15",
@@ -170,6 +177,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
+    id: "friendship-sinks",
     title: {
       zh: "友誼的小船說翻就翻",
       en: "The boat of friendship sinks when least expected",
@@ -198,6 +206,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
+    id: "rainboom",
     title: { zh: "彩虹音爆", en: "Sonic Rainboom" },
     track: "main",
     start: "18:00",
@@ -209,6 +218,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "sing-along",
     title: { zh: "大合唱", en: "Sing-along" },
     track: "main",
     start: "20:00",
@@ -231,6 +241,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
+    id: "workshop-open",
     title: { zh: "工坊區開放", en: "Workshop Open" },
     track: "workshop",
     start: "10:30",
@@ -242,6 +253,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "vendor-morning",
     title: { zh: "攤位街", en: "Vendor Area" },
     track: "vendor",
     start: "10:30",
@@ -253,6 +265,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "vendor-afternoon",
     title: { zh: "攤位街", en: "Vendor Area" },
     track: "vendor",
     start: "13:00",
@@ -264,6 +277,7 @@ export const events: TimetableEvent[] = [
     },
   },
   {
+    id: "social-morning",
     title: { zh: "交誼區", en: "Social Area" },
     track: "social",
     start: "10:30",
@@ -289,6 +303,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
+    id: "social-afternoon",
     title: { zh: "交誼區", en: "Social Area" },
     track: "social",
     start: "13:00",

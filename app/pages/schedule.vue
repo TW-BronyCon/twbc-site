@@ -12,6 +12,7 @@ import {
 } from "~/data/scheduleData";
 
 const { t, locale } = useI18n();
+const localePath = useLocalePath();
 
 definePageMeta({
   underDevelopment: false,
@@ -146,12 +147,20 @@ const processedEvents = computed(() => {
       : "";
     const formattedTitle = titleText.replace(/\n/g, "<br>");
 
-    const duration = (
-      (timeToMinutes(event.end) - timeToMinutes(event.start)) /
-      60
-    )
-      .toFixed(1)
-      .replace(".0", "");
+    const diffMinutes = timeToMinutes(event.end) - timeToMinutes(event.start);
+    const hrs = Math.floor(diffMinutes / 60);
+    const mins = diffMinutes % 60;
+    let duration = "";
+    if (hrs > 0 && mins > 0) {
+      duration = t("schedule.durationHoursMinutes", {
+        hours: hrs,
+        minutes: mins,
+      });
+    } else if (hrs > 0) {
+      duration = t("schedule.durationHours", { hours: hrs });
+    } else {
+      duration = t("schedule.durationMinutes", { minutes: mins });
+    }
 
     const matchingCol = rawColumns.find((col) => col.key === event.track);
     const areaLabel = matchingCol?.label
@@ -574,14 +583,14 @@ onBeforeRouteLeave(() => {
 
               <div class="expo-tt-modal-meta">
                 <span>
-                  🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
-                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
+                  {{ activeModalEvent.start }} - {{ activeModalEvent.end }}
                 </span>
-
-                <span
-                  >📍 {{ t("schedule.area") }}:
-                  {{ activeModalEvent.area }}</span
-                >
+                <span>
+                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}
+                </span>
+                <span>
+                  {{ t("schedule.area") }}: {{ activeModalEvent.area }}
+                </span>
               </div>
 
               <p>
@@ -589,6 +598,16 @@ onBeforeRouteLeave(() => {
                   activeModalEvent.detailText || t("schedule.detailPlaceholder")
                 }}
               </p>
+
+              <div v-if="activeModalEvent.id" class="modal-cta-section">
+                <NuxtLink
+                  :to="localePath(`/events/${activeModalEvent.id}`)"
+                  class="view-detail-btn"
+                >
+                  <span>{{ t("schedule.viewEventDetail") }}</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </NuxtLink>
+              </div>
             </div>
           </div>
         </div>
@@ -826,6 +845,34 @@ onBeforeRouteLeave(() => {
 
 <style>
 /* Unscoped — modal is teleported to body */
+
+.expo-tt-modal-box .modal-cta-section {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.expo-tt-modal-box .view-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.5em;
+  border-radius: 8px;
+  background: var(--color-paper-text);
+  color: var(--color-paper-bg);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  transition: all 0.25s ease;
+  border: 2px solid var(--color-paper-text);
+}
+
+.expo-tt-modal-box .view-detail-btn:hover {
+  background: transparent;
+  color: var(--color-paper-text);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 53, 34, 0.15);
+}
 
 /* Schedule Modal Entry/Exit Animations */
 .schedule-modal-enter-active,
