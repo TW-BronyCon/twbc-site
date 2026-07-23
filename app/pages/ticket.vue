@@ -337,6 +337,7 @@ const onMouseLeave = () => {
   text-decoration: none;
   color: inherit;
   display: block;
+  cursor: pointer;
 }
 
 .block {
@@ -486,9 +487,8 @@ const onMouseLeave = () => {
   opacity: 1;
 }
 
-.block:hover {
+.block-link:hover .block {
   transform: translateY(-3px);
-  cursor: pointer;
   background: linear-gradient(
     180deg,
     rgba(243, 218, 108, 0.8),
@@ -501,7 +501,7 @@ const onMouseLeave = () => {
     0 0 26px color-mix(in srgb, currentColor 18%, transparent);
 }
 
-.block:active {
+.block-link:active .block {
   transform: translateY(2px);
   background: linear-gradient(
     180deg,
@@ -529,7 +529,7 @@ const onMouseLeave = () => {
   animation-play-state: paused;
 }
 
-.block:hover .ticket-img {
+.block-link:hover .ticket-img {
   animation: wiggle 1.5s infinite ease;
 }
 
@@ -1087,7 +1087,7 @@ const onMouseLeave = () => {
   filter: grayscale(0.5);
 }
 
-.block-link.is-disabled .block:hover {
+.block-link.is-disabled:hover .block {
   transform: none;
   background: linear-gradient(
     180deg,
@@ -1100,7 +1100,7 @@ const onMouseLeave = () => {
     0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
-.block-link.is-disabled .block:hover .ticket-img {
+.block-link.is-disabled:hover .ticket-img {
   animation: none;
   transform: none;
 }
