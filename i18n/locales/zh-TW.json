@@ -136,6 +136,11 @@
     "labels": {
       "time": "時間",
       "author": "寄件人"
+    },
+    "backToList": "返回信箱",
+    "notFound": {
+      "title": "找不到公告",
+      "message": "您所尋找的公告並不存在。"
     }
   },
   "common": {

@@ -8,12 +8,10 @@ import {
   nextTick,
 } from "vue";
 import type { ComponentPublicInstance } from "vue";
-import { rawNewsPosts } from "~/data/newsData";
-import { handleModalTab } from "~/utils/focus";
 
 /**
  * News Page Component
- * Displays list of letter envelopes that open on hover and click, showing the detailed news post content in an interactive modal.
+ * Displays list of letter envelopes that open on hover and click, leading to the news details page.
  */
 
 // Configuration for persisting the opened/unopened state of letters
@@ -21,6 +19,7 @@ const rememberOpenedMail = true;
 const openedStorageKey = "twbc-opened-news";
 
 const { t, locale } = useI18n();
+const localePath = useLocalePath();
 
 definePageMeta({
   underDevelopment: false,
@@ -42,9 +41,6 @@ type NewsPost = {
   time: string;
   content: string;
 };
-
-type ContentPart =
-  { type: "text"; value: string } | { type: "link"; value: string };
 
 type SealData = {
   angle: number;
@@ -87,24 +83,84 @@ function createRandomCrack() {
   };
 }
 
+// Simple yaml-like frontmatter parser
+function parseMarkdownWithFrontmatter(raw: string) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  if (match) {
+    const yamlBlock = match[1] || "";
+    const markdownContent = match[2] || "";
+
+    const meta: Record<string, string> = {};
+    yamlBlock.split("\n").forEach((line) => {
+      const idx = line.indexOf(":");
+      if (idx > -1) {
+        const key = line.slice(0, idx).trim();
+        const value = line.slice(idx + 1).trim();
+        let cleanVal = value;
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
+          cleanVal = value.slice(1, -1);
+        }
+        meta[key] = cleanVal;
+      }
+    });
+
+    return { meta, content: markdownContent };
+  }
+  return { meta: {} as Record<string, string>, content: raw };
+}
+
+// Import all news markdown files eagerly
+const newsMdFiles = import.meta.glob("/content/news/**/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
 const posts = computed<NewsPost[]>(() => {
-  const list = rawNewsPosts;
+  const list: {
+    id: string;
+    locale: string;
+    title: string;
+    time: string;
+    content: string;
+  }[] = [];
 
-  if (!Array.isArray(list)) return [];
+  for (const [path, raw] of Object.entries(newsMdFiles)) {
+    const filename = path.split("/").pop() || "";
+    const match = filename.match(/^(.+)\.(.+)\.md$/);
+    if (!match) continue;
 
-  const mapped = list.flatMap((post, index) => {
-    const id = post.id || `post_${String(index + 1).padStart(3, "0")}`;
-    const localizedPost =
-      post.locales?.[locale.value] ??
-      post.locales?.["zh-TW"] ??
-      post.locales?.en;
+    const id = match[1];
+    const fileLocale = match[2];
+    if (!id || !fileLocale) continue;
 
-    if (!localizedPost) return [];
+    const { meta, content } = parseMarkdownWithFrontmatter(raw as string);
 
-    let formattedTime = post.time || "";
-    if (post.time) {
+    list.push({
+      id,
+      locale: fileLocale,
+      title: meta.title || "",
+      time: meta.time || "",
+      content,
+    });
+  }
+
+  const uniqueIds = Array.from(new Set(list.map((p) => p.id)));
+  const mapped = uniqueIds.flatMap((id) => {
+    const postForLocale =
+      list.find((p) => p.id === id && p.locale === locale.value) ||
+      list.find((p) => p.id === id && p.locale === "zh-TW") ||
+      list.find((p) => p.id === id && p.locale === "en");
+
+    if (!postForLocale) return [];
+
+    let formattedTime = postForLocale.time || "";
+    if (postForLocale.time) {
       try {
-        const date = new Date(post.time);
+        const date = new Date(postForLocale.time);
         if (!Number.isNaN(date.getTime())) {
           formattedTime = date.toLocaleDateString(locale.value, {
             year: "numeric",
@@ -121,10 +177,10 @@ const posts = computed<NewsPost[]>(() => {
     return [
       {
         id,
-        title: localizedPost.title || "",
+        title: postForLocale.title,
         time: formattedTime,
-        rawTime: post.time || "",
-        content: localizedPost.content || "",
+        rawTime: postForLocale.time || "",
+        content: postForLocale.content,
       },
     ];
   });
@@ -136,21 +192,6 @@ const posts = computed<NewsPost[]>(() => {
       return timeB - timeA;
     })
     .map(({ rawTime, ...rest }) => rest);
-});
-
-const selectedPost = ref<NewsPost | null>(null);
-
-watch(selectedPost, (newVal) => {
-  if (import.meta.client) {
-    const root = document.getElementById("__nuxt");
-    if (root) {
-      if (newVal) {
-        root.setAttribute("inert", "");
-      } else {
-        root.removeAttribute("inert");
-      }
-    }
-  }
 });
 
 const openedMap = ref<Record<string, boolean>>({});
@@ -299,15 +340,6 @@ watch(
     for (const post of list) {
       getSealData(post.id);
     }
-
-    if (selectedPost.value) {
-      const found = list.find((post) => post.id === selectedPost.value?.id);
-      if (found) {
-        selectedPost.value = found;
-      } else {
-        closeMail();
-      }
-    }
   },
   { immediate: true },
 );
@@ -315,40 +347,6 @@ watch(
 function isMailOpened(postId: string) {
   return openedMap.value[postId] === true;
 }
-
-const contentParts = computed<ContentPart[]>(() => {
-  const text = selectedPost.value?.content ?? "";
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-  const parts: ContentPart[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = urlRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({
-        type: "text",
-        value: text.slice(lastIndex, match.index),
-      });
-    }
-
-    parts.push({
-      type: "link",
-      value: match[0],
-    });
-
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push({
-      type: "text",
-      value: text.slice(lastIndex),
-    });
-  }
-
-  return parts;
-});
 
 function trimText(text = "", max = 90) {
   const clean = text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
@@ -388,55 +386,15 @@ function loadOpenedMap() {
   }
 }
 
-const triggerElement = ref<HTMLElement | null>(null);
-
 function openMail(post: NewsPost) {
-  if (import.meta.client) {
-    triggerElement.value = document.activeElement as HTMLElement | null;
-  }
   openedMap.value[post.id] = true;
   saveOpenedMap();
-
-  selectedPost.value = post;
-  document.body.style.overflow = "hidden";
-
-  nextTick(() => {
-    const closeBtn = document.querySelector(
-      ".news-close-btn",
-    ) as HTMLElement | null;
-    if (closeBtn) closeBtn.focus();
-  });
-}
-
-function closeMail() {
-  selectedPost.value = null;
-  document.body.style.overflow = "";
-
-  nextTick(() => {
-    if (triggerElement.value) {
-      triggerElement.value.focus();
-      triggerElement.value = null;
-    }
-  });
-}
-
-function handleKeyDown(e: KeyboardEvent) {
-  if (!selectedPost.value) return;
-
-  if (e.key === "Escape") {
-    closeMail();
-  } else if (e.key === "Tab") {
-    const modalEl = document.querySelector(".news-modal") as HTMLElement | null;
-    if (modalEl) {
-      handleModalTab(e, modalEl);
-    }
-  }
+  navigateTo(localePath("/news/" + post.id));
 }
 
 onMounted(() => {
   loadOpenedMap();
 
-  window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("resize", handleResize);
 
   nextTick(() => {
@@ -449,7 +407,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("resize", handleResize);
 
   document.body.style.overflow = "";
@@ -538,60 +495,6 @@ onBeforeUnmount(() => {
         </article>
       </div>
     </section>
-
-    <Teleport to="body">
-      <Transition name="modal">
-        <div
-          v-if="selectedPost"
-          class="news-modal show"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="news-modal-title"
-          @click.self="closeMail"
-        >
-          <div class="news-paper">
-            <button
-              class="news-close-btn"
-              type="button"
-              :aria-label="t('common.close')"
-              @click="closeMail"
-            >
-              ✕
-            </button>
-
-            <div id="paperBody">
-              <h2 id="news-modal-title">{{ selectedPost.title }}</h2>
-
-              <div class="news-paper-meta">
-                {{ t("news.labels.time") }}：{{ selectedPost.time }}
-
-                <span class="news-paper-author">
-                  {{ t("news.labels.author") }}：{{ t("news.author") }}
-                </span>
-              </div>
-
-              <div class="news-paper-content">
-                <template v-for="(part, index) in contentParts" :key="index">
-                  <a
-                    v-if="part.type === 'link'"
-                    :href="part.value"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    @click.stop
-                  >
-                    {{ part.value }}
-                  </a>
-
-                  <span v-else>
-                    {{ part.value }}
-                  </span>
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
   </PageLayout>
 </template>
 
@@ -990,144 +893,6 @@ onBeforeUnmount(() => {
 
   .mail-meta {
     font-size: 0.78rem;
-  }
-}
-</style>
-
-<style>
-/* Unscoped Styles for Teleported Modal */
-.news-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.25s;
-  z-index: 99;
-}
-
-.news-modal.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* 信紙 */
-.news-paper {
-  width: min(760px, 100%);
-  max-height: 88vh;
-  overflow-y: auto;
-  background: repeating-linear-gradient(
-    to bottom,
-    #fffdf8 0px,
-    #fffdf8 34px,
-    #f2efe6 35px
-  );
-  color: var(--color-paper-text-dark);
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
-  position: relative;
-}
-
-.news-paper h2 {
-  margin: 0 0 0.5rem;
-  padding-right: 1.25rem;
-  font-size: 2rem;
-}
-
-.news-paper-meta {
-  font-size: 0.9rem;
-  color: var(--color-paper-text-muted);
-  margin-bottom: 1rem;
-  line-height: 1.7;
-}
-
-.news-paper-author {
-  float: right;
-}
-
-.news-paper-content {
-  line-height: 1.5;
-  white-space: pre-line;
-  text-align: justify;
-}
-
-.news-paper-content a {
-  color: var(--color-purple-accent);
-  font-weight: 700;
-  text-decoration: underline;
-  word-break: break-all;
-}
-
-.news-paper-content a:hover {
-  opacity: 0.75;
-}
-
-/* Modal Entry/Exit Animations */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-enter-active .news-paper,
-.modal-leave-active .news-paper {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-from .news-paper {
-  transform: scale(0.9) translateY(20px);
-}
-
-.modal-leave-to .news-paper {
-  transform: scale(0.95) translateY(10px);
-}
-
-.news-close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #ddd;
-  color: #111;
-  border: none;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease,
-    color 0.2s ease;
-}
-
-.news-close-btn:hover {
-  background: #ccc;
-}
-
-.news-close-btn:active {
-  background: #bbb;
-  transform: scale(0.95);
-}
-
-.news-close-btn:focus-visible {
-  outline: 2px solid var(--color-purple-accent);
-  outline-offset: 2px;
-}
-
-@media (max-width: 700px) {
-  .news-paper {
-    padding: 1.2rem;
-  }
-
-  .news-paper h2 {
-    font-size: 1.4rem;
   }
 }
 </style>

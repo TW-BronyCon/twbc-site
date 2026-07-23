@@ -206,7 +206,7 @@ export const events: TimetableEvent[] = [
   //  },
   //},
   {
-    id: "rainboom",
+    id: "sonic-rainboom",
     title: { zh: "彩虹音爆", en: "Sonic Rainboom" },
     track: "main",
     start: "18:00",
