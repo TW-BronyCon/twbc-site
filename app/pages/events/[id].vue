@@ -166,6 +166,18 @@ const eventArea = computed(() => {
   return currentEvent.track;
 });
 
+const eventZoneId = computed(() => {
+  const currentEvent = event.value;
+  if (!currentEvent) return "";
+  const trackMap: Record<string, string> = {
+    main: "stage",
+    vendor: "vendors",
+    workshop: "workshop",
+    social: "social",
+  };
+  return trackMap[currentEvent.track] || "";
+});
+
 const eventDetailText = computed(() => {
   // If there's no compiled markdown HTML, we fallback to event.detail from JSON
   return event.value && event.value.detail
@@ -279,13 +291,6 @@ useSeoMeta({
       <div class="event-header" v-else>
         <h1>{{ t("event.notFound.title") }}</h1>
       </div>
-      <!-- Back to Schedule Link -->
-      <div class="actions-section">
-        <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
-          <i class="fa-solid fa-list" />
-          <span>{{ t("event.backToSchedule") }}</span>
-        </NuxtLink>
-      </div>
     </template>
 
     <template #surface>
@@ -309,11 +314,34 @@ useSeoMeta({
 
           <div class="event-summary">
             <div class="info-tag-list">
-              <span class="info-tag" v-if="eventTimeRange">
+              <NuxtLink
+                v-if="eventTimeRange"
+                class="info-tag interactive"
+                :to="localePath('/schedule')"
+                :title="t('event.viewSchedule')"
+              >
                 <i class="fa-solid fa-clock" />
                 <span>{{ eventTimeRange }}</span>
-              </span>
-              <span class="info-tag" v-if="eventArea">
+                <span class="map-hint-text"
+                  >({{ t("event.viewSchedule") }})</span
+                >
+              </NuxtLink>
+              <NuxtLink
+                v-if="eventArea && eventZoneId"
+                class="info-tag interactive"
+                :to="
+                  localePath({
+                    path: '/venue',
+                    query: { zone: eventZoneId, fromEvent: id },
+                  })
+                "
+                :title="t('event.viewOnMapTooltip')"
+              >
+                <i class="fa-solid fa-location-dot" />
+                <span>{{ eventArea }}</span>
+                <span class="map-hint-text">({{ t("event.viewOnMap") }})</span>
+              </NuxtLink>
+              <span class="info-tag" v-else-if="eventArea">
                 <i class="fa-solid fa-location-dot" />
                 <span>{{ eventArea }}</span>
               </span>
@@ -557,6 +585,30 @@ useSeoMeta({
   color: var(--color-gold);
 }
 
+.info-tag.interactive {
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.info-tag.interactive:hover {
+  background: rgba(255, 230, 167, 0.15);
+  border-color: var(--color-gold);
+  transform: translateY(-1px);
+}
+
+.map-hint-text {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  font-weight: 500;
+  margin-left: 0.2rem;
+  transition: opacity 0.2s ease;
+}
+
+.info-tag.interactive:hover .map-hint-text {
+  opacity: 1;
+}
+
 .intro-text {
   font-size: 1.05rem;
   line-height: 1.75;
@@ -607,6 +659,17 @@ useSeoMeta({
   font-weight: 700;
 }
 
+.event-markdown-content :deep(a) {
+  color: var(--color-gold);
+  font-weight: 700;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.event-markdown-content :deep(a:hover) {
+  opacity: 0.8;
+}
+
 .event-markdown-content :deep(img) {
   display: block;
   max-width: min(100%, 650px);
@@ -632,35 +695,6 @@ useSeoMeta({
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.45),
     0 0 15px rgba(255, 230, 167, 0.1);
-}
-
-/* Actions Section */
-.actions-section {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.back-list-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--color-gold);
-  text-decoration: none;
-  font-weight: 700;
-  transition: all 0.25s ease;
-  border: 1px solid var(--color-gold);
-  cursor: pointer;
-}
-
-.back-list-btn:hover {
-  background: var(--color-gold);
-  color: #120b18;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 230, 167, 0.25);
 }
 
 /* Not Found styles */

@@ -200,7 +200,8 @@
       "boothTitle": "Booth {id}",
       "boothIntro": "Booth Introduction",
       "links": "Links",
-      "viewBoothDetail": "View Details"
+      "viewBoothDetail": "View Details",
+      "backToEvent": "Back to {event}"
     },
     "zones": {
       "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
@@ -269,7 +270,9 @@
       "title": "Event Not Found",
       "message": "Sorry, we couldn't find the details for this event."
     },
-    "backToSchedule": "Back to Schedule",
-    "attachments": "Attachments"
+    "attachments": "Attachments",
+    "viewSchedule": "View Schedule",
+    "viewOnMap": "View Map",
+    "viewOnMapTooltip": "View this area on the interactive map"
   }
 }
