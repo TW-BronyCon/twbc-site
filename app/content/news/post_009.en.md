@@ -9,3 +9,6 @@ As a brony, have you been humming the MLP theme? Do you keep replaying the pony 
 
 Event URL:
 https://twbronycon.org/events/rainboom
+
+<img src="/events/rainboom/TWBC_Poster_DJ3.png" alt="Sonic Rainboom Poster" class="event-poster" />
+<img src="/events/rainboom/TWBC_Poster_Sing_Alone_List.png" alt="Sonic Rainboom Poster" class="event-poster" />
