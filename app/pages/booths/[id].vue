@@ -11,6 +11,36 @@ const id = route.params.id as string;
 const booth = computed(() => booths.find((b) => b.id === id));
 const isEn = computed(() => locale.value.startsWith("en"));
 
+// Gallery active state
+const activeImageIdx = ref(0);
+
+// Lightbox state
+const isLightboxOpen = ref(false);
+
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (e.key === "Escape") {
+    isLightboxOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+});
+
+const boothImages = computed(() => {
+  if (!booth.value) return [];
+  // Fallback to booth.image if booth.images is not defined
+  return booth.value.images || (booth.value.image ? [booth.value.image] : []);
+});
+
+const currentImage = computed(() => {
+  return boothImages.value[activeImageIdx.value] || "";
+});
+
 const siteUrl = "https://twbronycon.org";
 
 const pageTitle = computed(() =>
@@ -49,36 +79,8 @@ useSeoMeta({
   ogImage: pageImage,
   twitterImage: pageImage,
   ogUrl: computed(() => `${siteUrl}${route.path}`),
-});
-
-// Gallery active state
-const activeImageIdx = ref(0);
-
-// Lightbox state
-const isLightboxOpen = ref(false);
-
-const handleKeyDown = (e: KeyboardEvent) => {
-  if (e.key === "Escape") {
-    isLightboxOpen.value = false;
-  }
-};
-
-onMounted(() => {
-  window.addEventListener("keydown", handleKeyDown);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeyDown);
-});
-
-const boothImages = computed(() => {
-  if (!booth.value) return [];
-  // Fallback to booth.image if booth.images is not defined
-  return booth.value.images || (booth.value.image ? [booth.value.image] : []);
-});
-
-const currentImage = computed(() => {
-  return boothImages.value[activeImageIdx.value] || "";
+  ogImageWidth: null,
+  ogImageHeight: null,
 });
 </script>
 
