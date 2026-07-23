@@ -442,12 +442,11 @@ onBeforeUnmount(() => {
 
     <section class="news-wrap">
       <div class="mail-list">
-        <article
+        <div
           v-for="post in posts"
           :key="post.id"
           :ref="(el) => setMailRef(post.id, el)"
-          class="mail"
-          :class="{ opened: openedMap[post.id] }"
+          class="mail-trigger"
           tabindex="0"
           role="button"
           :aria-label="
@@ -458,46 +457,48 @@ onBeforeUnmount(() => {
           @click="openMail(post)"
           @keydown.enter.space.prevent="openMail(post)"
         >
-          <div class="stamp"></div>
+          <article class="mail" :class="{ opened: openedMap[post.id] }">
+            <div class="stamp"></div>
 
-          <div
-            class="wax-seal"
-            :style="{
-              '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
-              '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
-              '--crack-bottom':
-                sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
-            }"
-          >
-            <img
-              v-if="!isMailOpened(post.id)"
-              src="/img/WaxSeal.avif"
-              class="wax-closed"
-              alt=""
-            />
+            <div
+              class="wax-seal"
+              :style="{
+                '--seal-angle': `${sealMap[post.id]?.angle ?? 0}deg`,
+                '--crack-top': sealMap[post.id]?.topClip ?? defaultSealTopClip,
+                '--crack-bottom':
+                  sealMap[post.id]?.bottomClip ?? defaultSealBottomClip,
+              }"
+            >
+              <img
+                v-if="!isMailOpened(post.id)"
+                src="/img/WaxSeal.avif"
+                class="wax-closed"
+                alt=""
+              />
 
-            <template v-else>
-              <div class="wax-top">
-                <div class="wax-piece-img"></div>
-              </div>
+              <template v-else>
+                <div class="wax-top">
+                  <div class="wax-piece-img"></div>
+                </div>
 
-              <div class="wax-bottom">
-                <div class="wax-piece-img"></div>
-              </div>
-            </template>
-          </div>
+                <div class="wax-bottom">
+                  <div class="wax-piece-img"></div>
+                </div>
+              </template>
+            </div>
 
-          <h3>{{ post.title }}</h3>
+            <h3>{{ post.title }}</h3>
 
-          <div class="preview">
-            {{ trimText(post.content, 90) }}
-          </div>
+            <div class="preview">
+              {{ trimText(post.content, 90) }}
+            </div>
 
-          <div class="mail-meta">
-            <div class="time">{{ post.time }}</div>
-            <div class="author">{{ t("news.author") }}</div>
-          </div>
-        </article>
+            <div class="mail-meta">
+              <div class="time">{{ post.time }}</div>
+              <div class="author">{{ t("news.author") }}</div>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
   </PageLayout>
@@ -541,6 +542,11 @@ onBeforeUnmount(() => {
   margin: 0 auto 5rem;
 }
 
+/* Trigger wrapper – stays in place so the cursor never leaves */
+.mail-trigger {
+  cursor: pointer;
+}
+
 /* 信封 */
 .mail {
   position: relative;
@@ -558,14 +564,13 @@ onBeforeUnmount(() => {
   border-radius: 1rem;
   padding: 1.2rem 1.35rem 1rem;
   color: var(--color-paper-text);
-  cursor: pointer;
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
   transition: 0.25s ease;
   overflow: hidden;
 }
 
-.mail:hover,
-.mail:focus-visible {
+.mail-trigger:hover .mail,
+.mail-trigger:focus-visible .mail {
   transform: translateY(-8px) rotate(-0.5deg);
   box-shadow:
     0 0 10px rgba(255, 255, 255, 0.45),
@@ -576,13 +581,13 @@ onBeforeUnmount(() => {
   animation: magicPulse 1.2s ease-in-out infinite;
 }
 
-.mail:focus-visible {
+.mail-trigger:focus-visible .mail {
   outline: 3px solid rgba(255, 130, 225, 0.85);
   outline-offset: 4px;
 }
 
-.mail:hover::after,
-.mail:focus-visible::after {
+.mail-trigger:hover .mail::after,
+.mail-trigger:focus-visible .mail::after {
   content: "";
   position: absolute;
   inset: -12px;
