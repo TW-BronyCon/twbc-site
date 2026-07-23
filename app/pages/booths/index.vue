@@ -58,9 +58,6 @@ useHead(() => ({
 
             <!-- Card Content -->
             <div class="booth-card-content">
-              <span class="booth-card-badge">
-                {{ t("venue.modal.boothTitle", { id: booth.id }) }}
-              </span>
               <h3 class="booth-card-title">
                 {{ booth.name[isEn ? "en" : "zh"] }}
               </h3>
@@ -210,17 +207,6 @@ useHead(() => ({
   flex-direction: column;
   padding: 1.25rem;
   flex-grow: 1;
-}
-
-.booth-card-badge {
-  align-self: flex-start;
-  background: rgba(255, 230, 167, 0.12);
-  color: var(--color-gold);
-  padding: 0.15rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
 }
 
 .booth-card-title {

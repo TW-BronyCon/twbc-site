@@ -61,9 +61,6 @@ const currentImage = computed(() => {
   <PageLayout>
     <template #title>
       <div class="booth-header" v-if="booth">
-        <span class="booth-badge">{{
-          t("venue.modal.boothTitle", { id: booth.id })
-        }}</span>
         <h1>{{ booth.name[isEn ? "en" : "zh"] }}</h1>
       </div>
       <div class="booth-header" v-else>
@@ -212,17 +209,6 @@ const currentImage = computed(() => {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-}
-
-.booth-badge {
-  background: var(--color-gold);
-  color: #120b18;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 
 .booth-detail-grid {
