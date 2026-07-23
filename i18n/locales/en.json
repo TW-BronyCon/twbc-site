@@ -217,7 +217,8 @@
     "list": {
       "title": "Vendors",
       "subtitle": "Discover fan art and merchandises from fandom creators."
-    }
+    },
+    "disclaimer": "Disclaimer: Booth vendors are independent participants. Their products, opinions, and conduct do not represent the TWBC team or staff. TWBC is not responsible for any transaction disputes or vendor merchandise."
   },
   "error": {
     "pageTitle": "Error {code}",

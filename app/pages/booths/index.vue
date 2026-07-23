@@ -99,6 +99,12 @@ useHead(() => ({
             </div>
           </div>
         </div>
+
+        <!-- Disclaimer -->
+        <div class="booth-disclaimer">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <span>{{ t("booth.disclaimer") }}</span>
+        </div>
       </div>
     </template>
   </PageLayout>
@@ -291,5 +297,25 @@ useHead(() => ({
   background: transparent;
   color: var(--color-gold);
   box-shadow: 0 4px 10px rgba(255, 230, 167, 0.15);
+}
+
+.booth-disclaimer {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  background: rgba(255, 230, 167, 0.05);
+  border: 1px dashed rgba(255, 230, 167, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.booth-disclaimer i {
+  color: var(--color-gold);
+  font-size: 1rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
 }
 </style>
