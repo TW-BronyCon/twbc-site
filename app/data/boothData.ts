@@ -22,7 +22,7 @@ export interface Booth {
 
 export const booths: Booth[] = [
   {
-    id: "1",
+    id: "nkplush",
     mapId: "1",
     name: { zh: "青焰小馬布偶", en: "NKPLUSH" },
     introduction: {
@@ -53,7 +53,7 @@ export const booths: Booth[] = [
     ],
   },
   {
-    id: "2",
+    id: "mian-mian",
     mapId: "2",
     name: { zh: "勉勉", en: "Mian Mian" },
     introduction: {
@@ -86,7 +86,7 @@ export const booths: Booth[] = [
     ],
   },
   {
-    id: "3",
+    id: "yeejay",
     mapId: "3",
     name: { zh: "藝潔的小木屋", en: "YeeJay's Art" },
     introduction: {
@@ -104,7 +104,7 @@ export const booths: Booth[] = [
     ],
   },
   {
-    id: "4",
+    id: "ravenwolf",
     mapId: "4",
     name: { zh: "RavenWolf的書報攤", en: "RavenWolf's Newsstand" },
     introduction: {
@@ -122,7 +122,7 @@ export const booths: Booth[] = [
     ],
   },
   {
-    id: "5",
+    id: "cloud-harbor",
     mapId: "6",
     name: { zh: "雲港商行", en: "Cloud Harbor" },
     introduction: {
