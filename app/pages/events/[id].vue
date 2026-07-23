@@ -19,26 +19,29 @@ const localeSuffix = computed(() => {
   return locale.value === "zh-TW" ? "zh-TW" : "en";
 });
 
-// Import all event markdown files at compile-time/build-time using Vite glob import
-// This avoids doing realtime network fetches over HTTP.
+// Import all event markdown files lazily/dynamically
 const eventMdFiles = import.meta.glob("/content/events/**/*.md", {
   query: "?raw",
   import: "default",
-  eager: true,
-}) as Record<string, string>;
-
-// Retrieve the raw markdown string statically from the preloaded modules
-const rawMd = computed(() => {
-  const pathWithLocale = `/content/events/${id}.${localeSuffix.value}.md`;
-  if (eventMdFiles[pathWithLocale]) {
-    return eventMdFiles[pathWithLocale];
-  }
-  const defaultPath = `/content/events/${id}.md`;
-  if (eventMdFiles[defaultPath]) {
-    return eventMdFiles[defaultPath];
-  }
-  return null;
 });
+
+// Fetch raw markdown file content dynamically at runtime
+const { data: rawMd } = await useAsyncData(
+  `event-md-${id}-${locale.value}`,
+  async () => {
+    const pathWithLocale = `/content/events/${id}.${localeSuffix.value}.md`;
+    if (eventMdFiles[pathWithLocale]) {
+      const loader = eventMdFiles[pathWithLocale] as () => Promise<string>;
+      return await loader();
+    }
+    const defaultPath = `/content/events/${id}.md`;
+    if (eventMdFiles[defaultPath]) {
+      const loader = eventMdFiles[defaultPath] as () => Promise<string>;
+      return await loader();
+    }
+    return null;
+  },
+);
 
 // Simple yaml-like frontmatter parser
 function parseMarkdownWithFrontmatter(raw: string) {
