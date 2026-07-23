@@ -71,7 +71,24 @@ function parseMarkdownWithFrontmatter(raw: string) {
 const parsed = computed(() => {
   if (!rawMd.value) return { meta: {} as Record<string, string>, html: "" };
   const { meta, content } = parseMarkdownWithFrontmatter(rawMd.value);
-  const html = marked.parse(content) as string;
+  let html = marked.parse(content) as string;
+
+  // Resolve references to the public folder (e.g. src="/public/img/..." or src="../../../public/img/...")
+  html = html.replace(
+    /(src|href)=["']\/?(?:\.\.\/)*public\/([^"']+)["']/g,
+    '$1="/$2"',
+  );
+
+  // Map /events/[id]/image.png to /img/events/[id]/image.png for event-relative images
+  const imageExtensionPattern =
+    /\.(png|jpe?g|gif|svg|webp|avif)(?:\?[^"']*)?$/i;
+  html = html.replace(/src=["']\/events\/([^"']+)["']/g, (match, p1) => {
+    if (imageExtensionPattern.test(p1)) {
+      return `src="/img/events/${p1}"`;
+    }
+    return match;
+  });
+
   return { meta, html };
 });
 
@@ -177,12 +194,7 @@ useHead(() => ({
 /* Paper letter layout */
 .news-paper {
   width: min(760px, 100%);
-  background: repeating-linear-gradient(
-    to bottom,
-    #fffdf8 0px,
-    #fffdf8 34px,
-    #f2efe6 35px
-  );
+  background: var(--color-paper-bg-gradient);
   color: var(--color-paper-text-dark);
   border-radius: 1rem;
   padding: 2.5rem 2rem;
