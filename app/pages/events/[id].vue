@@ -411,7 +411,7 @@ useSeoMeta({
         <p class="not-found-message">{{ t("event.notFound.message") }}</p>
         <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
           <i class="fa-solid fa-list" />
-          <span>{{ t("event.backToSchedule") }}</span>
+          <span>{{ t("event.viewSchedule") }}</span>
         </NuxtLink>
       </div>
 

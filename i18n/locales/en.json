@@ -200,8 +200,7 @@
       "boothTitle": "Booth {id}",
       "boothIntro": "Booth Introduction",
       "links": "Links",
-      "viewBoothDetail": "View Details",
-      "backToEvent": "Back to {event}"
+      "viewBoothDetail": "View Details"
     },
     "zones": {
       "stage": "The heart of the convention. Opening ceremony, panel discussions, mini-games, DJ performance, group sing-along, and group photos will be hosted here.",
