@@ -20,7 +20,7 @@ const localeSuffix = computed(() => {
 });
 
 // Import all event markdown files lazily/dynamically
-const eventMdFiles = import.meta.glob("../../../content/events/**/*.md", {
+const eventMdFiles = import.meta.glob("../../content/events/**/*.md", {
   query: "?raw",
   import: "default",
 });
@@ -29,12 +29,12 @@ const eventMdFiles = import.meta.glob("../../../content/events/**/*.md", {
 const { data: rawMd } = await useAsyncData(
   `event-md-${id}-${locale.value}`,
   async () => {
-    const pathWithLocale = `../../../content/events/${id}.${localeSuffix.value}.md`;
+    const pathWithLocale = `../../content/events/${id}.${localeSuffix.value}.md`;
     if (eventMdFiles[pathWithLocale]) {
       const loader = eventMdFiles[pathWithLocale] as () => Promise<string>;
       return await loader();
     }
-    const defaultPath = `../../../content/events/${id}.md`;
+    const defaultPath = `../../content/events/${id}.md`;
     if (eventMdFiles[defaultPath]) {
       const loader = eventMdFiles[defaultPath] as () => Promise<string>;
       return await loader();
@@ -229,7 +229,7 @@ useHead(() => ({
             </div>
             <!-- If we have parsed HTML, we render it below in a standard markdown area. 
                  Otherwise, fall back to showing the simple intro text. -->
-            <p class="intro-text" v-if="!parsed.html && eventDetailText">
+            <p class="intro-text">
               {{ eventDetailText }}
             </p>
           </div>
