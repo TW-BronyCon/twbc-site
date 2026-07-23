@@ -27,10 +27,10 @@ useHead(() => ({
     </template>
 
     <template #surface>
-      <div class="event-detail-container">
-        <!-- Hero section with graphic and quick info -->
-        <div class="event-hero">
-          <div class="event-poster">
+      <div class="event-detail-grid">
+        <!-- Visual Media Column -->
+        <div class="event-media-col">
+          <div class="main-image-container">
             <div class="poster-glow" />
             <div class="poster-inner">
               <i class="fa-solid fa-compact-disc disc-spinning" />
@@ -38,87 +38,86 @@ useHead(() => ({
               <div class="poster-subtitle">DJ MUSIC PARTY</div>
             </div>
           </div>
+        </div>
 
-          <div class="event-summary">
-            <div class="info-tag-list">
-              <span class="info-tag">
-                <i class="fa-solid fa-clock" />
-                {{ t("events.rainboom.time") }}
-              </span>
-            </div>
-            <p class="intro-text">
+        <!-- Info Column -->
+        <div class="event-info-col">
+          <!-- Time & Intro Card -->
+          <div class="info-card">
+            <h4 class="section-title">
+              <i class="fa-solid fa-clock" />
+              <span>{{ t("events.rainboom.time") }}</span>
+            </h4>
+            <p class="description-text">
               {{ t("events.rainboom.intro") }}
             </p>
           </div>
-        </div>
 
-        <hr class="divider" />
+          <!-- Highlights Card -->
+          <div class="info-card">
+            <h4 class="section-title">
+              <i class="fa-solid fa-star" />
+              <span>{{ t("events.rainboom.lineup") }}</span>
+            </h4>
+            <div class="highlights-list">
+              <div class="highlight-item">
+                <div class="item-header">
+                  <i class="fa-solid fa-sliders" />
+                  <h5>{{ t("events.rainboom.djVibe") }}</h5>
+                </div>
+                <p class="description-text">
+                  {{ t("events.rainboom.djVibeDesc") }}
+                </p>
+              </div>
 
-        <!-- Highlights section -->
-        <div class="event-highlights">
-          <h3 class="section-title">
-            <i class="fa-solid fa-star" />
-            {{ t("events.rainboom.lineup") }}
-          </h3>
-          <div class="highlights-grid">
-            <div class="highlight-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-sliders" />
+              <div class="highlight-item">
+                <div class="item-header">
+                  <i class="fa-solid fa-wand-magic-sparkles" />
+                  <h5>{{ t("events.rainboom.lightShow") }}</h5>
+                </div>
+                <p class="description-text">
+                  {{ t("events.rainboom.lightShowDesc") }}
+                </p>
               </div>
-              <div class="card-content">
-                <h4>{{ t("events.rainboom.djVibe") }}</h4>
-                <p>{{ t("events.rainboom.djVibeDesc") }}</p>
-              </div>
-            </div>
 
-            <div class="highlight-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-wand-magic-sparkles" />
-              </div>
-              <div class="card-content">
-                <h4>{{ t("events.rainboom.lightShow") }}</h4>
-                <p>{{ t("events.rainboom.lightShowDesc") }}</p>
-              </div>
-            </div>
-
-            <div class="highlight-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-people-group" />
-              </div>
-              <div class="card-content">
-                <h4>{{ t("events.rainboom.singAlong") }}</h4>
-                <p>{{ t("events.rainboom.singAlongDesc") }}</p>
+              <div class="highlight-item">
+                <div class="item-header">
+                  <i class="fa-solid fa-people-group" />
+                  <h5>{{ t("events.rainboom.singAlong") }}</h5>
+                </div>
+                <p class="description-text">
+                  {{ t("events.rainboom.singAlongDesc") }}
+                </p>
               </div>
             </div>
           </div>
-        </div>
 
-        <hr class="divider" />
-
-        <!-- Guidelines / Notice -->
-        <div class="event-guidelines">
-          <h3 class="section-title">
-            <i class="fa-solid fa-circle-exclamation" />
-            {{ t("events.rainboom.noticeTitle") }}
-          </h3>
-          <div class="guidelines-box">
-            <p
-              v-for="(line, idx) in t('events.rainboom.noticeContent').split(
-                '\n',
-              )"
-              :key="idx"
-            >
-              {{ line }}
-            </p>
+          <!-- Guidelines Card -->
+          <div class="info-card">
+            <h4 class="section-title">
+              <i class="fa-solid fa-circle-exclamation" />
+              <span>{{ t("events.rainboom.noticeTitle") }}</span>
+            </h4>
+            <div class="guidelines-list">
+              <p
+                v-for="(line, idx) in t('events.rainboom.noticeContent').split(
+                  '\n',
+                )"
+                :key="idx"
+                class="description-text"
+              >
+                {{ line }}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <!-- Back to Schedule Link -->
-        <div class="back-action">
-          <NuxtLink :to="localePath('/schedule')" class="back-link">
-            <i class="fa-solid fa-arrow-left" />
-            <span>{{ t("events.rainboom.backToSchedule") }}</span>
-          </NuxtLink>
+          <!-- Actions -->
+          <div class="actions-section">
+            <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
+              <i class="fa-solid fa-list" />
+              <span>{{ t("events.rainboom.backToSchedule") }}</span>
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </template>
@@ -134,53 +133,49 @@ useHead(() => ({
 }
 
 .event-badge {
-  display: inline-block;
-  background: var(--color-tier-royale);
+  background: var(--color-gold);
   color: #120b18;
-  font-weight: 700;
-  padding: 0.35rem 0.9rem;
+  padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  text-transform: uppercase;
+  font-weight: 700;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
 }
 
-.event-detail-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  color: var(--color-text-light);
-}
-
-/* Event Hero Layout */
-.event-hero {
+.event-detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1.8fr;
-  gap: 2rem;
-  align-items: center;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
 }
 
 @media (max-width: 850px) {
-  .event-hero {
+  .event-detail-grid {
     grid-template-columns: 1fr;
-    text-align: center;
+    gap: 1.5rem;
   }
 }
 
-/* Stylized Poster */
-.event-poster {
-  position: relative;
-  aspect-ratio: 1;
+.event-media-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.main-image-container {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 230, 167, 0.15);
   background: linear-gradient(135deg, #2c1a4d, #140526);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 189, 222, 0.25);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 1.5rem;
+  position: relative;
 }
 
 .poster-glow {
@@ -188,8 +183,8 @@ useHead(() => ({
   inset: -10%;
   background: radial-gradient(
     circle,
-    rgba(238, 122, 176, 0.2) 0%,
-    rgba(20, 155, 230, 0.2) 40%,
+    rgba(238, 122, 176, 0.15) 0%,
+    rgba(20, 155, 230, 0.15) 40%,
     transparent 70%
   );
   animation: pulse-glow 6s infinite alternate ease-in-out;
@@ -207,7 +202,7 @@ useHead(() => ({
 }
 
 .disc-spinning {
-  font-size: 5rem;
+  font-size: 4.5rem;
   animation: spin 8s infinite linear;
   background: linear-gradient(45deg, var(--color-pink), var(--color-gold));
   -webkit-background-clip: text;
@@ -216,7 +211,7 @@ useHead(() => ({
 }
 
 .poster-title {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: 0.1em;
   color: var(--color-gold);
@@ -224,168 +219,110 @@ useHead(() => ({
 }
 
 .poster-subtitle {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.15em;
   opacity: 0.8;
 }
 
-.event-summary {
+.event-info-col {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.info-tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-@media (max-width: 850px) {
-  .info-tag-list {
-    justify-content: center;
-  }
-}
-
-.info-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-gold);
-}
-
-.intro-text {
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.divider {
-  border: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 189, 222, 0.2),
-    transparent
-  );
-  margin: 0.5rem 0;
-}
-
-/* Highlights Section */
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--color-pink);
-  margin-bottom: 1.25rem;
-}
-
-@media (max-width: 850px) {
-  .section-title {
-    justify-content: center;
-  }
-}
-
-.highlights-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-.highlight-card {
-  display: flex;
-  gap: 1rem;
-  padding: 1.25rem;
-  background: rgba(95, 45, 100, 0.25);
-  border: 1px solid rgba(255, 189, 222, 0.1);
-  border-radius: 10px;
-  transition: all 0.3s ease;
+.info-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(20, 10, 25, 0.55);
+  border: 1px solid rgba(255, 230, 167, 0.08);
 }
 
-.highlight-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 189, 222, 0.3);
-  background: rgba(95, 45, 100, 0.35);
-  box-shadow: 0 8px 24px rgba(95, 45, 100, 0.2);
-}
-
-.card-icon {
-  font-size: 1.6rem;
+.section-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.15rem;
   color: var(--color-gold);
+  border-bottom: 1px solid rgba(255, 230, 167, 0.15);
+  padding-bottom: 0.5rem;
   display: flex;
-  align-items: flex-start;
-  padding-top: 0.1rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.card-content h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.4rem 0;
-}
-
-.card-content p {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
+.description-text {
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-/* Guidelines Section */
-.guidelines-box {
-  background: rgba(20, 10, 25, 0.4);
-  border: 1px dashed rgba(255, 230, 167, 0.25);
-  border-radius: 8px;
-  padding: 1.2rem;
+.highlights-list {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1.25rem;
 }
 
-.guidelines-box p {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* Back Link Action */
-.back-action {
-  margin-top: 1rem;
+.highlight-item {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-.back-link {
-  display: inline-flex;
+.item-header {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   color: var(--color-gold);
+}
+
+.item-header i {
+  font-size: 1rem;
+}
+
+.item-header h5 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.guidelines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.actions-section {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-list-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-gold);
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.95rem;
   transition: all 0.25s ease;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border: 1px solid var(--color-gold);
+  cursor: pointer;
 }
 
-.back-link:hover {
-  color: #ffffff;
-  background: rgba(255, 230, 167, 0.1);
-  transform: translateX(-3px);
+.back-list-btn:hover {
+  background: var(--color-gold);
+  color: #120b18;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 230, 167, 0.25);
 }
 
-/* Animations */
 @keyframes spin {
   from {
     transform: rotate(0deg);
