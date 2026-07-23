@@ -25,14 +25,19 @@ definePageMeta({
   underDevelopment: false,
 });
 
-useHead({
+const route = useRoute();
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
   title: () => t("newsPage.title"),
-  meta: [
-    {
-      name: "description",
-      content: () => t("newsPage.description"),
-    },
-  ],
+  ogTitle: () => t("newsPage.title"),
+  twitterTitle: () => t("newsPage.title"),
+  description: () => t("newsPage.description"),
+  ogDescription: () => t("newsPage.description"),
+  twitterDescription: () => t("newsPage.description"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
 });
 
 type NewsPost = {

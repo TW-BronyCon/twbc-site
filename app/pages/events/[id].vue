@@ -226,19 +226,46 @@ const posterSubtitle = computed(() => {
   return "SPECIAL EVENT";
 });
 
-useHead(() => ({
-  title: hasEvent.value
+const siteUrl = "https://twbronycon.org";
+
+const pageTitle = computed(() =>
+  hasEvent.value
     ? `${eventTitle.value} - Taiwan BronyCon`
     : t("event.notFound.title"),
-  meta: [
-    {
-      name: "description",
-      content: hasEvent.value
-        ? parsed.value.meta.intro || eventDetailText.value
-        : t("event.notFound.message"),
-    },
-  ],
-}));
+);
+
+const pageDesc = computed(() =>
+  hasEvent.value
+    ? parsed.value.meta.intro || eventDetailText.value
+    : t("event.notFound.message"),
+);
+
+const pageImage = computed(() => {
+  const firstImg = parsed.value.images[0];
+  const img = firstImg ? firstImg.src : null;
+  if (!img) return `${siteUrl}/img/text-logo.avif`;
+  if (
+    img.startsWith("http://") ||
+    img.startsWith("https://") ||
+    img.startsWith("data:")
+  ) {
+    return img;
+  }
+  const cleanPath = img.startsWith("/") ? img : `/${img}`;
+  return `${siteUrl}${cleanPath}`;
+});
+
+useSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  twitterTitle: pageTitle,
+  description: pageDesc,
+  ogDescription: pageDesc,
+  twitterDescription: pageDesc,
+  ogImage: pageImage,
+  twitterImage: pageImage,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 </script>
 
 <template>

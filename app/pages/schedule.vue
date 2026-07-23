@@ -18,15 +18,20 @@ definePageMeta({
   underDevelopment: false,
 });
 
-useHead(() => ({
-  title: t("schedule.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("schedule.description"),
-    },
-  ],
-}));
+const route = useRoute();
+const siteUrl = "https://twbronycon.org";
+
+useSeoMeta({
+  title: () => t("schedule.title"),
+  ogTitle: () => t("schedule.title"),
+  twitterTitle: () => t("schedule.title"),
+  description: () => t("schedule.description"),
+  ogDescription: () => t("schedule.description"),
+  twitterDescription: () => t("schedule.description"),
+  ogImage: `${siteUrl}/img/text-logo.avif`,
+  twitterImage: `${siteUrl}/img/text-logo.avif`,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 
 const gridContainer = ref<HTMLElement | null>(null);
 const activeModalIndex = ref<number | null>(null);

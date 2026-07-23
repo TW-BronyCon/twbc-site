@@ -11,20 +11,45 @@ const id = route.params.id as string;
 const booth = computed(() => booths.find((b) => b.id === id));
 const isEn = computed(() => locale.value.startsWith("en"));
 
-// Head configuration
-useHead(() => ({
-  title: booth.value
+const siteUrl = "https://twbronycon.org";
+
+const pageTitle = computed(() =>
+  booth.value
     ? `${booth.value.name[isEn.value ? "en" : "zh"]} - ${t("venue.legend.booth")}`
     : t("booth.notFound.title"),
-  meta: [
-    {
-      name: "description",
-      content: booth.value
-        ? booth.value.introduction[isEn.value ? "en" : "zh"]
-        : t("booth.notFound.message"),
-    },
-  ],
-}));
+);
+
+const pageDesc = computed(() =>
+  booth.value
+    ? booth.value.introduction[isEn.value ? "en" : "zh"]
+    : t("booth.notFound.message"),
+);
+
+const pageImage = computed(() => {
+  const img = boothImages.value[0] || currentImage.value;
+  if (!img) return `${siteUrl}/img/text-logo.avif`;
+  if (
+    img.startsWith("http://") ||
+    img.startsWith("https://") ||
+    img.startsWith("data:")
+  ) {
+    return img;
+  }
+  const cleanPath = img.startsWith("/") ? img : `/${img}`;
+  return `${siteUrl}${cleanPath}`;
+});
+
+useSeoMeta({
+  title: pageTitle,
+  ogTitle: pageTitle,
+  twitterTitle: pageTitle,
+  description: pageDesc,
+  ogDescription: pageDesc,
+  twitterDescription: pageDesc,
+  ogImage: pageImage,
+  twitterImage: pageImage,
+  ogUrl: computed(() => `${siteUrl}${route.path}`),
+});
 
 // Gallery active state
 const activeImageIdx = ref(0);
