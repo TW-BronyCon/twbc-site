@@ -844,7 +844,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("1")?.id ?? "1" }}
+                        {{ "1" }}
                       </text>
                     </g>
                     <!-- Booth 2 (mapId=2) -->
@@ -877,7 +877,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("2")?.id ?? "2" }}
+                        {{ "2" }}
                       </text>
                     </g>
                     <!-- Booth 3 (mapId=3) -->
@@ -910,7 +910,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("3")?.id ?? "3" }}
+                        {{ "3" }}
                       </text>
                     </g>
                     <!-- Booth 4 (mapId=4) -->
@@ -943,7 +943,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("4")?.id ?? "4" }}
+                        {{ "4" }}
                       </text>
                     </g>
                     <!-- Booth 5 (mapId=5) -->
@@ -976,7 +976,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("5")?.id ?? "5" }}
+                        {{ "5" }}
                       </text>
                     </g>
                     <!-- Booth 6 (mapId=6) -->
@@ -1009,7 +1009,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("6")?.id ?? "6" }}
+                        {{ "6" }}
                       </text>
                     </g>
                     <!-- Booth 7 (mapId=7) -->
@@ -1042,7 +1042,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("7")?.id ?? "7" }}
+                        {{ "7" }}
                       </text>
                     </g>
                     <!-- Booth 8 (mapId=8) -->
@@ -1075,7 +1075,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("8")?.id ?? "8" }}
+                        {{ "8" }}
                       </text>
                     </g>
                     <!-- Booth 9 (mapId=9) -->
@@ -1108,7 +1108,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("9")?.id ?? "9" }}
+                        {{ "9" }}
                       </text>
                     </g>
                     <!-- Booth 10 (mapId=10) -->
@@ -1141,7 +1141,7 @@ onUnmounted(() => {
                         dominant-baseline="central"
                         text-anchor="middle"
                       >
-                        {{ boothByMapId("10")?.id ?? "10" }}
+                        {{ "10" }}
                       </text>
                     </g>
                   </g>
@@ -1206,7 +1206,7 @@ onUnmounted(() => {
               <template v-if="selectedBooth">
                 <div class="sidebar-item-detail">
                   <span class="preview-badge booth-badge">{{
-                    t("venue.modal.boothTitle", { id: selectedBooth.id })
+                    t("venue.modal.boothTitle", { id: selectedBooth.mapId })
                   }}</span>
                   <h3>{{ selectedBooth.name[isEn ? "en" : "zh"] }}</h3>
                   <div class="sidebar-section-title">
