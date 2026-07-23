@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { marked } from "marked";
-import { events } from "~/data/scheduleData";
+import { events, columns } from "~/data/scheduleData";
 
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -20,7 +20,7 @@ const localeSuffix = computed(() => {
 });
 
 // Import all event markdown files lazily/dynamically
-const eventMdFiles = import.meta.glob("/content/events/**/*.md", {
+const eventMdFiles = import.meta.glob("../../../content/events/**/*.md", {
   query: "?raw",
   import: "default",
 });
@@ -29,12 +29,12 @@ const eventMdFiles = import.meta.glob("/content/events/**/*.md", {
 const { data: rawMd } = await useAsyncData(
   `event-md-${id}-${locale.value}`,
   async () => {
-    const pathWithLocale = `/content/events/${id}.${localeSuffix.value}.md`;
+    const pathWithLocale = `../../../content/events/${id}.${localeSuffix.value}.md`;
     if (eventMdFiles[pathWithLocale]) {
       const loader = eventMdFiles[pathWithLocale] as () => Promise<string>;
       return await loader();
     }
-    const defaultPath = `/content/events/${id}.md`;
+    const defaultPath = `../../../content/events/${id}.md`;
     if (eventMdFiles[defaultPath]) {
       const loader = eventMdFiles[defaultPath] as () => Promise<string>;
       return await loader();
@@ -90,13 +90,18 @@ const eventSubtitle = computed(() => {
 });
 
 const eventTimeRange = computed(() => {
-  if (parsed.value.meta.time) return parsed.value.meta.time;
+  // if (parsed.value.meta.time) return parsed.value.meta.time;
   return event.value ? `${event.value.start} - ${event.value.end}` : "";
 });
 
 const eventArea = computed(() => {
-  if (parsed.value.meta.area) return parsed.value.meta.area;
-  return event.value ? event.value.track : "";
+  const currentEvent = event.value;
+  if (!currentEvent) return "";
+  const matchingCol = columns.find((col) => col.key === currentEvent.track);
+  if (matchingCol?.label) {
+    return isEn.value ? matchingCol.label.en : matchingCol.label.zh;
+  }
+  return currentEvent.track;
 });
 
 const eventDetailText = computed(() => {
@@ -106,6 +111,57 @@ const eventDetailText = computed(() => {
       ? event.value.detail.en
       : event.value.detail.zh
     : "";
+});
+
+const eventType = computed(() => {
+  return event.value?.type || "";
+});
+
+// Map event type to FontAwesome icon
+const posterIcon = computed(() => {
+  switch (eventType.value) {
+    case "entry":
+      return "fa-solid fa-door-open";
+    case "opening":
+      return "fa-solid fa-flag";
+    case "community":
+      return "fa-solid fa-users";
+    case "break":
+      return "fa-solid fa-film";
+    case "talk":
+      return "fa-solid fa-chalkboard-user";
+    case "music":
+      return "fa-solid fa-compact-disc";
+    case "sing":
+      return "fa-solid fa-music";
+    case "photo":
+      return "fa-solid fa-camera";
+    case "workshop":
+      return "fa-solid fa-palette";
+    case "vendor":
+      return "fa-solid fa-store";
+    case "social":
+      return "fa-solid fa-comments";
+    case "social-special":
+      return "fa-solid fa-dice";
+    default:
+      return "fa-solid fa-star";
+  }
+});
+
+// Get the localized type label for the poster subtitle
+const posterSubtitle = computed(() => {
+  if (parsed.value.meta.subtitle)
+    return parsed.value.meta.subtitle.toUpperCase();
+  if (eventType.value) {
+    const key = `schedule.types.${eventType.value}`;
+    const localized = t(key);
+    if (localized && localized !== key) {
+      return localized.toUpperCase();
+    }
+    return eventType.value.toUpperCase();
+  }
+  return "SPECIAL EVENT";
 });
 
 useHead(() => ({
@@ -127,13 +183,17 @@ useHead(() => ({
   <PageLayout>
     <template #title>
       <div class="event-header" v-if="hasEvent">
-        <span class="event-badge" v-if="eventSubtitle">
-          {{ eventSubtitle }}
-        </span>
         <h1>{{ eventTitle }}</h1>
       </div>
       <div class="event-header" v-else>
         <h1>{{ t("event.notFound.title") }}</h1>
+      </div>
+      <!-- Back to Schedule Link -->
+      <div class="actions-section">
+        <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
+          <i class="fa-solid fa-list" />
+          <span>{{ t("event.backToSchedule") }}</span>
+        </NuxtLink>
       </div>
     </template>
 
@@ -144,9 +204,15 @@ useHead(() => ({
           <div class="event-poster">
             <div class="poster-glow" />
             <div class="poster-inner">
-              <i class="fa-solid fa-compact-disc disc-spinning" />
+              <i
+                class="poster-icon"
+                :class="[posterIcon, { spin: eventType === 'music' }]"
+              />
               <div class="poster-title">{{ eventTitle.toUpperCase() }}</div>
-              <div class="poster-subtitle">SPECIAL EVENT</div>
+              <div class="poster-subtitle" v-if="eventSubtitle">
+                {{ eventSubtitle }}
+              </div>
+              <div class="poster-subtitle" v-else>{{ posterSubtitle }}</div>
             </div>
           </div>
 
@@ -175,14 +241,6 @@ useHead(() => ({
           class="event-markdown-content info-card"
           v-html="parsed.html"
         ></div>
-
-        <!-- Back to Schedule Link -->
-        <div class="actions-section">
-          <NuxtLink :to="localePath('/schedule')" class="back-list-btn">
-            <i class="fa-solid fa-list" />
-            <span>{{ t("event.backToSchedule") }}</span>
-          </NuxtLink>
-        </div>
       </div>
 
       <!-- Not Found State -->
@@ -282,13 +340,17 @@ useHead(() => ({
   text-align: center;
 }
 
-.disc-spinning {
+.poster-icon {
   font-size: 4.5rem;
-  animation: spin 8s infinite linear;
   background: linear-gradient(45deg, var(--color-pink), var(--color-gold));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 12px rgba(255, 189, 222, 0.5));
+}
+
+.poster-icon.spin {
+  animation: spin 8s infinite linear;
 }
 
 .poster-title {
@@ -390,7 +452,7 @@ useHead(() => ({
 /* Actions Section */
 .actions-section {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .back-list-btn {

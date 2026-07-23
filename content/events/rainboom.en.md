@@ -1,8 +1,6 @@
 ---
 title: Sonic Rainboom
 subtitle: TWBC Late-Night Music Party
-time: 18:00 - 20:00 | Main Stage
-area: Main Stage
 ---
 
 As a Brony, are the catchy tunes of My Little Pony constantly stuck in your head? Do you find yourself on an endless loop listening to MLP music? The late-night music party will feature 3 DJs taking turns on stage to hype up the crowd. Have you reviewed your favorite MLP songs yet?

@@ -152,9 +152,26 @@
     "mobilehint": "Swipe to view the Schedule",
     "note": "The schedule below is for reference only and may be subject to change.",
     "duration": "Duration",
+    "durationHoursMinutes": "{hours}hr {minutes}mins",
+    "durationHours": "{hours}hr",
+    "durationMinutes": "{minutes}mins",
     "area": "Area",
     "detailPlaceholder": "Details will be added later.",
-    "viewEventDetail": "View Event Details"
+    "viewEventDetail": "View Event Details",
+    "types": {
+      "entry": "Entry",
+      "opening": "Opening",
+      "community": "Community Event",
+      "break": "Break / Screening",
+      "talk": "Special Lecture",
+      "music": "Music Event",
+      "sing": "Sing-along",
+      "photo": "Group Photo",
+      "workshop": "Workshop",
+      "vendor": "Vendor Area",
+      "social": "Social Area",
+      "social-special": "Special Social"
+    }
   },
   "venue": {
     "title": "Venue Map",

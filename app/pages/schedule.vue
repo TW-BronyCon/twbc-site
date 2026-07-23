@@ -147,12 +147,20 @@ const processedEvents = computed(() => {
       : "";
     const formattedTitle = titleText.replace(/\n/g, "<br>");
 
-    const duration = (
-      (timeToMinutes(event.end) - timeToMinutes(event.start)) /
-      60
-    )
-      .toFixed(1)
-      .replace(".0", "");
+    const diffMinutes = timeToMinutes(event.end) - timeToMinutes(event.start);
+    const hrs = Math.floor(diffMinutes / 60);
+    const mins = diffMinutes % 60;
+    let duration = "";
+    if (hrs > 0 && mins > 0) {
+      duration = t("schedule.durationHoursMinutes", {
+        hours: hrs,
+        minutes: mins,
+      });
+    } else if (hrs > 0) {
+      duration = t("schedule.durationHours", { hours: hrs });
+    } else {
+      duration = t("schedule.durationMinutes", { minutes: mins });
+    }
 
     const matchingCol = rawColumns.find((col) => col.key === event.track);
     const areaLabel = matchingCol?.label
@@ -575,14 +583,14 @@ onBeforeRouteLeave(() => {
 
               <div class="expo-tt-modal-meta">
                 <span>
-                  🕒 {{ activeModalEvent.start }} - {{ activeModalEvent.end }} ▶
-                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}h
+                  {{ activeModalEvent.start }} - {{ activeModalEvent.end }}
                 </span>
-
-                <span
-                  >📍 {{ t("schedule.area") }}:
-                  {{ activeModalEvent.area }}</span
-                >
+                <span>
+                  {{ t("schedule.duration") }}: {{ activeModalEvent.duration }}
+                </span>
+                <span>
+                  {{ t("schedule.area") }}: {{ activeModalEvent.area }}
+                </span>
               </div>
 
               <p>
@@ -591,12 +599,9 @@ onBeforeRouteLeave(() => {
                 }}
               </p>
 
-              <div
-                v-if="activeModalEvent.id === 'rainboom'"
-                class="modal-cta-section"
-              >
+              <div v-if="activeModalEvent.id" class="modal-cta-section">
                 <NuxtLink
-                  :to="localePath('/events/rainboom')"
+                  :to="localePath(`/events/${activeModalEvent.id}`)"
                   class="view-detail-btn"
                 >
                   <span>{{ t("schedule.viewEventDetail") }}</span>
