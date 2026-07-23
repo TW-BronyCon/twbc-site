@@ -264,6 +264,7 @@
       "title": "找不到活動",
       "message": "抱歉，找不到此活動的詳細資訊。"
     },
-    "backToSchedule": "返回時程表"
+    "backToSchedule": "返回時程表",
+    "attachments": "活動附件"
   }
 }

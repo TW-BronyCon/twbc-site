@@ -19,3 +19,6 @@ subtitle: TWBC夜場音樂派對
 - 歡迎攜帶發光配件、螢光棒等裝備入場！
 - 活動期間請注意補充水分，量力而行。
 - 遵守會場秩序，尊重他人，若有身體不適請立即向現場工作人員尋求協助。
+
+<img src="/events/rainboom/TWBC_Poster_DJ3.png" alt="Sonic Rainboom Poster" class="event-poster" />
+<img src="/events/rainboom/TWBC_Poster_Sing_Alone_List.png" alt="Sonic Rainboom Poster" class="event-poster" />

@@ -19,3 +19,6 @@ subtitle: TWBC Late-Night Music Party
 - Light sticks, glow gear, and glowing cosplay are highly welcome!
 - Stay hydrated and take breaks when needed.
 - Respect others and follow staff instructions to ensure a safe and fun environment for all.
+
+<img src="/events/rainboom/TWBC_Poster_DJ3.png" alt="Sonic Rainboom Poster" class="event-poster" />
+<img src="/events/rainboom/TWBC_Poster_Sing_Alone_List.png" alt="Sonic Rainboom Poster" class="event-poster" />
